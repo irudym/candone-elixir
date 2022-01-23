@@ -1,0 +1,74 @@
+<div class="flex flex-col">
+  <div class="py-4">
+    <h1>People</h1>
+  </div>
+
+  <%= if @live_action in [:new, :edit] do %>
+    <.modal return_to={Routes.person_index_path(@socket, :index)}>
+      <.live_component
+        module={CandoneWeb.PersonLive.FormComponent}
+        id={@person.id || :new}
+        title={@page_title}
+        action={@live_action}
+        person={@person}
+        companies={@companies}
+        return_to={Routes.person_index_path(@socket, :index)}
+      />
+    </.modal>
+  <% end %>
+
+  <div class="py-4">
+    <span class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Person", to: Routes.person_index_path(@socket, :new) %></span>
+  </div>
+
+  <div class="py-4">
+    <div class="flex flex-col">
+      <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+          <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-sx font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th scope="col" class="px-6 py-3 text-left text-sx font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                  <th scope="col" class="px-6 py-3 text-left text-sx font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                  <th scope="col" class="relative px-6 py-3"></th>
+                </tr>
+              </thead>
+              <tbody id="people" class="bg-white divide-y divide-gray-200">
+                <%= for person <- @people do %>
+                  <tr id={"person-#{person.id}"}>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <%= person.first_name %> <%= person.middle_name %> <%= person.last_name %> 
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <%= if person.company do %>
+                            <%= person.company.name %>  
+                        <% end %>    
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <%= person.description %>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <span class="bg-sky-500 hover:bg-sky-700 mx-1 px-2 py-1 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_redirect "Show", to: Routes.person_show_path(@socket, :show, person) %></span>
+                      <span class="bg-sky-500 hover:bg-sky-700 mx-1 px-2 py-1 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "Edit", to: Routes.person_index_path(@socket, :edit, person) %></span>
+                      <span class="bg-red-500 hover:bg-red-700 mx-1 px-2 py-1 text-sm leading-5 rounded-lg font-semibold text-white"><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: person.id, data: [confirm: "Are you sure?"] %></span>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+  
+</div>

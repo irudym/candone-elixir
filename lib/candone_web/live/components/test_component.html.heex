@@ -1,0 +1,20 @@
+<div class="py-2 bg-white border border-gray-300 rounded-md columns-2" >
+	<div class="bg-gray-200 p-2">
+		<h2>Left side</h2>
+		<ul>
+			<%= for option <- @left_options do %>
+				<li phx-target={@myself} phx-click="select-left" phx-value-option-id={option.id} >
+					<%= option.name %>
+				</li>
+			<% end %>
+		</ul>
+	</div>
+	<div class="p-2">
+		<h2>Right side</h2>
+		<%= for option <- @right_options do %>
+				<li phx-target={@myself} phx-click="select-left" phx-value-option-id={option.id} >
+					<%= option.name %>
+				</li>
+			<% end %>
+	</div>
+</div>

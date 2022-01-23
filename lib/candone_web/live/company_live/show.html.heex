@@ -1,0 +1,36 @@
+<h1>Show Company</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.company_show_path(@socket, :show, @company)}>
+    <.live_component
+      module={CandoneWeb.CompanyLive.FormComponent}
+      id={@company.id}
+      title={@page_title}
+      action={@live_action}
+      company={@company}
+      return_to={Routes.company_show_path(@socket, :show, @company)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @company.name %>
+  </li>
+
+  <li>
+    <strong>Address:</strong>
+    <%= @company.address %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @company.description %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.company_show_path(@socket, :edit, @company), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.company_index_path(@socket, :index) %></span>

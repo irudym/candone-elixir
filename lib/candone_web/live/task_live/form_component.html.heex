@@ -1,0 +1,54 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="task-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+
+
+    <div class="mb-4">
+      <%= label f, :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= text_input f, :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= error_tag f, :name, "text-red-500 text-xs italic" %>
+    </div>
+  
+    <div class="mb-4">
+      <%= label f, :description, class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= textarea f, :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= error_tag f, :description %>
+    </div>
+
+    <div class="mb-4">
+      <%= label f, :urgency, class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= number_input f, :urgency, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= error_tag f, :urgency %>
+    </div>
+  
+    <div class="mb-4">
+      <%= label f, :cost, class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= number_input f, :cost, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= error_tag f, :cost %>
+    </div>
+
+    <div class="mb-4">
+      <label id="listbox-label" class="block text-sm font-medium text-gray-700">
+        People
+      </label>
+
+      <.live_component module={SelectManyComponent}
+        id="people-1"
+        options={@people}
+        f={f}
+        name={:people}
+      />
+    </div>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving...", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+    </div>
+  </.form>
+</div>
