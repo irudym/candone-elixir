@@ -13,15 +13,15 @@ defmodule CandoneWeb.DashboardLive.Index do
   def mount(_params, _session, socket) do
     projects = Candone.Projects.list_projects()
     current_project_id = List.first(projects).id || :none
-    tasks = if current_project_id != :none do
+    { tasks, notes } = if current_project_id != :none do
       project = Projects.get_project!(current_project_id)
-      Projects.get_project_tasks(project)
+      { Projects.get_project_tasks(project), Projects.get_project_notes(project) }
     else
-      []
+      { [], [] }
     end
     {:ok, socket
           |> assign(:projects, projects)
-          |> assign(:notes, [])
+          |> assign(:notes, notes)
           |> assign(:current_project_id, current_project_id)
           |> assign(:tasks, tasks)
     }
@@ -39,7 +39,6 @@ defmodule CandoneWeb.DashboardLive.Index do
   end
 
   defp apply_action(socket, :new_task, _params) do
-    IO.inspect(socket, label: "Dashboard/New Task/socket")
     socket
     |> assign(:page_title, "New Task")
     |> assign(:task, %Task{})
@@ -56,19 +55,32 @@ defmodule CandoneWeb.DashboardLive.Index do
     socket
   end
 
+  defp apply_action(socket, :show_project, %{"id" => id} = params) do
+    IO.inspect(id, label: "Dashbord/:show_project/id")
+
+    socket
+    |> set_project(id)
+  end
+
+  @doc """
+    Set the project id and associated tasks and notes in socket
+  """
+  defp set_project(socket, id) do
+    project = Projects.get_project!(id)
+    tasks = Projects.get_project_tasks(project)
+    notes = Projects.get_project_notes(project)
+
+    socket
+    |> assign(:current_project_id, id)
+    |> assign(:tasks, tasks)
+    |> assign(:notes, notes)  
+  end
+
   @impl true
   def handle_event("project-select", %{"id" => project_id} = params, socket) do
-    IO.inspect(params, label: "Project click event")
-
-    project = Projects.get_project!(project_id)
-    tasks = Projects.get_project_tasks(project)
-
-    IO.inspect(tasks, label: "Project-select/tasks")
-
     {:noreply, 
       socket
-      |> assign(:current_project_id, project_id)
-      |> assign(:tasks, tasks)
+      |> push_patch(to: Routes.dashboard_index_path(socket, :show_project, project_id))
     }  
   end
 end

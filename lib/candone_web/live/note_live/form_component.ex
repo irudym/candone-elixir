@@ -41,7 +41,15 @@ defmodule CandoneWeb.NoteLive.FormComponent do
   end
 
   defp save_note(socket, :new, note_params) do
-    case Notes.create_note(note_params) do
+    
+    result = if socket.assigns.project_id && socket.assigns.project_id != :none do
+      project = Candone.Projects.get_project!(socket.assigns.project_id)
+      Notes.create_note_with_projects(note_params, [project])
+    else
+      Notes.create_note(note_params)
+    end
+
+    case result do
       {:ok, _note} ->
         {:noreply,
          socket
@@ -51,5 +59,9 @@ defmodule CandoneWeb.NoteLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  defp save_note(socket, :new_note, note_params) do
+    save_note(socket, :new, note_params)
   end
 end

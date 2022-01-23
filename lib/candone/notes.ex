@@ -101,4 +101,17 @@ defmodule Candone.Notes do
   def change_note(%Note{} = note, attrs \\ %{}) do
     Note.changeset(note, attrs)
   end
+
+  def create_note_with_projects(attrs, projects) do
+    case create_note(attrs) do
+      {:ok, note} -> 
+        {:ok, note
+        |> Repo.preload(:projects)
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.put_assoc(:projects, projects)
+        |> Repo.update!()}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
 end

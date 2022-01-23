@@ -81,7 +81,7 @@ defmodule Candone.Tasks do
     end
   end
 
-  def create_task_with_people_project(attrs, people, project) do
+  def create_task_with_people_projects(attrs, people, project) do
     case create_task(attrs) do
       {:ok, task} -> 
         {:ok, task

@@ -107,4 +107,8 @@ defmodule Candone.Projects do
     Repo.all(Ecto.assoc(project, :tasks))
   end
 
+  def get_project_notes(project) do
+    Repo.all(Ecto.assoc(project, :notes))
+  end
+
 end
