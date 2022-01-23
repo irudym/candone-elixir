@@ -5,6 +5,7 @@ defmodule CandoneWeb.DashboardLive.Index do
   import CandoneWeb.Components.CardComponent
   alias Candone.Projects.Project
   alias Candone.Tasks.Task
+  alias Candone.Notes.Note
   alias Candone.Contacts
 
 
@@ -20,7 +21,7 @@ defmodule CandoneWeb.DashboardLive.Index do
     end
     {:ok, socket
           |> assign(:projects, projects)
-          |> assign(:tasks, [])
+          |> assign(:notes, [])
           |> assign(:current_project_id, current_project_id)
           |> assign(:tasks, tasks)
     }
@@ -43,6 +44,12 @@ defmodule CandoneWeb.DashboardLive.Index do
     |> assign(:page_title, "New Task")
     |> assign(:task, %Task{})
     |> assign(:people, Contacts.list_people_with_full_names())
+  end
+
+  defp apply_action(socket, :new_note, _params) do
+    socket
+    |> assign(:page_title, "New Note")
+    |> assign(:note, %Note{})
   end
 
   defp apply_action(socket, :index, _params) do

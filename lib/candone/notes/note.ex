@@ -6,6 +6,8 @@ defmodule Candone.Notes.Note do
     field :content, :string
     field :name, :string
 
+    many_to_many :projects, Candone.Projects.Project, join_through: "projects_notes", on_delete: :delete_all, on_replace: :delete
+
     timestamps()
   end
 
