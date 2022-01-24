@@ -18,10 +18,12 @@ defmodule CandoneWeb.Router do
     pipe_through :browser
 
     live "/", DashboardLive.Index, :index
-    live "/dashboard/projects/:id", DashboardLive.Index, :show_project
     live "/dashboard/projects/new", DashboardLive.Index, :new_project
+    live "/dashboard/projects/:id", DashboardLive.Index, :show_project
     live "/dashboard/tasks/new", DashboardLive.Index, :new_task
+    live "/dashboard/tasks/:id/edit", DashboardLive.Index, :edit_task
     live "/dashboard/notes/new", DashboardLive.Index, :new_note
+    live "/dashboard/notes/:id/edit", DashboardLive.Index, :edit_note
 
     live "/companies", CompanyLive.Index, :index
     live "/companies/new", CompanyLive.Index, :new

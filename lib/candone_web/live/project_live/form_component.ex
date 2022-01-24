@@ -52,4 +52,6 @@ defmodule CandoneWeb.ProjectLive.FormComponent do
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
+
+  defp save_project(socket, :new_project, params), do: save_project(socket, :new, params)
 end

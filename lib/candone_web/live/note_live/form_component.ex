@@ -64,4 +64,8 @@ defmodule CandoneWeb.NoteLive.FormComponent do
   defp save_note(socket, :new_note, note_params) do
     save_note(socket, :new, note_params)
   end
+
+  defp save_note(socket, :edit_note, note_params) do
+    save_note(socket, :edit, note_params)
+  end
 end

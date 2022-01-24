@@ -104,7 +104,8 @@ defmodule Candone.Projects do
 
 
   def get_project_tasks(project) do
-    Repo.all(Ecto.assoc(project, :tasks))
+    query = from t in Ecto.assoc(project, :tasks), left_join: p in assoc(t, :people), group_by: t.id, select_merge: %{people_count: count(p.id)}
+    Repo.all(query)
   end
 
   def get_project_notes(project) do

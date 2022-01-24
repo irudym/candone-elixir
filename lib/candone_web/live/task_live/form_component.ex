@@ -76,5 +76,9 @@ defmodule CandoneWeb.TaskLive.FormComponent do
     save_task(socket, :new, task_params)
   end
 
+  defp save_task(socket, :edit_task, task_params) do
+    save_task(socket, :edit, task_params)
+  end
+
 
 end

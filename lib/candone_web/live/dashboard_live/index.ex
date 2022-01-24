@@ -45,19 +45,36 @@ defmodule CandoneWeb.DashboardLive.Index do
     |> assign(:people, Contacts.list_people_with_full_names())
   end
 
+  defp apply_action(socket, :edit_task, %{"id" => id}) do
+    task = Candone.Tasks.get_task!(id)
+    # TODO: need to think about how to get rid of this re-mapping
+    task = Map.put(task, :people, Enum.map(task.people, & "#{&1.id}"))
+
+    socket
+    |> assign(:page_title, "Edit Task")
+    |> assign(:task, task)
+    |> assign(:people, Contacts.list_people_with_full_names())
+  end
+
   defp apply_action(socket, :new_note, _params) do
     socket
     |> assign(:page_title, "New Note")
     |> assign(:note, %Note{})
   end
 
+  defp apply_action(socket, :edit_note, %{"id" => id}) do
+    note = Candone.Notes.get_note!(id)
+
+    socket
+    |> assign(:page_title, "Edit Note")
+    |> assign(:note, note)
+  end
+
   defp apply_action(socket, :index, _params) do
     socket
   end
 
-  defp apply_action(socket, :show_project, %{"id" => id} = params) do
-    IO.inspect(id, label: "Dashbord/:show_project/id")
-
+  defp apply_action(socket, :show_project, %{"id" => id}) do
     socket
     |> set_project(id)
   end
@@ -65,7 +82,11 @@ defmodule CandoneWeb.DashboardLive.Index do
   @doc """
     Set the project id and associated tasks and notes in socket
   """
+
+  defp set_project(socket, "new"), do: socket
+  
   defp set_project(socket, id) do
+    IO.inspect(id, label: "SET_PROJECT/id:")
     project = Projects.get_project!(id)
     tasks = Projects.get_project_tasks(project)
     notes = Projects.get_project_notes(project)
@@ -77,10 +98,24 @@ defmodule CandoneWeb.DashboardLive.Index do
   end
 
   @impl true
-  def handle_event("project-select", %{"id" => project_id} = params, socket) do
+  def handle_event("project-select", %{"id" => project_id}, socket) do
     {:noreply, 
       socket
       |> push_patch(to: Routes.dashboard_index_path(socket, :show_project, project_id))
     }  
+  end
+
+  def handle_event("task-select", %{"id" => task_id}, socket) do
+    {:noreply,
+      socket
+      |> push_patch(to: Routes.dashboard_index_path(socket, :edit_task, task_id))
+    }
+  end
+
+  def handle_event("note-select", %{"id" => note_id}, socket) do
+    {:noreply,
+      socket
+      |> push_patch(to: Routes.dashboard_index_path(socket, :edit_note, note_id))
+    }
   end
 end

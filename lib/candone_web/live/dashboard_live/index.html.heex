@@ -6,20 +6,20 @@
   </div>
 
   <%= if @live_action in [:new_project] do %>
-    <.modal return_to={Routes.dashboard_index_path(@socket, :index)}>
+    <.modal return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}>
       <.live_component
         module={CandoneWeb.ProjectLive.FormComponent}
         id={@project.id || :new}
         title={@page_title}
         action={@live_action}
         project={@project}
-        return_to={Routes.dashboard_index_path(@socket, :index)}
+        return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
       />
     </.modal>
   <% end %>
 
-  <%= if @live_action in [:new_task] do %>
-    <.modal return_to={Routes.dashboard_index_path(@socket, :index)}>
+  <%= if @live_action in [:new_task, :edit_task] do %>
+    <.modal return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}>
       <.live_component
         module={CandoneWeb.TaskLive.FormComponent}
         id={@task.id || :new}
@@ -28,13 +28,13 @@
         task={@task}
         people={@people}
         project_id={@current_project_id}
-        return_to={Routes.dashboard_index_path(@socket, :index)}
+        return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
       />
     </.modal>
   <% end %>
 
-  <%= if @live_action in [:new_note] do %>
-  <.modal return_to={Routes.dashboard_index_path(@socket, :index)}>
+  <%= if @live_action in [:new_note, :edit_note] do %>
+  <.modal return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}>
     <.live_component
       module={CandoneWeb.NoteLive.FormComponent}
       id={@note.id || :new}
@@ -42,7 +42,7 @@
       action={@live_action}
       note={@note}
       project_id={@current_project_id}
-      return_to={Routes.dashboard_index_path(@socket, :index)}
+      return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
     />
   </.modal>
 <% end %>
@@ -73,6 +73,7 @@
               counter2 = "0"
               click="project-select"
               value={"#{project.id}"}
+              selected={"#{project.id}" == "#{@current_project_id}"}
             />
         <% end %>
       </div>
@@ -102,6 +103,7 @@
             counter2 = "0"
             click="task-select"
             value={task.id}
+            selected={false}
           />
         <% end %>
       </div>
@@ -131,6 +133,7 @@
             counter2="0"
             click="note-select"
             value={note.id}
+            selected={false}
           />
         <% end %>
       </div>

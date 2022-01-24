@@ -21,3 +21,20 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## Useful links
 https://pragmaticstudio.com/tutorials/adding-tailwind-css-to-phoenix
+
+
+
+## Model definitions
+
+
+### Tasks
+Main fields are follwoing. 
+
+  * **name**:string - Task name or title
+  * **description**:text - Task description
+  * **cost**:integer - The estimated cost (number of hours, resources cost and so on) to complete the task
+  * **urgency**:integer - The task urgency, could be 0 - no urgency, 1 - low, 2 - medium, 3 - high
+  * **stage**:integer - The task stage, could be 0 - in backlog, 1 - in spring (working on it), 2 - done
+  * **people**:associations - The list of people which are responsible for the task 
+  * **projects**:associations - Lnked projects, by design one task could be linked to many projects
+   

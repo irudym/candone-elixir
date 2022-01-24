@@ -7,6 +7,7 @@ defmodule Candone.Tasks.Task do
     field :description, :string
     field :name, :string
     field :urgency, :integer
+    field :stage, :integer
 
     field :people_count, :integer, virtual: true
 
@@ -19,9 +20,16 @@ defmodule Candone.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:name, :description, :urgency, :cost])
+    |> cast(attrs, [:name, :description, :urgency, :cost, :stage])
    #  |> cast_assoc(:people, with: &Candone.Contacts.Person.changeset/2)
     |> foreign_key_constraint(:people)
     |> validate_required([:name])
   end
+
+  @doc """
+    Get a string representation of the stage 
+  """
+  def get_stage(%{stage: 0}), do: "In Backlog"
+  def get_stage(%{stage: 1}), do: "In Srint"
+  def get_stage(%{stage: 2}), do: "Done"
 end
