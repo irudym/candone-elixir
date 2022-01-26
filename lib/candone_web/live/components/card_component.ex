@@ -8,9 +8,9 @@ defmodule CandoneWeb.Components.CardComponent do
 
  		 ~H"""
  		 	<div class={"relative cursor-pointer bg-white py-2 px-6 rounded-xl my-4 shadow-xl #{if assigns.selected, do: "border-2 border-sky-500"}"} phx-click={assigns.click} phx-value-id={assigns.value}>
-        <div class="absolute left-9 w-[3px] bg-red-300 z-2 top-3 bottom-3 rounded-lg">
+        <div class="absolute left-10 w-[3px] bg-red-300 z-2 top-3 bottom-3 rounded-lg">
         </div>
-        <div class="mt-1 ml-8">
+        <div class="mt-1 ml-9">
           <p class="text-md mt-2">
             <%= assigns.name %>
           </p>

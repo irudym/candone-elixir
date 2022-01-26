@@ -16,7 +16,7 @@ defmodule CandoneWeb.NoteLive.FormComponent do
      |> assign(assigns)
      |> assign(:changeset, changeset)
      |> assign(:markdown, markdown)
-     |> assign(:show_markdown, assigns.action == :edit || assigns.action == :edit_note)
+     |> assign(:show_markdown, assigns.action == :edit_note)
 
     }
   end
