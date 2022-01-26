@@ -35,7 +35,7 @@ defmodule Candone.Notes do
       ** (Ecto.NoResultsError)
 
   """
-  def get_note!(id), do: Repo.get!(Note, id)
+  def get_note!(id), do: Repo.get!(Note, id) |> Repo.preload(:people)
 
   @doc """
   Creates a note.
@@ -99,7 +99,9 @@ defmodule Candone.Notes do
 
   """
   def change_note(%Note{} = note, attrs \\ %{}) do
-    Note.changeset(note, attrs)
+    note
+    |> Repo.preload(:people)
+    |> Note.changeset(attrs) 
   end
 
   def create_note_with_projects(attrs, projects) do
@@ -114,4 +116,53 @@ defmodule Candone.Notes do
         {:error, changeset}
     end
   end
+
+  @doc """
+  Create a task with people 
+
+  ## Example 
+    iex> create_note_with_people(%{field: value}, people)
+    {:ok, %Note{}}
+
+    iex> create_note_with_people(%{field: bad_value}, people)
+    {:error, %Ecto.Changeset{}}
+  """
+  def create_note_with_people(attrs, people) do
+    case create_note(attrs) do
+      {:ok, note} -> 
+        {:ok, note
+        |> Repo.preload(:people)
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.put_assoc(:people, people)
+        |> Repo.update!()}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def create_note_with_people_projects(attrs, people, project) do
+    case create_note(attrs) do
+      {:ok, note} -> 
+        {:ok, note
+        |> Repo.preload(:people)
+        |> Repo.preload(:projects)
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.put_assoc(:people, people)
+        |> Ecto.Changeset.put_assoc(:projects, project)
+        |> Repo.update!()}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def update_note_with_people(%Note{} = note, attrs, people) do
+    note
+    |> Repo.preload(:people)
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_assoc(:people, people)
+    |> Note.changeset(attrs)
+    |> Repo.update()
+  end
+
+
 end

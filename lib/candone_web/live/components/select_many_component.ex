@@ -12,10 +12,10 @@ defmodule CandoneWeb.Components.SelectManyComponent do
   def update(assigns, socket) do
     %{f: f, name: name, options: options, id: id} = assigns
 
-    #IO.inspect(f, label: "UPDATE/f")
+    # IO.inspect(f, label: "SelectManyComponent/UPDATE/f")
     
     value = Map.get(f.params, "#{name}")
-    #IO.inspect(value, label: "UPDATE/value")
+    # IO.inspect(value, label: "UPDATE/value")
     
     values_ids = if value && value != "" do
       String.split(value, ",")
@@ -23,7 +23,9 @@ defmodule CandoneWeb.Components.SelectManyComponent do
       Map.get(f.data, name)
     end
 
-    #IO.inspect(values_ids, label: "UPDATE/values_ids")
+    
+    # IO.inspect(options, label: "SelectManyComponent/options")
+    # IO.inspect(values_ids, label: "SelectManyComponent/values_ids")
     
     selected_options = Enum.map(values_ids, fn id -> Enum.find(options, & "#{&1.id}" == "#{id}") end)  
     #IO.inspect(selected_options, label: "UPDATE/selected_options")
@@ -43,7 +45,7 @@ defmodule CandoneWeb.Components.SelectManyComponent do
   @impl true
   def handle_event("update", %{"selectedIdx" => idx, "id" => id}, socket) do
 
-    IO.inspect(id, label: "HANDLE UPDATE")
+    #IO.inspect(id, label: "HANDLE UPDATE")
     selected_options = Enum.concat(socket.assigns.selected_options, [Enum.find(socket.assigns.options, & "#{&1.id}" == "#{idx}")])
 
     # remove idx from options

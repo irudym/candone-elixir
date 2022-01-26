@@ -11,13 +11,14 @@
       title={@page_title}
       action={@live_action}
       note={@note}
+      people={@people}
       return_to={Routes.note_index_path(@socket, :index)}
     />
   </.modal>
 <% end %>
 
 <div class="py-4">
-    <span class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Project", to: Routes.note_index_path(@socket, :new) %></span>
+    <span class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Note", to: Routes.note_index_path(@socket, :new) %></span>
   </div>
 
   <div class="py-4">

@@ -41,11 +41,13 @@
       title={@page_title}
       action={@live_action}
       note={@note}
+      people={@people}
       project_id={@current_project_id}
       return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
     />
   </.modal>
 <% end %>
+  <ul class="list-disc list-decimal list-inside py-4 leading-7 text-blue-600 visited:text-purple-600"></ul>
 
   
 

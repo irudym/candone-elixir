@@ -20,7 +20,7 @@ defmodule CandoneWeb.NoteLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.note_index_path(conn, :index))
 
       assert html =~ "Listing Notes"
-      assert html =~ note.content
+      assert html =~ note.name
     end
 
     test "saves new note", %{conn: conn} do
@@ -42,8 +42,26 @@ defmodule CandoneWeb.NoteLiveTest do
         |> follow_redirect(conn, Routes.note_index_path(conn, :index))
 
       assert html =~ "Note created successfully"
-      assert html =~ "some content"
+      assert html =~ "some name"
     end
+
+
+    test "saves new note with persons", %{conn: conn} do
+      {:ok, index_live, _html} = live(conn, Routes.note_index_path(conn, :index))
+
+      assert index_live |> element("a", "New Note") |> render_click() =~ "New Note"
+
+      assert_patch(index_live, Routes.note_index_path(conn, :new))
+
+      {:ok, _, html} = 
+        index_live
+        |> form("#note-form", note: @create_attrs)
+        |> render_submit(%{"note[people]" => "1,2,3"})
+        |> follow_redirect(conn, Routes.note_index_path(conn, :index))
+
+      assert html =~ "Note created successfully"
+      assert html =~ "some name"
+    end 
 
     test "updates note in listing", %{conn: conn, note: note} do
       {:ok, index_live, _html} = live(conn, Routes.note_index_path(conn, :index))
@@ -64,7 +82,7 @@ defmodule CandoneWeb.NoteLiveTest do
         |> follow_redirect(conn, Routes.note_index_path(conn, :index))
 
       assert html =~ "Note updated successfully"
-      assert html =~ "some updated content"
+      assert html =~ "some updated name"
     end
 
     test "deletes note in listing", %{conn: conn, note: note} do

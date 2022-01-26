@@ -5,7 +5,9 @@ defmodule CandoneWeb.NoteLive.Show do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, socket
+          |> assign(:people, Candone.Contacts.list_people_with_full_names())
+    }
   end
 
   @impl true
@@ -13,7 +15,9 @@ defmodule CandoneWeb.NoteLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:note, Notes.get_note!(id))}
+     |> assign(:note, Notes.get_note!(id))
+     # |> assign(:people, Candone.Contacts.list_people_with_full_names())
+   }
   end
 
   defp page_title(:show), do: "Show Note"

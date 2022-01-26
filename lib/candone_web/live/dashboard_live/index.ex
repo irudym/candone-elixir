@@ -60,14 +60,18 @@ defmodule CandoneWeb.DashboardLive.Index do
     socket
     |> assign(:page_title, "New Note")
     |> assign(:note, %Note{})
+    |> assign(:people, Contacts.list_people_with_full_names())
   end
 
   defp apply_action(socket, :edit_note, %{"id" => id}) do
     note = Candone.Notes.get_note!(id)
+    # TODO: need to think about how to get rid of this re-mapping
+    note = Map.put(note, :people, Enum.map(note.people, & "#{&1.id}"))
 
     socket
     |> assign(:page_title, "Edit Note")
     |> assign(:note, note)
+    |> assign(:people, Contacts.list_people_with_full_names())
   end
 
   defp apply_action(socket, :index, _params) do

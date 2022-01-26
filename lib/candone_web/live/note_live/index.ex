@@ -3,10 +3,16 @@ defmodule CandoneWeb.NoteLive.Index do
 
   alias Candone.Notes
   alias Candone.Notes.Note
+  alias Candone.Contacts
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :notes, list_notes())}
+    notes = list_notes()
+    people = Contacts.list_people_with_full_names()
+    {:ok, socket
+          |> assign(:notes, notes)
+          |> assign(:people, people)
+    }
   end
 
   @impl true
@@ -15,9 +21,12 @@ defmodule CandoneWeb.NoteLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
+    note = Notes.get_note!(id)
+    note = Map.put(note, :people, Enum.map(note.people, & "#{&1.id}"))
+
     socket
     |> assign(:page_title, "Edit Note")
-    |> assign(:note, Notes.get_note!(id))
+    |> assign(:note, note)
   end
 
   defp apply_action(socket, :new, _params) do

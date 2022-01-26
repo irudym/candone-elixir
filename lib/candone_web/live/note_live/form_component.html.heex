@@ -8,18 +8,46 @@
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save">
-  
+
+    <div class="mb-4">
+      <%= label f, "Participants", class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <.live_component module={SelectManyComponent}
+          id="people-in-notes1"
+          options={@people}
+          f={f}
+          name={:people}
+        />
+    </div>
     <div class="mb-4">
       <%= label f, :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
       <%= text_input f, :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
       <%= error_tag f, :name, "text-red-500 text-xs italic" %>
     </div>
 
-    <div class="mb-4">
-      <%= label f, :content, class: "block text-gray-700 text-sm font-bold mb-2" %>
-      <%= textarea f, :content, class: "min-h-[20rem] shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      <%= error_tag f, :content, "text-red-500 text-xs italic" %>
-    </div>
+    <%= if @show_markdown do %>
+      <div class="py-2">
+        <span
+          phx-click="edit-note"
+          phx-target={@myself}
+          class=" cursor-pointer bg-sky-500 hover:bg-sky-700 px-2 py-1 text-xs leading-5 rounded-lg font-semibold text-white"
+        >
+          Edit note
+        </span>
+      </div>
+      <div class="mb-4">
+        <div class="min-h-[20rem] shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+          <%= raw(@markdown) %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= if !@show_markdown do%>
+      <div class="mb-4">
+        <%= label f, :content, class: "block text-gray-700 text-sm font-bold mb-2" %>
+        <%= textarea f, :content, [autofocus: true, class: "min-h-[20rem] shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"] %>
+        <%= error_tag f, :content, "text-red-500 text-xs italic" %>
+      </div>
+    <% end %>
   
     <div>
       <%= submit "Save", phx_disable_with: "Saving...", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
