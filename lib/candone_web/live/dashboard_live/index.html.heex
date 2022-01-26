@@ -106,6 +106,7 @@
             click="task-select"
             value={task.id}
             selected={false}
+            colour={get_colour_from_urgency(task.urgency)}
           />
         <% end %>
       </div>
@@ -136,6 +137,7 @@
             click="note-select"
             value={note.id}
             selected={false}
+            colour="bg-sky-500"
           />
         <% end %>
       </div>

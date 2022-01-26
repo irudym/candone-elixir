@@ -28,7 +28,7 @@ https://pragmaticstudio.com/tutorials/adding-tailwind-css-to-phoenix
 
 
 ### Tasks
-Main fields are follwoing. 
+Model which handles all information about a task. Many tasks might be associated with many projects, for example one task could be relate to two projects. Main fields are follwoing. 
 
   * **name**:string - Task name or title
   * **description**:text - Task description

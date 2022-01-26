@@ -8,6 +8,13 @@ defmodule CandoneWeb.DashboardLive.Index do
   alias Candone.Notes.Note
   alias Candone.Contacts
 
+  @urgency %{
+    0 => "bg-gray-200",
+    1 => "bg-green-200",
+    2 => "bg-yellow-200",
+    3 => "bg-red-200"
+  }
+
 
   @impl true
   def mount(_params, _session, socket) do
@@ -24,6 +31,7 @@ defmodule CandoneWeb.DashboardLive.Index do
           |> assign(:notes, notes)
           |> assign(:current_project_id, current_project_id)
           |> assign(:tasks, tasks)
+          |> assign(:page_title, "Candone")
     }
   end
 
@@ -98,7 +106,8 @@ defmodule CandoneWeb.DashboardLive.Index do
     socket
     |> assign(:current_project_id, id)
     |> assign(:tasks, tasks)
-    |> assign(:notes, notes)  
+    |> assign(:notes, notes)
+    |> assign(:page_title, "Candone: #{project.name}")
   end
 
   @impl true
@@ -121,5 +130,9 @@ defmodule CandoneWeb.DashboardLive.Index do
       socket
       |> push_patch(to: Routes.dashboard_index_path(socket, :edit_note, note_id))
     }
+  end
+
+  def get_colour_from_urgency(value) do
+    Map.get(@urgency, value, "bg-gray-200")
   end
 end

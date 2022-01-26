@@ -4,6 +4,7 @@ defmodule CandoneWeb.TaskLive.FormComponent do
   alias Candone.Tasks
   alias Candone.Contacts
   alias CandoneWeb.Components.SelectManyComponent
+  import CandoneWeb.Components.FormComponents
 
   @impl true
   def update(%{task: task} = assigns, socket) do

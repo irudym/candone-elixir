@@ -6,8 +6,8 @@ defmodule Candone.Tasks.Task do
     field :cost, :integer
     field :description, :string
     field :name, :string
-    field :urgency, :integer
-    field :stage, :integer
+    field :urgency, :integer, default: 0
+    field :stage, :integer, default: 0
 
     field :people_count, :integer, virtual: true
 
