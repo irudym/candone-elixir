@@ -1,4 +1,4 @@
-<div class="container">
+<div class="px-2">
   <div class="flex flex-wrap -mx-4">
     <div class="w-full px-4">
       <h2>Dashboard</h2>
@@ -49,23 +49,15 @@
 <% end %>
   <ul class="list-disc list-decimal list-inside py-4 leading-7 text-blue-600 visited:text-purple-600"></ul>
 
-  
+  <div class="min-h-full flex flex-row flex-wrap items-stratch">
 
-  <div class="flex flex-wrap justify-center -mx-4">
-    <div class="w-full md:w-1/2 lg:w-1/3 px-4">
+    <!-- Projects -->
+    <div class="grow basis-1/6 mr-4">
       <div class="py-4">
         <span class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Project", to: Routes.dashboard_index_path(@socket, :new_project) %>
         </span>
       </div>
-      <div class="bg-white rounded-xl relative
-               border border-primary py-10
-               px-8
-               sm:p-12
-               lg:py-10 lg:px-6
-               xl:p-12
-               mb-10
-               "
-      >
+      <div class="rounded-lg border bg-white p-4 min-h-full">
         <%= for project <- @projects do %>
             <.card
               name={project.name}
@@ -81,52 +73,77 @@
       </div>
     </div>
 
-    <div class="w-full md:w-1/2 lg:w-1/3 px-4">
+    <!-- Tasks -->
+    <div class="grow basis-3/6 mr-4">
       <div class="py-4">
         <span class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Task", to: Routes.dashboard_index_path(@socket, :new_task) %>
         </span>
       </div>
-
-      <div class="bg-white rounded-xl relative
-               border border-primary py-10
-               px-8
-               sm:p-12
-               lg:py-10 lg:px-6
-               xl:p-12
-               mb-10
-               "
-      >
-        <%= for task <- @tasks do %>
-          <.card
-            name={task.name}
-            description={task.description} 
-            date={task.inserted_at}
-            counter1={task.people_count}
-            counter2 = "0"
-            click="task-select"
-            value={task.id}
-            selected={false}
-            colour={get_colour_from_urgency(task.urgency)}
-          />
-        <% end %>
+      <div class="grid grid-cols-3">  
+        <div class="py-4 mx-1 flex flex-col">
+          <div class="mb-2 text-lg font-light">Backlog</div>
+          <div class="rounded-lg border p-4 bg-white min-h-full">
+            <%= for task <- @tasks.backlog do %>
+              <.card
+                name={task.name}
+                description={task.description} 
+                date={task.inserted_at}
+                counter1={task.people_count}
+                counter2 = "0"
+                click="task-select"
+                value={task.id}
+                selected={false}
+                colour={get_colour_from_urgency(task.urgency)}
+              />
+            <% end %>
+          </div>
+        </div>
+        <div class="py-4 mx-1 flex flex-col ">
+          <div class="mb-2 text-lg font-light">Sprint</div>
+          <div class="rounded-lg border p-4 bg-white min-h-full">
+            <%= for task <- @tasks.sprint do %>
+              <.card
+                name={task.name}
+                description={task.description} 
+                date={task.inserted_at}
+                counter1={task.people_count}
+                counter2 = "0"
+                click="task-select"
+                value={task.id}
+                selected={false}
+                colour={get_colour_from_urgency(task.urgency)}
+              />
+            <% end %>
+          </div>
+        </div>
+        <div class="py-4 mx-1 flex flex-col ">
+          <div class="mb-2 text-lg font-light">Done</div>
+          <div class="rounded-lg border p-4 bg-white min-h-full">
+            <%= for task <- @tasks.done do %>
+              <.card
+                name={task.name}
+                description={task.description} 
+                date={task.inserted_at}
+                counter1={task.people_count}
+                counter2 = "0"
+                click="task-select"
+                value={task.id}
+                selected={false}
+                colour={get_colour_from_urgency(task.urgency)}
+              />
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="w-full md:w-1/2 lg:w-1/3 px-4">
+    <!-- Notes -->
+    <div class="grow">
       <div class="py-4">
         <span class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Note", to: Routes.dashboard_index_path(@socket, :new_note) %>
         </span>
       </div>
-
-      <div class="bg-white rounded-xl relative
-               border border-primary py-10
-               px-8
-               sm:p-12
-               lg:py-10 lg:px-6
-               xl:p-12
-               mb-10
-               "
-      >
+      <div class="rounded-lg border bg-white p-4 min-h-full">
         <%= for note <- @notes do %>
           <.card
             name={note.name}
@@ -142,5 +159,6 @@
         <% end %>
       </div>
     </div>
-  </div>                    
+  </div>
+
 </div>

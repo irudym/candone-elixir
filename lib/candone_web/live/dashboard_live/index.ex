@@ -2,7 +2,7 @@ defmodule CandoneWeb.DashboardLive.Index do
   use CandoneWeb, :live_view
 
   alias Candone.Projects
-  import CandoneWeb.Components.CardComponent
+  import CandoneWeb.Components.CardComponents
   alias Candone.Projects.Project
   alias Candone.Tasks.Task
   alias Candone.Notes.Note
@@ -20,18 +20,12 @@ defmodule CandoneWeb.DashboardLive.Index do
   def mount(_params, _session, socket) do
     projects = Candone.Projects.list_projects()
     current_project_id = List.first(projects).id || :none
-    { tasks, notes } = if current_project_id != :none do
-      project = Projects.get_project!(current_project_id)
-      { Projects.get_project_tasks(project), Projects.get_project_notes(project) }
-    else
-      { [], [] }
-    end
+    
     {:ok, socket
           |> assign(:projects, projects)
-          |> assign(:notes, notes)
           |> assign(:current_project_id, current_project_id)
-          |> assign(:tasks, tasks)
           |> assign(:page_title, "Candone")
+          |> set_project(current_project_id)
     }
   end
 
@@ -96,16 +90,23 @@ defmodule CandoneWeb.DashboardLive.Index do
   """
 
   defp set_project(socket, "new"), do: socket
-  
+
+  defp set_project(socket, :none) do
+    socket
+    |> assign(:tasks, %{backlog: [], sprint: [], done: []})
+    |> assign(:notes, [])
+  end
+
   defp set_project(socket, id) do
-    IO.inspect(id, label: "SET_PROJECT/id:")
     project = Projects.get_project!(id)
-    tasks = Projects.get_project_tasks(project)
+    backlog_tasks = Projects.get_project_tasks_with_stage(project, 0)
+    sprint_tasks = Projects.get_project_tasks_with_stage(project, 1)
+    done_tasks = Projects.get_project_tasks_with_stage(project, 2)
     notes = Projects.get_project_notes(project)
 
     socket
     |> assign(:current_project_id, id)
-    |> assign(:tasks, tasks)
+    |> assign(:tasks, %{backlog: backlog_tasks, sprint: sprint_tasks, done: done_tasks})
     |> assign(:notes, notes)
     |> assign(:page_title, "Candone: #{project.name}")
   end

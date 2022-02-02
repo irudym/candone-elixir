@@ -108,6 +108,11 @@ defmodule Candone.Projects do
     Repo.all(query)
   end
 
+  def get_project_tasks_with_stage(project, stage) do
+    query = from t in Ecto.assoc(project, :tasks), where: t.stage == ^stage, left_join: p in assoc(t, :people), group_by: t.id, select_merge: %{people_count: count(p.id)}
+    Repo.all(query)
+  end
+
   def get_project_notes(project) do
     Repo.all(Ecto.assoc(project, :notes))
   end

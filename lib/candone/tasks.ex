@@ -22,6 +22,11 @@ defmodule Candone.Tasks do
     Repo.all query
   end
 
+  def list_task_by_stage(stage) do
+    query = from t in Task, where: t.stage == ^stage, left_join: p in assoc(t, :people), group_by: t.id, select_merge: %{people_count: count(p.id)}
+    Repo.all query
+  end
+
   @doc """
   Gets a single task.
 
