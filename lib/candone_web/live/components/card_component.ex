@@ -7,9 +7,14 @@ defmodule CandoneWeb.Components.CardComponents do
 
   def project_card(assigns) do
     ~H"""
-      <div class="border-2 relative cursor-pointer bg-white py-2 px-2 rounded-xl my-4 shadow-xl">
-        <div class="absolute top-[-1px] bottom-[-1px] left-[-2px] rounded-l-xl border-4 border-gray-500 bg-gray-500 w-[10px]"></div>
-        <div class="mt-1 ml-9">
+      <div class={"border-2 relative cursor-pointer border-gray-100 bg-white #{if assigns.selected, do: "bg-gray-100"} py-1 px-2 rounded-xl my-4"}
+            phx-click={assigns.click}
+            phx-value-id={assigns.value}
+        >
+        <div
+            class={"absolute top-[-1px] bottom-[-1px] left-[-2px] rounded-l-xl border-primary-200 #{if assigns.selected, do: "bg-primary-300", else: "bg-primary-200"} w-[10px]"}>
+        </div>
+        <div class="ml-9">
           <p class="text-md mt-2">
             <%= assigns.name %>
           </p>
@@ -25,9 +30,11 @@ defmodule CandoneWeb.Components.CardComponents do
 
   def card(assigns) do
  		 ~H"""
- 		 	<div class={"relative cursor-pointer bg-white py-2 px-6 rounded-xl my-4 shadow-xl #{if assigns.selected, do: "border-2 border-sky-500"}"} phx-click={assigns.click} phx-value-id={assigns.value}>
-        <div class={"absolute left-10 w-[3px] #{Map.get(assigns, :colour, "bg-gray-200")} z-2 top-3 bottom-3 rounded-lg"}>
+ 		 	<div class={"relative cursor-pointer bg-white py-2 px-6 rounded-xl my-4 drop-shadow #{if assigns.selected, do: "bg-gray-100"}"} phx-click={assigns.click} phx-value-id={assigns.value}>
+        <div
+            class={"absolute top-[-1px] bottom-[-1px] left-[-2px] rounded-l-xl #{Map.get(assigns, :colour, "bg-primary-200")} w-[10px]"}>
         </div>
+
         <div class="mt-1 ml-9">
           <p class="text-md mt-2">
             <%= assigns.name %>

@@ -3,7 +3,6 @@ defmodule CandoneWeb.PersonLive.Index do
 
   alias Candone.Contacts
   alias Candone.Contacts.Person
-  alias CandoneWeb.Components.TestComponent
 
   @impl true
   def mount(_params, _session, socket) do

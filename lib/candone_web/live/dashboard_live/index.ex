@@ -9,7 +9,7 @@ defmodule CandoneWeb.DashboardLive.Index do
   alias Candone.Contacts
 
   @urgency %{
-    0 => "bg-gray-200",
+    0 => "bg-primary-200",
     1 => "bg-green-200",
     2 => "bg-yellow-200",
     3 => "bg-red-200"
@@ -20,7 +20,7 @@ defmodule CandoneWeb.DashboardLive.Index do
   def mount(_params, _session, socket) do
     projects = Candone.Projects.list_projects()
     current_project_id = List.first(projects).id || :none
-    
+
     {:ok, socket
           |> assign(:projects, projects)
           |> assign(:current_project_id, current_project_id)
@@ -113,10 +113,10 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   @impl true
   def handle_event("project-select", %{"id" => project_id}, socket) do
-    {:noreply, 
+    {:noreply,
       socket
       |> push_patch(to: Routes.dashboard_index_path(socket, :show_project, project_id))
-    }  
+    }
   end
 
   def handle_event("task-select", %{"id" => task_id}, socket) do

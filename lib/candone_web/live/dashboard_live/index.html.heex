@@ -1,4 +1,4 @@
-<div class="px-2">
+<div class="px-12">
   <div class="flex flex-wrap -mx-4">
     <div class="w-full px-4">
       <h2>Dashboard</h2>
@@ -57,14 +57,12 @@
         <span class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Project", to: Routes.dashboard_index_path(@socket, :new_project) %>
         </span>
       </div>
-      <div class="rounded-lg border bg-white p-4 min-h-full">
+      <div class="rounded-lg bg-white p-4 min-h-full">
         <%= for project <- @projects do %>
-            <.card
+            <.project_card
               name={project.name}
-              description={project.description} 
               date={project.inserted_at}
-              counter1 = "0"
-              counter2 = "0"
+              tasks = "0"
               click="project-select"
               value={"#{project.id}"}
               selected={"#{project.id}" == "#{@current_project_id}"}
@@ -82,7 +80,7 @@
       <div class="grid grid-cols-3">  
         <div class="py-4 mx-1 flex flex-col">
           <div class="mb-2 text-lg font-light">Backlog</div>
-          <div class="rounded-lg border p-4 bg-white min-h-full">
+          <div class="rounded-lg p-4 min-h-full bg-gray-100">
             <%= for task <- @tasks.backlog do %>
               <.card
                 name={task.name}
@@ -100,7 +98,7 @@
         </div>
         <div class="py-4 mx-1 flex flex-col ">
           <div class="mb-2 text-lg font-light">Sprint</div>
-          <div class="rounded-lg border p-4 bg-white min-h-full">
+          <div class="rounded-lg  p-4 bg-gray-100">
             <%= for task <- @tasks.sprint do %>
               <.card
                 name={task.name}
@@ -118,7 +116,7 @@
         </div>
         <div class="py-4 mx-1 flex flex-col ">
           <div class="mb-2 text-lg font-light">Done</div>
-          <div class="rounded-lg border p-4 bg-white min-h-full">
+          <div class="rounded-lg  p-4  bg-gray-100">
             <%= for task <- @tasks.done do %>
               <.card
                 name={task.name}
@@ -140,10 +138,10 @@
     <!-- Notes -->
     <div class="grow">
       <div class="py-4">
-        <span class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Note", to: Routes.dashboard_index_path(@socket, :new_note) %>
+        <span class="bg-primary-300 hover:bg-primary-200 px-5 py-3 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Note", to: Routes.dashboard_index_path(@socket, :new_note) %>
         </span>
       </div>
-      <div class="rounded-lg border bg-white p-4 min-h-full">
+      <div class="rounded-lg border bg-gray-100 p-4 min-h-full">
         <%= for note <- @notes do %>
           <.card
             name={note.name}
