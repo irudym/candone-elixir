@@ -15,7 +15,7 @@ defmodule CandoneWeb.Components.CardComponents do
             class={"absolute top-[-1px] bottom-[-1px] left-[-2px] rounded-l-xl border-primary-200 #{if assigns.selected, do: "bg-primary-300", else: "bg-primary-200"} w-[10px]"}>
         </div>
         <div class="ml-9">
-          <p class="text-md mt-2">
+          <p class="text-base mt-2">
             <%= assigns.name %>
           </p>
           <div class="space-x-2 text-gray-400 text-xs">
@@ -36,7 +36,7 @@ defmodule CandoneWeb.Components.CardComponents do
         </div>
 
         <div class="mt-1 ml-9">
-          <p class="text-md mt-2">
+          <p class="text-base mt-2">
             <%= assigns.name %>
           </p>
           <div class="felx space-x-2 text-gray-400 text-sm">

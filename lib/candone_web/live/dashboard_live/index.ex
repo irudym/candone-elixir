@@ -3,13 +3,14 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   alias Candone.Projects
   import CandoneWeb.Components.CardComponents
+  import CandoneWeb.Components.UiComponents
   alias Candone.Projects.Project
   alias Candone.Tasks.Task
   alias Candone.Notes.Note
   alias Candone.Contacts
 
   @urgency %{
-    0 => "bg-primary-200",
+    0 => "bg-primary-100",
     1 => "bg-green-200",
     2 => "bg-yellow-200",
     3 => "bg-red-200"
