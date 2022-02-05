@@ -23,6 +23,7 @@ defmodule CandoneWeb.DashboardLive.Index do
     current_project_id = List.first(projects).id || :none
 
     {:ok, socket
+          |> assign(:title, "Dashboard")
           |> assign(:projects, projects)
           |> assign(:current_project_id, current_project_id)
           |> assign(:page_title, "Candone")
