@@ -8,6 +8,7 @@ defmodule CandoneWeb.PersonLive.Index do
   def mount(_params, _session, socket) do
     new_socket =
       socket
+      |> assign(:title, "Contacts")
       |> assign(:people, list_people())
       |> assign(:companies, [%{id: "", name: "N/A"} | list_companies()])
     {:ok, new_socket}

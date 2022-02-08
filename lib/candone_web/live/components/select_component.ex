@@ -5,10 +5,10 @@ defmodule CandoneWeb.Components.SelectComponent do
   def update(assigns, socket) do
     %{f: f, name: name, options: options} = assigns
 
-    IO.inspect(f)
+    # IO.inspect(f)
 
     value = Map.get(f.params, "#{name}") || Map.get(f.data, name)
-    selected_option = Enum.find(options, & "#{&1.id}" == "#{value}") || List.first(options) 
+    selected_option = Enum.find(options, & "#{&1.id}" == "#{value}") || List.first(options)
 
     {:ok,
       socket

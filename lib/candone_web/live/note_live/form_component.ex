@@ -6,6 +6,8 @@ defmodule CandoneWeb.NoteLive.FormComponent do
   alias CandoneWeb.Components.SelectManyComponent
   alias Candone.Markdown
 
+  import CandoneWeb.Components.UiComponents
+
   @impl true
   def update(%{note: note} = assigns, socket) do
     changeset = Notes.change_note(note)
@@ -66,7 +68,7 @@ defmodule CandoneWeb.NoteLive.FormComponent do
 
   defp save_note(socket, :new, note_params) do
     people = Contacts.get_people_from_string(Map.get(note_params, "people"))
-    
+
     result = if Map.has_key?(socket.assigns, :project_id) && socket.assigns.project_id != :none do
       project = Candone.Projects.get_project!(socket.assigns.project_id)
       Notes.create_note_with_people_projects(note_params, people, [project])

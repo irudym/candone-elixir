@@ -1,6 +1,9 @@
 <div class="px-12">
   <%= if @live_action in [:new_project] do %>
-    <.modal return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}>
+    <.modal 
+      return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
+      title={@page_title}
+    >
       <.live_component
         module={CandoneWeb.ProjectLive.FormComponent}
         id={@project.id || :new}
@@ -13,7 +16,10 @@
   <% end %>
 
   <%= if @live_action in [:new_task, :edit_task] do %>
-    <.modal return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}>
+    <.modal 
+      return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
+      title={@page_title}
+    >
       <.live_component
         module={CandoneWeb.TaskLive.FormComponent}
         id={@task.id || :new}
@@ -28,7 +34,10 @@
   <% end %>
 
   <%= if @live_action in [:new_note, :edit_note] do %>
-  <.modal return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}>
+  <.modal 
+      return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
+      title={@page_title}  
+  >
     <.live_component
       module={CandoneWeb.NoteLive.FormComponent}
       id={@note.id || :new}

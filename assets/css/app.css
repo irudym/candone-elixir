@@ -21,10 +21,6 @@
   background-color: #B5BFC9;
 }
 
-.bg-primary-200 {
-  background-color: #778493;
-}
-
 .bg-red-200 {
   background-color: #E78B63;
 }
@@ -45,14 +41,6 @@
   background-color: #F5CD62;
 }
 
-.bg-primary2-200 {
-  background-color: #417293;
-}
-
-.bg-primary2-100 {
-  background-color: #7AB5C8;
-}
-
 .bg-gray-100 {
   background-color: #F3F5F6;
 }
@@ -67,4 +55,12 @@
 
 .text-primary-300 {
   color: #0E2E41;
+}
+
+.text-primary-200 {
+  color: #778493;
+}
+
+.text-gray-100 {
+  color: #F3F5F6;
 }
