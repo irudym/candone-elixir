@@ -8,10 +8,11 @@ defmodule CandoneWeb.TaskLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     people = Contacts.list_people_with_full_names()
-      
+
     new_socket = socket
       |> assign(:tasks, list_tasks())
       |> assign(:people, people)
+      |> assign(:title, "Tasks")
     {:ok, new_socket}
   end
 

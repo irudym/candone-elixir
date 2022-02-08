@@ -21,10 +21,6 @@
   background-color: #B5BFC9;
 }
 
-.bg-red-200 {
-  background-color: #E78B63;
-}
-
 .bg-red-100 {
   background-color: #FED2BF;
 }
@@ -63,4 +59,8 @@
 
 .text-gray-100 {
   color: #F3F5F6;
+}
+
+.text-red-200 {
+  color: #E78B63;
 }

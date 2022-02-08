@@ -6,7 +6,9 @@ defmodule CandoneWeb.DashboardLive.Index do
   import CandoneWeb.Components.UiComponents
   alias Candone.Projects.Project
   alias Candone.Tasks.Task
+  alias Candone.Tasks
   alias Candone.Notes.Note
+  alias Candone.Notes
   alias Candone.Contacts
 
   @urgency %{
@@ -95,7 +97,9 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   defp set_project(socket, :none) do
     socket
-    |> assign(:tasks, %{backlog: [], sprint: [], done: []})
+    |> assign(:tasks_backlog, [])
+    |> assign(:tasks_sprint, [])
+    |> assign(:tasks_done, [])
     |> assign(:notes, [])
   end
 
@@ -108,7 +112,9 @@ defmodule CandoneWeb.DashboardLive.Index do
 
     socket
     |> assign(:current_project_id, id)
-    |> assign(:tasks, %{backlog: backlog_tasks, sprint: sprint_tasks, done: done_tasks})
+    |> assign(:tasks_backlog, backlog_tasks)
+    |> assign(:tasks_sprint, sprint_tasks)
+    |> assign(:tasks_done, done_tasks)
     |> assign(:notes, notes)
     |> assign(:page_title, "Candone: #{project.name}")
   end
@@ -132,6 +138,51 @@ defmodule CandoneWeb.DashboardLive.Index do
     {:noreply,
       socket
       |> push_patch(to: Routes.dashboard_index_path(socket, :edit_note, note_id))
+    }
+  end
+
+  def handle_event("task-delete", %{"id" => id}, socket) do
+    task = Tasks.get_task!(id)
+
+    # get task stage
+    stage = task.stage
+    {:ok, _} = Tasks.delete_task(task)
+
+    #update only corresponding list of tasks
+    stage_type = case stage do
+      0 -> :tasks_backlog
+      1 -> :tasks_sprint
+      2 -> :tasks_done
+    end
+
+    project = Projects.get_project!(socket.assigns.current_project_id)
+
+    {:noreply, socket
+                |> assign(stage_type, Projects.get_project_tasks_with_stage(project, stage))
+    }
+  end
+
+  def handle_event("note-delete", %{"id" => id}, socket) do
+    project = Projects.get_project!(socket.assigns.current_project_id)
+    note = Notes.get_note!(id)
+    {:ok, _} = Notes.delete_note(note)
+
+    {:noreply, socket
+                |> assign(:notes, Projects.get_project_notes(project))
+    }
+  end
+
+  def handle_event("project-delete", %{"id" => id}, socket) do
+    project = Projects.get_project!(id)
+    {:ok, _} = Projects.delete_project(project)
+
+    projects = Candone.Projects.list_projects()
+    current_project_id = List.first(projects).id || :none
+
+    {:noreply, socket
+                |> assign(:projects, projects)
+                |> assign(:current_project_id, current_project_id)
+                |> set_project(current_project_id)
     }
   end
 

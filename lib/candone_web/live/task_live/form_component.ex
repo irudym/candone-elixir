@@ -5,6 +5,7 @@ defmodule CandoneWeb.TaskLive.FormComponent do
   alias Candone.Contacts
   alias CandoneWeb.Components.SelectManyComponent
   import CandoneWeb.Components.FormComponents
+  import CandoneWeb.Components.UiComponents
 
   @impl true
   def update(%{task: task} = assigns, socket) do
@@ -36,13 +37,13 @@ defmodule CandoneWeb.TaskLive.FormComponent do
     task = Tasks.get_task!(socket.assigns.task.id)
 
     task = Tasks.update_task_with_people(task, task_params, people)
-    #IO.inspect(task, label: "SAVE_TASK:edit/task") 
+    #IO.inspect(task, label: "SAVE_TASK:edit/task")
     case task do
       {:ok, _task} ->
         {:noreply,
          socket
          |> put_flash(:info, "Task updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_patch(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
@@ -65,7 +66,7 @@ defmodule CandoneWeb.TaskLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Task created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_patch(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

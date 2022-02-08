@@ -5,14 +5,16 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundColor: {
+      colors: {
         'primary-200': '#778493',
         'primary-100': '#B5BFC9',
         'primary2-300': '#30556E',
         'primary2-200': '#417293',
         'primary2-100': '#7AB5C8',
         'green-300': '#539480',
-      },
+        'red-200': '#E78B63',
+        'red-50': '#FFF1EB',
+      }
     },
     fontSize: {
       'xs': '.75rem',

@@ -9,25 +9,25 @@
 
 
     <div class="mb-4">
-      <%= label f, :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
-      <%= text_input f, :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= label f, :name, class: "block text-primary-300 text-sm font-semibold mb-2" %>
+      <%= text_input f, :name, class: "appearance-none border border-primary-200 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
       <%= error_tag f, :name, "text-red-500 text-xs italic" %>
     </div>
   
     <div class="mb-4">
-      <%= label f, :description, class: "block text-gray-700 text-sm font-bold mb-2" %>
-      <%= textarea f, :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= label f, :description, class: "block text-primary-300 text-sm font-semibold mb-2" %>
+      <%= textarea f, :description, class: "min-h-[10rem] appearance-none border border-primary-200 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
       <%= error_tag f, :description %>
     </div>
 
     <div class="mb-4">
-      <%= label f, :cost, class: "block text-gray-700 text-sm font-bold mb-2" %>
-      <%= number_input f, :cost, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= label f, :cost, class: "block text-primary-300 text-sm font-semibold mb-2" %>
+      <%= number_input f, :cost, class: "appearance-none border border-primary-200 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
       <%= error_tag f, :cost %>
     </div>
 
     <div class="mb-4">
-      <%= label f, :urgency, class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= label f, :urgency, class: "block text-primary-300 text-sm font-semibold mb-2" %>
       
       <div class="flex justify-start">
         <.radio_button f={f} name={:urgency} value="0" label="None" />
@@ -40,7 +40,7 @@
   
 
     <div class="mb-4">
-      <label id="listbox-label" class="block text-sm font-medium text-gray-700">
+      <label id="listbox-label" class="block text-primary-300 text-sm font-semibold mb-2">
         People
       </label>
 
@@ -54,7 +54,7 @@
 
     <%= if @action != :new && @action != :new_task do %>
       <div class="mb-4">
-        <%= label f, :stage, class: "block text-gray-700 text-sm font-bold mb-2" %>
+        <%= label f, :stage, class: "block text-primary-300 text-sm font-semibold mb-2" %>
         
         <div class="flex justify-start">
           <.radio_button f={f} name={:stage} value="0" label="Backlog" />
@@ -65,8 +65,9 @@
       </div>
     <% end %>
   
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving...", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+    <div class="flex flex-row-reverse gap-6">
+      <.cancel_button return_to={@return_to}/>
+      <%= submit "Save", phx_disable_with: "Save", class: "bg-primary2-200 hover:bg-primary2-300 text-sm leading-5 rounded-lg font-semibold text-white py-2 px-8 rounded-lg focus:outline-none focus:shadow-outline" %>
     </div>
   </.form>
 </div>

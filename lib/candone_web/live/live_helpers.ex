@@ -39,7 +39,14 @@ defmodule CandoneWeb.LiveHelpers do
           <div class="absolute w-full -top-0.5 left-0 h-12 bg-primary-300 rounded-t-lg">
             <div class="relative flex flex-row-reverse justify-between items-center p-1 px-3">
               <%= if @return_to do %>
-                  <a class="m-2 text-gray-100" href={@return_to} id="close" phx-click={hide_modal()}>
+                  <a
+                    class="m-2 text-gray-100"
+                    href={@return_to}
+                    id="close"
+                    data-phx-link="patch"
+                    data-phx-link-state="push"
+                    phx-click={hide_modal()}
+                  >
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="mx-1 p-1 rounded-md w-5 h-5 cursor-pointer text-gray-100 stroke-current hover:bg-gray-300"

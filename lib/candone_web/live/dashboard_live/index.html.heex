@@ -71,7 +71,7 @@
               name={project.name}
               date={project.inserted_at}
               tasks = "0"
-              click="project-select"
+              type="project"
               value={"#{project.id}"}
               selected={"#{project.id}" == "#{@current_project_id}"}
             />
@@ -94,7 +94,7 @@
         <div class="py-4 mx-1 flex flex-col">
           <div class="mb-2 text-base font-md">Backlog</div>
           <div class="rounded-lg px-4 py-0.5 min-h-full bg-gray-100">
-            <%= for task <- @tasks.backlog do %>
+            <%= for task <- @tasks_backlog do %>
               <.card
                 name={task.name}
                 description={task.description} 
@@ -102,6 +102,7 @@
                 counter1={task.people_count}
                 counter2 = "0"
                 click="task-select"
+                type="task"
                 value={task.id}
                 selected={false}
                 colour={get_colour_from_urgency(task.urgency)}
@@ -112,7 +113,7 @@
         <div class="py-4 mx-1 flex flex-col ">
           <div class="mb-2 text-base font-md">Sprint</div>
           <div class="rounded-lg px-4 py-0.5 bg-gray-100">
-            <%= for task <- @tasks.sprint do %>
+            <%= for task <- @tasks_sprint do %>
               <.card
                 name={task.name}
                 description={task.description} 
@@ -120,6 +121,7 @@
                 counter1={task.people_count}
                 counter2 = "0"
                 click="task-select"
+                type="task"
                 value={task.id}
                 selected={false}
                 colour={get_colour_from_urgency(task.urgency)}
@@ -130,14 +132,16 @@
         <div class="py-4 mx-1 flex flex-col ">
           <div class="mb-2 text-base font-md">Done</div>
           <div class="rounded-lg px-4 py-0.5 bg-gray-100">
-            <%= for task <- @tasks.done do %>
+            <%= for task <- @tasks_done do %>
               <.card
+
                 name={task.name}
                 description={task.description} 
                 date={task.inserted_at}
                 counter1={task.people_count}
                 counter2 = "0"
                 click="task-select"
+                type="task"
                 value={task.id}
                 selected={false}
                 colour={get_colour_from_urgency(task.urgency)}
@@ -168,6 +172,7 @@
             counter1="0"
             counter2="0"
             click="note-select"
+            type="note"
             value={note.id}
             selected={false}
             colour="bg-primary2-100"
