@@ -1,6 +1,4 @@
 <div>
-  <h2><%= @title %></h2>
-
   <.form
     let={f}
     for={@changeset}
@@ -10,19 +8,20 @@
     phx-submit="save">
   
     <div class="mb-4">
-      <%= label f, :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
-      <%= text_input f, :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      <%= error_tag f, :name, "text-red-500 text-xs italic" %>
+      <%= label f, :name, class: "block text-primary-300 text-sm font-semibold mb-2" %>
+      <%= text_input f, :name, class: "appearance-none border border-primary-200 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= error_tag f, :name, "text-red-200 text-xs italic" %>
     </div>
   
     <div class="mb-4">
-      <%= label f, :description, class: "block text-gray-700 text-sm font-bold mb-2" %>
-      <%= textarea f, :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      <%= error_tag f, :description, "text-red-500 text-xs italic" %>
+      <%= label f, :description, class: "block text-primary-300 text-sm font-semibold mb-2" %>
+      <%= textarea f, :description, class: "min-h-[10rem] appearance-none border border-primary-200 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= error_tag f, :description, "text-red-200 text-xs italic" %>
     </div>
-  
-    <div>
-      <%= submit "Save", phx_disable_with: "Save", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+
+    <div class="flex flex-row-reverse gap-6">
+      <.cancel_button return_to={@return_to}/>
+      <%= submit "Save", phx_disable_with: "Save", class: "bg-primary2-200 hover:bg-primary2-300 text-sm leading-5 rounded-lg font-semibold text-white py-2 px-8 rounded-lg focus:outline-none focus:shadow-outline" %>
     </div>
   </.form>
 </div>

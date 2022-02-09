@@ -18,6 +18,12 @@ defmodule CandoneWeb.DashboardLive.Index do
     3 => "bg-red-200"
   }
 
+  @stage_types [
+    :tasks_backlog,
+    :tasks_sprint,
+    :tasks_done
+  ]
+
 
   @impl true
   def mount(_params, _session, socket) do
@@ -101,6 +107,7 @@ defmodule CandoneWeb.DashboardLive.Index do
     |> assign(:tasks_sprint, [])
     |> assign(:tasks_done, [])
     |> assign(:notes, [])
+    |> assign(:sprint_cost, 0)
   end
 
   defp set_project(socket, id) do
@@ -110,6 +117,8 @@ defmodule CandoneWeb.DashboardLive.Index do
     done_tasks = Projects.get_project_tasks_with_stage(project, 2)
     notes = Projects.get_project_notes(project)
 
+    sprint_cost = Enum.reduce(sprint_tasks, 0, fn task, acc -> acc + task.cost end)
+
     socket
     |> assign(:current_project_id, id)
     |> assign(:tasks_backlog, backlog_tasks)
@@ -117,6 +126,7 @@ defmodule CandoneWeb.DashboardLive.Index do
     |> assign(:tasks_done, done_tasks)
     |> assign(:notes, notes)
     |> assign(:page_title, "Candone: #{project.name}")
+    |> assign(:sprint_cost, sprint_cost)
   end
 
   @impl true
@@ -149,16 +159,10 @@ defmodule CandoneWeb.DashboardLive.Index do
     {:ok, _} = Tasks.delete_task(task)
 
     #update only corresponding list of tasks
-    stage_type = case stage do
-      0 -> :tasks_backlog
-      1 -> :tasks_sprint
-      2 -> :tasks_done
-    end
 
     project = Projects.get_project!(socket.assigns.current_project_id)
-
     {:noreply, socket
-                |> assign(stage_type, Projects.get_project_tasks_with_stage(project, stage))
+                |> assign(Enum.at(@stage_types, stage), Projects.get_project_tasks_with_stage(project, stage))
     }
   end
 

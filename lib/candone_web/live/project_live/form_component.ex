@@ -3,6 +3,8 @@ defmodule CandoneWeb.ProjectLive.FormComponent do
 
   alias Candone.Projects
 
+  import CandoneWeb.Components.UiComponents
+
   @impl true
   def update(%{project: project} = assigns, socket) do
     changeset = Projects.change_project(project)

@@ -7,6 +7,7 @@ defmodule CandoneWeb.NoteLive.FormComponent do
   alias Candone.Markdown
 
   import CandoneWeb.Components.UiComponents
+  import CandoneWeb.Components.Icons
 
   @impl true
   def update(%{note: note} = assigns, socket) do

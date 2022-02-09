@@ -6,7 +6,10 @@ defmodule CandoneWeb.CompanyLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :companies, list_companies())}
+    {:ok, socket
+          |> assign(:companies, list_companies())
+          |> assign(:title, "Companies")
+    }
   end
 
   @impl true

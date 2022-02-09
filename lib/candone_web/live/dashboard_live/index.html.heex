@@ -60,9 +60,8 @@
         Projects
       </div>
       <div class="py-4">
-        <.add_button 
+        <.add_project_button 
           to={Routes.dashboard_index_path(@socket, :new_project)}
-          name="Project"
         />
       </div>
       <div class="rounded-lg bg-white pr-4 py-0.5 min-h-full mt-[3.25rem]">
@@ -85,9 +84,8 @@
         Tasks
       </div>
       <div class="py-4">
-        <.add_button 
+        <.add_task_button 
           to={Routes.dashboard_index_path(@socket, :new_task)}
-          name="Task"
         />
       </div>
       <div class="grid grid-cols-3">  
@@ -100,7 +98,7 @@
                 description={task.description} 
                 date={task.inserted_at}
                 counter1={task.people_count}
-                counter2 = "0"
+                counter2 = {task.cost}
                 click="task-select"
                 type="task"
                 value={task.id}
@@ -111,7 +109,7 @@
           </div>
         </div>
         <div class="py-4 mx-1 flex flex-col ">
-          <div class="mb-2 text-base font-md">Sprint</div>
+          <div class="mb-2 text-base font-md">Sprint | Cost: <%= @sprint_cost %></div>
           <div class="rounded-lg px-4 py-0.5 bg-gray-100">
             <%= for task <- @tasks_sprint do %>
               <.card
@@ -119,7 +117,7 @@
                 description={task.description} 
                 date={task.inserted_at}
                 counter1={task.people_count}
-                counter2 = "0"
+                counter2 = {task.cost}
                 click="task-select"
                 type="task"
                 value={task.id}
@@ -139,7 +137,7 @@
                 description={task.description} 
                 date={task.inserted_at}
                 counter1={task.people_count}
-                counter2 = "0"
+                counter2 = {task.cost}
                 click="task-select"
                 type="task"
                 value={task.id}
@@ -158,9 +156,8 @@
         Notes
       </div>
       <div class="py-4">
-        <.add_button 
+        <.add_note_button 
           to={Routes.dashboard_index_path(@socket, :new_note)}
-          name="Note"
         />
       </div>
       <div class="rounded-lg bg-gray-100 px-4 py-0.5 min-h-full mt-[3.25rem]">

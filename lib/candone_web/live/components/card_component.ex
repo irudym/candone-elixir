@@ -1,6 +1,8 @@
 defmodule CandoneWeb.Components.CardComponents do
   import Phoenix.LiveView.Helpers
 
+  import CandoneWeb.Components.Icons
+
 
   def project_card(assigns) do
     ~H"""
@@ -22,7 +24,10 @@ defmodule CandoneWeb.Components.CardComponents do
           <div class="space-x-2 text-gray-400 text-xs">
             <%= Calendar.strftime(assigns.date, "%d %B %Y") %>
           </div>
-          <div class="mt-4 text-xs text-gray-400">Tasks: <%= assigns.tasks %></div>
+          <div class="mt-4 text-xs text-primary-200">
+            <.task_icon />
+            <%= assigns.tasks %>
+          </div>
         </div>
     </div>
     """
@@ -70,19 +75,21 @@ defmodule CandoneWeb.Components.CardComponents do
           <p class="text-base mt-2">
             <%= assigns.name %>
           </p>
-          <div class="felx space-x-2 text-gray-400 text-xs">
+          <div class="felx space-x-2 text-primary-200 text-xs">
             <%= Calendar.strftime(assigns.date, "%d %B %Y") %>
           </div>
 
-          <div class="my-5 text-gray-400 text-sm font-light">
+          <div class="my-5 text-primary-200 text-sm font-light">
             <%= assigns.description %>
           </div>
 
           <div class="flex">
-            <div class="rounded-full bg-gray-300 text-center px-3 text-sm text-gray-500 mr-2 mb-2">
+            <div class="rounded-full text-center py-1 text-sm text-primary-200 mr-4 mb-1">
+              <.people_icon />
             	<%= assigns.counter1 %>
             </div>
-            <div class="rounded-full bg-gray-300 text-center px-3 text-sm text-gray-500 mb-2">
+            <div class="rounded-full text-center py-1 text-sm text-primary-200 mb-1">
+              <.cog_icon />
             	<%= assigns.counter2 %>
             </div>
           </div>
