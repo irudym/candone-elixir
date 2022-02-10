@@ -83,7 +83,10 @@
       <div class="flex flex-row">
           <.dropdown_menu
             title="Tasks"
-            items={[%{name: (if @hide_done, do: "Show done tasks", else: "Hide done tasks"), click: "hide-done"}]}
+            items={[%{name: (if @hide_done, do: "Show done tasks", else: "Hide done tasks"), click: "hide-done"},
+                    %{name: "Sort by date", click: ""},
+                    %{name: "Sort by cost", click: ""},
+                    %{name: "Sort by urgency", click: ""}]}
           />
       </div>
       
