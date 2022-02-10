@@ -142,5 +142,30 @@ defmodule CandoneWeb.Components.UiComponents do
     """
   end
 
+  @doc """
+    Create a dropdown menu with custom menu list provided through inner block
+  """
+  def dropdown_menu_custom(assigns) do
+    ~H"""
+      <div class="group font-medium py-1 text-lg">
+        <%= @title %>
+        <.arrow_down_icon />
+        <ul class="invisible group-hover:visible absolute z-50 mt-1 w-full bg-white shadow-lg max-h-56 max-w-[12rem] rounded-md border border-primary-200 py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+          <%= render_slot(@inner_block) %>
+        </ul>
+      </div>
+    """
+  end
+
+  def dropdown_menu_item(assigns) do
+    ~H"""
+      <li phx-click={@click} class="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-primary2-200 hover:text-white">
+        <span>
+          <%= render_slot(@inner_block) %>
+        </span>
+      </li>
+    """
+  end
+
 
 end

@@ -19,15 +19,22 @@ defmodule CandoneWeb.Components.CardComponents do
         </div>
         <div class="ml-9">
           <p class="text-base mt-1">
-            <%= assigns.name %>
+            <%= @name %>
           </p>
           <div class="space-x-2 text-gray-400 text-xs">
             <%= Calendar.strftime(assigns.date, "%d %B %Y") %>
           </div>
-          <div class="mt-4 text-xs text-primary-200">
-            <.task_icon />
-            <%= assigns.tasks %>
+          <div class="flex">
+            <div class="mt-4 text-xs text-primary-200 mr-4">
+              <.task_icon />
+              <%= @tasks %>
+            </div>
+            <div class="mt-4 text-xs text-primary-200">
+              <.note_icon />
+              <%= @notes %>
+            </div>
           </div>
+
         </div>
     </div>
     """

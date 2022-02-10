@@ -14,8 +14,18 @@ defmodule Candone.Markdown do
 	def as_html(nil), do: ""
 
 	def as_html(markdown) do
-		markdown
-		|> Earmark.as_ast!()
+
+		#ast = case EarmarkParser.as_ast(markdown) do
+		#	{:error, ast, warnings} -> {:ok,
+		#		[
+		#			{"p", [], [{"strong", [], ["markdown error:#{line}:"], %{}}, "#{message}"], %{}},
+		#			{"p", [], [markdown], %{}}
+		#		], []}
+		#	{:ok, ast, _} -> {:ok, ast, []}
+		#end
+		{_, ast, _} = EarmarkParser.as_ast(markdown)
+
+		ast
 		|> Earmark.Transform.map_ast(fn {t, a, _, m} -> {t, a ++ [{"class", Map.get(@class_map, t, "")}], nil, m} end, true)
 		|> Earmark.transform()
 	end

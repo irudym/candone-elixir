@@ -6,6 +6,9 @@ defmodule Candone.Projects.Project do
     field :description, :string
     field :name, :string
 
+    field :task_count, :integer, virtual: true
+    field :note_count, :integer, virtual: true
+
     many_to_many :tasks, Candone.Tasks.Task, join_through: "projects_tasks", on_delete: :delete_all, on_replace: :delete
     many_to_many :notes, Candone.Notes.Note, join_through: "projects_notes", on_delete: :delete_all, on_replace: :delete
 

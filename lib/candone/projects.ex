@@ -18,7 +18,8 @@ defmodule Candone.Projects do
 
   """
   def list_projects do
-    Repo.all(Project)
+    query = from p in Project, left_join: t in assoc(p, :tasks), left_join: n in assoc(p, :notes), group_by: p.id, select_merge: %{task_count: count(t.id), note_count: count(n.id, :distinct)}
+    Repo.all(query)
   end
 
   @doc """

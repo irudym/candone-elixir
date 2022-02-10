@@ -69,7 +69,8 @@
             <.project_card
               name={project.name}
               date={project.inserted_at}
-              tasks = "0"
+              tasks={project.task_count}
+              notes={project.note_count}
               type="project"
               value={"#{project.id}"}
               selected={"#{project.id}" == "#{@current_project_id}"}
@@ -81,13 +82,30 @@
     <!-- Tasks -->
     <div class="grow basis-3/6 mr-4">
       <div class="flex flex-row">
-          <.dropdown_menu
-            title="Tasks"
-            items={[%{name: (if @hide_done, do: "Show done tasks", else: "Hide done tasks"), click: "hide-done"},
-                    %{name: "Sort by date", click: ""},
-                    %{name: "Sort by cost", click: ""},
-                    %{name: "Sort by urgency", click: ""}]}
-          />
+          <.dropdown_menu_custom title="Tasks">
+            <.dropdown_menu_item click="hide-done">
+              <%= if @hide_done do %>
+                <.show_icon />
+                Show done tasks
+              <% else %>
+                <.hide_icon />
+                Hide done tasks
+              <% end %>
+
+            </.dropdown_menu_item>
+            <.dropdown_menu_item click="">
+              <.calendar_icon />
+              Sort by date
+            </.dropdown_menu_item>
+            <.dropdown_menu_item click="">
+              <.cog_icon /> 
+              Sort by cost
+            </.dropdown_menu_item>
+            <.dropdown_menu_item click="">
+              <.exclamation_icon />
+              Sort by urgency
+            </.dropdown_menu_item>
+          </.dropdown_menu_custom>
       </div>
       
       <div class="py-4">
