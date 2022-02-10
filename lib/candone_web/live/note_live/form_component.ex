@@ -12,7 +12,12 @@ defmodule CandoneWeb.NoteLive.FormComponent do
   @impl true
   def update(%{note: note} = assigns, socket) do
     changeset = Notes.change_note(note)
-    markdown = Markdown.as_html(note.content)
+
+    markdown = if Map.get(assigns, :show_markdown, assigns.action == :edit_note) do
+      Markdown.as_html(note.content)
+    else
+      ""
+    end
 
     {:ok,
      socket
@@ -20,7 +25,6 @@ defmodule CandoneWeb.NoteLive.FormComponent do
      |> assign(:changeset, changeset)
      |> assign(:markdown, markdown)
      |> assign(:show_markdown, assigns.action == :edit_note)
-
     }
   end
 
@@ -31,9 +35,15 @@ defmodule CandoneWeb.NoteLive.FormComponent do
       |> Notes.change_note(note_params)
       |> Map.put(:action, :validate)
 
+    markdown = if Map.get(socket.assigns, :show_markdown, socket.assigns.action == :edit_note) do
+      Markdown.as_html(Map.get(note_params,"content"))
+    else
+      ""
+    end
+
     {:noreply, socket
                 |> assign(:changeset, changeset)
-                |> assign(:markdown, Markdown.as_html(Map.get(note_params,"content")))
+                |> assign(:markdown, markdown)
     }
   end
 
