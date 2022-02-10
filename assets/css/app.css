@@ -13,9 +13,6 @@
 
 
 /* colours */
-.bg-primary-300 {
-  background-color: #0E2E41;
-}
 
 .bg-primary-100 {
   background-color: #B5BFC9;
@@ -47,10 +44,6 @@
 
 .border-primary-200 {
   border-color: #B5BFC9;
-}
-
-.text-primary-300 {
-  color: #0E2E41;
 }
 
 .text-primary-200 {

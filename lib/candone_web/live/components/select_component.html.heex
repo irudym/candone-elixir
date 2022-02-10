@@ -42,7 +42,7 @@
     <%= for {option, idx} <- Enum.with_index(@options) do %>
       <li 
         role="option"
-        :class={"{ 'text-white bg-sky-700' : idx === #{idx}, 'text-gray-900' : !(idx === #{idx})}"}
+        :class={"{ 'text-white bg-primary2-200' : idx === #{idx}, 'text-gray-900' : !(idx === #{idx})}"}
         @click="selectedIdx = idx"
         @mouseenter={"idx = #{idx}"}
         class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9" id={"listbox-option-#{option.id}"} role="option">

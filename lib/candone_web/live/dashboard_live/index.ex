@@ -2,8 +2,11 @@ defmodule CandoneWeb.DashboardLive.Index do
   use CandoneWeb, :live_view
 
   alias Candone.Projects
+
   import CandoneWeb.Components.CardComponents
   import CandoneWeb.Components.UiComponents
+  import CandoneWeb.Components.Icons
+
   alias Candone.Projects.Project
   alias Candone.Tasks.Task
   alias Candone.Tasks
@@ -36,6 +39,7 @@ defmodule CandoneWeb.DashboardLive.Index do
           |> assign(:current_project_id, current_project_id)
           |> assign(:page_title, "Candone")
           |> set_project(current_project_id)
+          |> assign(:hide_done, false)
     }
   end
 
@@ -188,6 +192,12 @@ defmodule CandoneWeb.DashboardLive.Index do
                 |> assign(:current_project_id, current_project_id)
                 |> set_project(current_project_id)
     }
+  end
+
+  def handle_event("hide-done", _, socket) do
+    hide_done = socket.assigns.hide_done
+    {:noreply, socket
+              |> assign(:hide_done, !hide_done)}
   end
 
   def get_colour_from_urgency(value) do

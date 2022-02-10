@@ -4,6 +4,8 @@ defmodule CandoneWeb.Components.UiComponents do
 
   alias Phoenix.LiveView.JS
 
+  import CandoneWeb.Components.Icons
+
   def add_button(assigns) do
     ~H"""
       <.live_patch_custom
@@ -49,28 +51,7 @@ defmodule CandoneWeb.Components.UiComponents do
       to={@to}
       class="bg-primary2-200 hover:bg-primary2-300 px-5 py-3 text-sm leading-5 rounded-lg font-semibold text-white"
     >
-      <svg
-        width="100%" height="100%"
-        viewBox="0 0 32 32"
-        version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
-        xmlns:serif="http://www.serif.com/"
-        style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"
-        class="h-4 w-4 stroke-current inline mb-1 mr-1"
-      >
-        <g id="Layer1">
-          <g transform="matrix(1.71429,0,0,1.71429,-397.143,-350.235)">
-            <path d="M241,221L235.178,221C234.865,221 234.566,220.876 234.345,220.655C234.124,220.434 234,220.135 234,219.822C234,217.191 234,210.858 234,208.243C234,207.603 234.519,207.083 235.16,207.083C237.797,207.083 244.219,207.083 246.849,207.083C247.154,207.083 247.447,207.205 247.663,207.421C247.879,207.637 248,207.929 248,208.235C248,209.956 248,213 248,213" style="fill:none;stroke-width:1.75px;"/>
-
-          </g>
-          <g transform="matrix(1.71429,0,0,1.71429,-397.143,-350.857)">
-              <path d="M246,217L246,221" style="fill:none;stroke-width:1.75px;"/>
-              <path d="M244,219L248,219" style="fill:none;stroke-width:1.75px;"/>
-          </g>
-          <g transform="matrix(1,0,0,1,-4.71429,-0.877511)">
-              <path d="M14,17.571L19,22.143L25.857,13" style="fill:none;stroke-width:3px;"/>
-          </g>
-        </g>
-      </svg>
+      <.add_task_icon />
       Add Task
     </.live_patch_custom>
     """
@@ -141,6 +122,24 @@ defmodule CandoneWeb.Components.UiComponents do
     js
     |> JS.hide(to: "#modal", transition: "fade-out")
     |> JS.hide(to: "#modal-content", transition: "fade-out-scale")
+  end
+
+  def dropdown_menu(assigns) do
+    ~H"""
+      <div class="group font-medium py-1 text-lg">
+        <%= @title %>
+        <.arrow_down_icon />
+        <ul class="invisible group-hover:visible absolute z-100 mt-1 w-full bg-white shadow-lg max-h-56 max-w-[12rem] rounded-md border border-primary-200 py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+          <%= for item <- @items do %>
+            <li class="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-primary2-200 hover:text-white">
+              <span phx-click={item.click}>
+                <%= item.name %>
+              </span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    """
   end
 
 

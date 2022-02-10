@@ -80,15 +80,19 @@
 
     <!-- Tasks -->
     <div class="grow basis-3/6 mr-4">
-      <div class="font-medium py-1 text-lg">
-        Tasks
+      <div class="flex flex-row">
+          <.dropdown_menu
+            title="Tasks"
+            items={[%{name: (if @hide_done, do: "Show done tasks", else: "Hide done tasks"), click: "hide-done"}]}
+          />
       </div>
+      
       <div class="py-4">
         <.add_task_button 
           to={Routes.dashboard_index_path(@socket, :new_task)}
         />
       </div>
-      <div class="grid grid-cols-3">  
+      <div class={"grid grid-cols-3 #{if @hide_done, do: "grid-cols-2"}"}>  
         <div class="py-4 mx-1 flex flex-col">
           <div class="mb-2 text-base font-md">Backlog</div>
           <div class="rounded-lg px-4 py-0.5 min-h-full bg-gray-100">
@@ -127,26 +131,28 @@
             <% end %>
           </div>
         </div>
-        <div class="py-4 mx-1 flex flex-col ">
-          <div class="mb-2 text-base font-md">Done</div>
-          <div class="rounded-lg px-4 py-0.5 bg-gray-100">
-            <%= for task <- @tasks_done do %>
-              <.card
+        <%= if !@hide_done do %>
+          <div class={"py-4 mx-1 flex flex-col"}>
+            <div class="mb-2 text-base font-md">Done</div>
+            <div class="rounded-lg px-4 py-0.5 bg-gray-100">
+              <%= for task <- @tasks_done do %>
+                <.card
 
-                name={task.name}
-                description={task.description} 
-                date={task.inserted_at}
-                counter1={task.people_count}
-                counter2 = {task.cost}
-                click="task-select"
-                type="task"
-                value={task.id}
-                selected={false}
-                colour={get_colour_from_urgency(task.urgency)}
-              />
-            <% end %>
+                  name={task.name}
+                  description={task.description} 
+                  date={task.inserted_at}
+                  counter1={task.people_count}
+                  counter2 = {task.cost}
+                  click="task-select"
+                  type="task"
+                  value={task.id}
+                  selected={false}
+                  colour={get_colour_from_urgency(task.urgency)}
+                />
+              <% end %>
+            </div>
           </div>
-        </div>
+        <% end %>  
       </div>
     </div>
 

@@ -49,7 +49,7 @@ defmodule CandoneWeb.LiveHelpers do
                   >
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="mx-1 p-1 rounded-md w-5 h-5 cursor-pointer text-gray-100 stroke-current hover:bg-gray-300"
+                    class="mx-1 p-1 rounded-md w-5 h-5 cursor-pointer text-gray-100 stroke-current hover:bg-primary-250"
                     style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-miterlimit:2;"
                     fill="none"
                     viewBox="0 0 10 10"
@@ -69,7 +69,7 @@ defmodule CandoneWeb.LiveHelpers do
                   <a id="close" href="#" class="m-2 text-gray-100" phx-click={hide_modal()}>
                   <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="mx-1 p-1 rounded-md w-5 h-5 cursor-pointer text-gray-100 stroke-current hover:bg-gray-300"
+                  class="mx-1 p-1 rounded-md w-5 h-5 cursor-pointer text-gray-100 stroke-current hover:bg-primary-250"
                   style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-miterlimit:2;"
                   fill="none"
                   viewBox="0 0 10 10"
