@@ -93,16 +93,16 @@
               <% end %>
 
             </.dropdown_menu_item>
-            <.dropdown_menu_item click="">
-              <.calendar_icon />
+            <.dropdown_menu_item click="sort-date">
+              <.calendar_icon checked={@sorting == :date} />
               Sort by date
             </.dropdown_menu_item>
-            <.dropdown_menu_item click="">
-              <.cog_icon /> 
+            <.dropdown_menu_item click="sort-cost">
+              <.cog_icon checked={@sorting == :cost} /> 
               Sort by cost
             </.dropdown_menu_item>
-            <.dropdown_menu_item click="">
-              <.exclamation_icon />
+            <.dropdown_menu_item click="sort-urgency">
+              <.exclamation_icon  checked={@sorting == :urgency} />
               Sort by urgency
             </.dropdown_menu_item>
           </.dropdown_menu_custom>

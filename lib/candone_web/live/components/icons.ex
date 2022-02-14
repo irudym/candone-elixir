@@ -12,7 +12,7 @@ defmodule CandoneWeb.Components.Icons do
         version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         xml:space="preserve" xmlns:serif="http://www.serif.com/"
         style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.5;"
-        class={"h-4 w-4 stroke-current inline mb-1 mr-1 #{@class}"}
+        class={"h-6 w-6 p-1 stroke-current inline mb-1 mr-1 #{@class}"}
       >
         <g id="Layer">
             <path d="M28,29L4,29C4,29 4,19.571 16,19.571C28,19.571 28,29 28,29Z" style="fill:none;stroke-width:3px;"/>
@@ -23,7 +23,11 @@ defmodule CandoneWeb.Components.Icons do
   end
 
   def cog_icon(assigns) do
-    assigns = assign_new(assigns, :class, fn -> nil end)
+    assigns =
+      assigns
+      |> assign_new(:class, fn -> nil end)
+      |> assign_new(:checked, fn -> false end)
+
     ~H"""
       <svg
         width="100%" height="100%"
@@ -31,7 +35,7 @@ defmodule CandoneWeb.Components.Icons do
         xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
         xmlns:serif="http://www.serif.com/"
         style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.5;"
-        class={"h-4 w-4 stroke-current inline mb-1 mr-1 #{@class}"}
+        class={"h-6 w-6 p-1 stroke-current inline mb-1 mr-1 #{@class} #{if @checked, do: "rounded-md bg-primary2-200 text-white"}"}
       >
           <g transform="matrix(0.923077,0,0,0.923077,1.23077,1.23077)">
             <g id="cog">
@@ -166,7 +170,11 @@ defmodule CandoneWeb.Components.Icons do
   end
 
   def calendar_icon(assigns) do
-    assigns = assign_new(assigns, :class, fn -> nil end)
+    assigns =
+      assigns
+      |> assign_new(:class, fn -> nil end)
+      |> assign_new(:checked, fn -> false end)
+
     ~H"""
       <svg
         width="100%" height="100%"
@@ -174,7 +182,7 @@ defmodule CandoneWeb.Components.Icons do
         version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
         xmlns:serif="http://www.serif.com/"
         style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
-        class={"h-4 w-4 inline mb-1 mr-1 stroke-none fill-current #{@class}"}
+        class={"h-6 w-6 p-1 inline mb-1 mr-1 stroke-none fill-current #{@class} #{if @checked, do: "rounded-md bg-primary2-200 text-white"}"}
       >
         <g transform="matrix(1,0,0,1,1,-6.11067e-13)">
             <path d="M28.5,10.985C28.5,10.061 28.133,9.175 27.479,8.521C26.825,7.867 25.939,7.5 25.015,7.5C20.511,7.5 9.56,7.5 5.022,7.5C3.077,7.5 1.5,9.077 1.5,11.022C1.5,14.67 1.5,22.316 1.5,25.97C1.5,27.92 3.08,29.5 5.029,29.5L24.987,29.5C25.919,29.5 26.812,29.13 27.471,28.471C28.13,27.812 28.5,26.919 28.5,25.987C28.5,22.327 28.5,14.625 28.5,10.985ZM25.5,10.985C25.5,14.625 25.5,22.327 25.5,25.987C25.5,26.123 25.446,26.254 25.35,26.35C25.254,26.446 25.123,26.5 24.987,26.5L5.03,26.5C4.737,26.5 4.5,26.263 4.5,25.97L4.5,11.022C4.5,10.734 4.734,10.5 5.022,10.5C5.022,10.5 25.015,10.5 25.015,10.5C25.143,10.5 25.267,10.551 25.358,10.642C25.449,10.733 25.5,10.857 25.5,10.985Z"/>
@@ -204,7 +212,11 @@ defmodule CandoneWeb.Components.Icons do
   end
 
   def exclamation_icon(assigns) do
-    assigns = assign_new(assigns, :class, fn -> nil end)
+    assigns =
+      assigns
+      |> assign_new(:class, fn -> nil end)
+      |> assign_new(:checked, fn -> false end)
+
     ~H"""
       <svg
         width="100%" height="100%"
@@ -212,7 +224,7 @@ defmodule CandoneWeb.Components.Icons do
         version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
         xmlns:serif="http://www.serif.com/"
         style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
-        class={"h-4 w-4 inline mb-1 mr-1 stroke-none fill-current #{@class}"}
+        class={"h-6 w-6 p-1 inline mb-1 mr-1 stroke-none fill-current #{@class} #{if @checked, do: "rounded-md bg-primary2-200 text-white"}"}
       >
         <g transform="matrix(1,0,0,1,-0.5,0)">
             <path d="M19,5.033C19,3.91 18.09,3 16.967,3C16.639,3 16.299,3 15.973,3C14.883,3 14,3.883 14,4.973C14,8.422 14,15.514 14,18.99C14,19.523 14.212,20.034 14.589,20.411C14.966,20.788 15.477,21 16.01,21C16.352,21 16.707,21 17.048,21C17.565,21 18.062,20.794 18.428,20.428C18.794,20.062 19,19.565 19,19.048C19,15.613 19,8.524 19,5.033Z"/>
@@ -239,7 +251,7 @@ defmodule CandoneWeb.Components.Icons do
         version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
         xmlns:serif="http://www.serif.com/"
         style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
-        class={"h-4 w-4 inline mb-1 mr-1 stroke-none fill-current #{@class}"}
+        class={"h-6 w-6 p-1 inline mb-1 mr-1 stroke-none fill-current #{@class}"}
       >
         <g transform="matrix(1,0,0,1.26667,0,-4.26667)">
           <g transform="matrix(1.07407,0,0,1.10526,-1.18519,-1.68421)">
@@ -262,7 +274,7 @@ defmodule CandoneWeb.Components.Icons do
         version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
         xmlns:serif="http://www.serif.com/"
         style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
-        class={"h-4 w-4 inline mb-1 mr-1 stroke-none fill-current #{@class}"}
+        class={"h-6 w-6 p-1 inline mb-1 mr-1 stroke-none fill-current #{@class}"}
       >
         <g transform="matrix(1,0,0,1.26667,0,-4.26667)">
           <g transform="matrix(1,0,0,0.789474,0,3.36842)">
@@ -274,6 +286,28 @@ defmodule CandoneWeb.Components.Icons do
           <g transform="matrix(1,0,0,0.789474,0,3.36842)">
             <path d="M26.146,4.587L3.146,26.087C2.642,26.558 2.616,27.35 3.087,27.854C3.558,28.358 4.35,28.384 4.854,27.913L27.854,6.413C28.358,5.942 28.384,5.15 27.913,4.646C27.442,4.142 26.65,4.116 26.146,4.587Z"/>
           </g>
+        </g>
+      </svg>
+    """
+  end
+
+  def add_person_icon(assigns) do
+    assigns = assign_new(assigns, :class, fn -> nil end)
+    ~H"""
+      <svg
+        width="100%" height="100%"
+        viewBox="0 0 32 32"
+        version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
+        xmlns:serif="http://www.serif.com/"
+        style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
+        class={"h-4 w-4 inline mb-1 mr-1 stroke-none fill-current #{@class}"}
+      >
+        <path d="M23.071,23.071L21.143,23.071C20.315,23.071 19.643,23.744 19.643,24.571C19.643,25.399 20.315,26.071 21.143,26.071L23.071,26.071L23.071,28C23.071,28.828 23.744,29.5 24.571,29.5C25.399,29.5 26.071,28.828 26.071,28L26.071,26.071L28,26.071C28.828,26.071 29.5,25.399 29.5,24.571C29.5,23.744 28.828,23.071 28,23.071L26.071,23.071L26.071,21.143C26.071,20.315 25.399,19.643 24.571,19.643C23.744,19.643 23.071,20.315 23.071,21.143L23.071,23.071Z"/>
+        <g transform="matrix(1,0,0,0.96,-3.09917e-11,0.782489)">
+          <path d="M16,27.438L5.751,27.438C6.013,26.451 6.552,25.148 7.656,23.992C9.184,22.391 11.755,21.134 16,21.134C17.013,21.134 17.934,21.206 18.77,21.338C19.589,21.467 20.354,20.879 20.478,20.027C20.602,19.174 20.038,18.377 19.22,18.248C18.248,18.094 17.178,18.009 16,18.009C10.644,18.009 7.456,19.769 5.528,21.789C2.474,24.988 2.5,29 2.5,29C2.5,29.863 3.172,30.562 4,30.563L16,30.563C16.828,30.562 17.5,29.862 17.5,29C17.5,28.138 16.828,27.437 16,27.438Z"/>
+        </g>
+        <g transform="matrix(1,0,0,0.96,-3.09917e-11,0.782489)">
+          <path d="M16,2.438C11.844,2.438 8.5,5.844 8.5,10C8.5,14.156 11.844,17.563 16,17.563C20.156,17.563 23.5,14.156 23.5,10C23.5,5.844 20.156,2.438 16,2.438ZM16,5.563C18.467,5.563 20.5,7.533 20.5,10C20.5,12.467 18.467,14.437 16,14.437C13.533,14.437 11.5,12.467 11.5,10C11.5,7.533 13.533,5.563 16,5.563Z"/>
         </g>
       </svg>
     """

@@ -64,9 +64,9 @@ defmodule Candone.Tasks do
   end
 
   @doc """
-  Create a task with people 
+  Create a task with people
 
-  ## Example 
+  ## Example
     iex> create_task_with_people(%{field: value}, people)
     {:ok, %Task{}}
 
@@ -75,7 +75,7 @@ defmodule Candone.Tasks do
   """
   def create_task_with_people(attrs, people) do
     case create_task(attrs) do
-      {:ok, task} -> 
+      {:ok, task} ->
         {:ok, task
         |> Repo.preload(:people)
         |> Ecto.Changeset.change()
@@ -88,7 +88,7 @@ defmodule Candone.Tasks do
 
   def create_task_with_people_projects(attrs, people, project) do
     case create_task(attrs) do
-      {:ok, task} -> 
+      {:ok, task} ->
         {:ok, task
         |> Repo.preload(:people)
         |> Repo.preload(:projects)
@@ -159,4 +159,15 @@ defmodule Candone.Tasks do
     |> Repo.preload(:people)
     |> Task.changeset(attrs)
   end
+
+  def sort_by(tasks, :date) do
+    Enum.sort_by(tasks, & &1.inserted_at, {:desc, NaiveDateTime})
+  end
+
+
+  def sort_by(tasks, field) do
+    Enum.sort_by(tasks, & Map.get(&1, field), :desc)
+  end
+
+
 end

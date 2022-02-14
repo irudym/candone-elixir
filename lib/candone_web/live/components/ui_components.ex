@@ -90,6 +90,20 @@ defmodule CandoneWeb.Components.UiComponents do
     """
   end
 
+  def add_person_button(assigns) do
+    ~H"""
+    <.live_patch_custom
+      to={@to}
+      class="bg-primary2-200 hover:bg-primary2-300 px-5 py-3 text-sm leading-5 rounded-lg font-semibold text-white"
+    >
+      <.add_person_icon />
+      Add Person
+    </.live_patch_custom>
+    """
+  end
+
+
+
   def live_patch_custom(assigns) do
     assigns = assign_new(assigns, :phx_click, fn -> nil end)
     ~H"""

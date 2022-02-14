@@ -1,7 +1,4 @@
-<div class="flex flex-col">
-  <div class="py-4">
-    <h1>People</h1>
-  </div>
+<div class="px-12 pt-8">
 
   <%= if @live_action in [:new, :edit] do %>
     <.modal return_to={Routes.person_index_path(@socket, :index)} title={@page_title}>
@@ -18,7 +15,7 @@
   <% end %>
 
   <div class="py-4">
-    <span class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-lg font-semibold text-white"><%= live_patch "New Person", to: Routes.person_index_path(@socket, :new) %></span>
+    <.add_person_button to={Routes.person_index_path(@socket, :new)} />
   </div>
 
   <div class="py-4">

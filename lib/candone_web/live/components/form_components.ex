@@ -17,12 +17,12 @@ defmodule CandoneWeb.Components.FormComponents do
   	~H"""
   		<div class="mr-6">
         <input
-        	id={@id} 
-        	type="radio" 
-        	name={@name} 
+        	id={@id}
+        	type="radio"
+        	name={@name}
         	value={@value}
         	checked={@checked}
-        	class="appearance-none rounded-full h-4 w-4 border-2 border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2 cursor-pointer" />
+        	class="appearance-none rounded-full h-4 w-4 border-2 border-primary-100 bg-white checked:bg-primary2-200 checked:border-white focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2 cursor-pointer" />
         <label for={@id} class="inline-block text-gray-800"> <%= @label %> </label>
       </div>
   	"""

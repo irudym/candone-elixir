@@ -38,8 +38,9 @@ defmodule CandoneWeb.DashboardLive.Index do
           |> assign(:projects, projects)
           |> assign(:current_project_id, current_project_id)
           |> assign(:page_title, "Candone")
-          |> set_project(current_project_id)
+          |> assign(:sorting, :date)
           |> assign(:hide_done, false)
+          |> set_project(current_project_id)
     }
   end
 
@@ -116,9 +117,12 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   defp set_project(socket, id) do
     project = Projects.get_project!(id)
-    backlog_tasks = Projects.get_project_tasks_with_stage(project, 0)
-    sprint_tasks = Projects.get_project_tasks_with_stage(project, 1)
-    done_tasks = Projects.get_project_tasks_with_stage(project, 2)
+
+    sorting = socket.assigns.sorting
+    backlog_tasks = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 0), sorting)
+    sprint_tasks = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 1), sorting)
+    done_tasks = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 2), sorting)
+
     notes = Projects.get_project_notes(project)
 
     sprint_cost = Enum.reduce(sprint_tasks, 0, fn task, acc -> acc + task.cost end)
@@ -198,6 +202,33 @@ defmodule CandoneWeb.DashboardLive.Index do
     hide_done = socket.assigns.hide_done
     {:noreply, socket
               |> assign(:hide_done, !hide_done)}
+  end
+
+  def handle_event("sort-urgency", _, socket) do
+    {:noreply, socket
+              |> assign(:sorting, :urgency)
+              |> assign(:tasks_backlog, Tasks.sort_by(socket.assigns.tasks_backlog, :urgency))
+              |> assign(:tasks_sprint, Tasks.sort_by(socket.assigns.tasks_sprint, :urgency))
+              |> assign(:tasks_done, Tasks.sort_by(socket.assigns.tasks_done, :urgency))
+    }
+  end
+
+  def handle_event("sort-date", _, socket) do
+    {:noreply, socket
+              |> assign(:sorting, :date)
+              |> assign(:tasks_backlog, Tasks.sort_by(socket.assigns.tasks_backlog, :date))
+              |> assign(:tasks_sprint, Tasks.sort_by(socket.assigns.tasks_sprint, :date))
+              |> assign(:tasks_done, Tasks.sort_by(socket.assigns.tasks_done, :date))
+    }
+  end
+
+  def handle_event("sort-cost", _, socket) do
+    {:noreply, socket
+              |> assign(:sorting, :cost)
+              |> assign(:tasks_backlog, Tasks.sort_by(socket.assigns.tasks_backlog, :cost))
+              |> assign(:tasks_sprint, Tasks.sort_by(socket.assigns.tasks_sprint, :cost))
+              |> assign(:tasks_done, Tasks.sort_by(socket.assigns.tasks_done, :cost))
+    }
   end
 
   def get_colour_from_urgency(value) do
