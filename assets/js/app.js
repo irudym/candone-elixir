@@ -29,6 +29,7 @@ import Alpine from 'alpinejs'
 
 import {SelectComponent} from "./select_component"
 import {SelectManyComponent} from "./select_many_component"
+import {FlashMessage} from "./flash_message"
 
 window.Alpine = Alpine
  
@@ -37,6 +38,7 @@ Alpine.start()
 let Hooks = {}
 Hooks.SelectComponent = SelectComponent
 Hooks.SelectManyComponent = SelectManyComponent
+Hooks.Flash = FlashMessage
 
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")

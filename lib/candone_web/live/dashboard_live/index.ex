@@ -171,6 +171,7 @@ defmodule CandoneWeb.DashboardLive.Index do
     project = Projects.get_project!(socket.assigns.current_project_id)
     {:noreply, socket
                 |> assign(Enum.at(@stage_types, stage), Projects.get_project_tasks_with_stage(project, stage))
+                |> put_flash(:info, "Task deleted")
     }
   end
 

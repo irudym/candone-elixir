@@ -86,7 +86,7 @@ defmodule CandoneWeb.Components.CardComponents do
             <%= Calendar.strftime(assigns.date, "%d %B %Y") %>
           </div>
 
-          <div class="my-5 text-primary-200 text-sm font-light">
+          <div class="my-5 text-primary-200 text-sm font-light max-h-20 text-ellipsis overflow-hidden">
             <%= assigns.description %>
           </div>
 

@@ -1,23 +1,64 @@
 <main class="mx-auto">
   <%= if @flash != %{} do %>
-    <div class="alert alert-info bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative z-100" 
-          role="alert"
-          phx-click="lv:clear-flash"
-          phx-value-key="info"
-    >
-      <strong class="font-bold">Info</strong>
-      <span class="block sm:inline">
-        <%= live_flash(@flash, :info) %>
-        <%= inspect(@flash) %>
-      </span>
-      <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-        <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
-      </span>
-    </div>
+    <div id="flash" phx-hook="Flash">
+      <%= if Map.has_key?(@flash, "info") do  %>
+        <div class="flash fixed top-8 left-1/2 drop-shadow z-50 border-2 cursor-pointer border-gray-100 bg-white  py-1 px-2 rounded-xl my-4"
+             role="alert"
+             phx-click="lv:clear-flash"
+             phx-value-info="info"
+        >
+          <div class="absolute top-[-2px] bottom-[-2px] left-[-4px] rounded-l-xl bg-primary2-200 w-12 flex justify-center items-center text-white">
+            <svg
+                  width="100%" height="100%"
+                  viewBox="0 0 32 32"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
+                  xmlns:serif="http://www.serif.com/"
+                  style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"
+                  class="h-8 w-8 stroke-none fill-current inline"
+                >
+                  <g transform="matrix(2.01205,0,0,2.01205,-24.0972,-19.3546)">
+                    <path d="M13.329,18.305L18.329,22.876C18.536,23.066 18.813,23.159 19.093,23.133C19.372,23.106 19.627,22.964 19.795,22.739L26.652,13.596C26.982,13.158 26.892,12.534 26.454,12.205C26.015,11.876 25.391,11.965 25.062,12.404L18.862,20.67C18.862,20.67 14.671,16.838 14.671,16.838C14.266,16.468 13.637,16.496 13.266,16.901C12.896,17.306 12.924,17.935 13.329,18.305Z"/>
+                  </g>
+                </svg>
+          </div>
 
-    <p class="alert alert-danger" role="alert"
-      phx-click="lv:clear-flash"
-      phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+          <div class="ml-12 p-4">
+            <p class="text-base mt-1">
+              <%= live_flash(@flash, :info) %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+
+      <%= if Map.has_key?(@flash, "error") do  %>
+        <div class="flash fixed top-8 left-1/2 drop-shadow z-50 border-2 cursor-pointer border-gray-100 bg-white  py-1 px-2 rounded-xl my-4"
+             role="alert"
+             phx-click="lv:clear-flash"
+             phx-value-info="info"
+        >
+          <div class="absolute top-[-2px] bottom-[-2px] left-[-4px] rounded-l-xl bg-red-200 w-12 flex justify-center items-center text-white">
+            <svg
+                  width="100%" height="100%"
+                  viewBox="0 0 32 32"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
+                  xmlns:serif="http://www.serif.com/"
+                  style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"
+                  class="h-8 w-8 stroke-none fill-current inline"
+                >
+                  <path d="M16,12.868L7.566,4.434C6.702,3.57 5.298,3.57 4.434,4.434C3.57,5.298 3.57,6.702 4.434,7.566L12.868,16L4.434,24.434C3.57,25.298 3.57,26.702 4.434,27.566C5.298,28.43 6.702,28.43 7.566,27.566L16,19.132L24.434,27.566C25.298,28.43 26.702,28.43 27.566,27.566C28.43,26.702 28.43,25.298 27.566,24.434L19.132,16L27.566,7.566C28.43,6.702 28.43,5.298 27.566,4.434C26.702,3.57 25.298,3.57 24.434,4.434L16,12.868Z"/>
+            </svg>
+          </div>
+
+          <div class="ml-12 p-4">
+            <p class="text-base mt-1">
+              <%= live_flash(@flash, :error) %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
   <% end %>
 
   <div class="h-64 bg-primary-300 py-4 px-10">

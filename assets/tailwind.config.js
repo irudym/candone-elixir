@@ -16,6 +16,7 @@ module.exports = {
         'green-300': '#539480',
         'red-200': '#E78B63',
         'red-50': '#FFF1EB',
+        'red-100': '#FED2BF',
       }
     },
     fontSize: {
