@@ -24,7 +24,10 @@ defmodule CandoneWeb.LiveHelpers do
       </.modal>
   """
   def modal(assigns) do
-    assigns = assign_new(assigns, :return_to, fn -> nil end)
+    assigns = assigns
+              |> assign_new(:return_to, fn -> nil end)
+              |> assign_new(:class, fn -> nil end)
+
 
     ~H"""
     <div id="modal" class="fixed z-10 inset-0 overflow-y-auto" phx-remove={hide_modal()}>
@@ -36,7 +39,7 @@ defmodule CandoneWeb.LiveHelpers do
 
         <div class="inline-block align-bottom bg-white text-left rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <!-- modal header -->
-          <div class="absolute w-full -top-0.5 left-0 h-12 bg-primary-300 rounded-t-lg">
+          <div class={"absolute w-full -top-0.5 left-0 h-12 bg-primary-300 rounded-t-lg #{@class}"}>
             <div class="relative flex flex-row-reverse justify-between items-center p-1 px-3">
               <%= if @return_to do %>
                   <a
@@ -66,25 +69,8 @@ defmodule CandoneWeb.LiveHelpers do
                     </svg>
                   </a>
                 <% else %>
-                  <a id="close" href="#" class="m-2 text-gray-100" phx-click={hide_modal()}>
-                  <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="mx-1 p-1 rounded-md w-5 h-5 cursor-pointer text-gray-100 stroke-current hover:bg-primary-250"
-                  style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-miterlimit:2;"
-                  fill="none"
-                  viewBox="0 0 10 10"
-                  stroke="currentColor"
-                  width="100%" height="100%"
-                  xml:space="preserve" xmlns:serif="http://www.serif.com/"
-                  >
-                    <g transform="matrix(0.646062,-0.149612,-0.148781,0.649668,-0.319038,-1.14623)">
-                      <path d="M3,4L18.991,19.991" style="fill:none;stroke-width:3.2px;"/>
-                    </g>
-                    <g transform="matrix(0.148781,0.649668,-0.646062,-0.149612,11.1139,-0.350554)">
-                        <path d="M3,4L18.991,19.991" style="fill:none;stroke-width:3.2px;stroke-linejoin:round;stroke-miterlimit:1.5;"/>
-                    </g>
-                  </svg>
-                  </a>
+                  <div class="m-2 text-gray-100 h-5">
+                  </div>
               <% end %>
               <div class="font-medium text-gray-100 text-base pl-4">
                 <%= @title %>

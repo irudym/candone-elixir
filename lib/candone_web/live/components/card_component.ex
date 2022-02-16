@@ -50,9 +50,8 @@ defmodule CandoneWeb.Components.CardComponents do
       xml:space="preserve" xmlns:serif="http://www.serif.com/"
       style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"
       class="h-7 w-7 stroke-current text-red-200 p-1 rounded-lg hover:bg-red-200 hover:text-red-50"
-      phx-click={"#{@type}-delete"}
+      phx-click={"#{@type}-delete-confirm"}
       phx-value-id={@value}
-      data={[confirm: "Are you sure?"]}
     >
       <g transform="matrix(1,0,0,1,0,0.622489)">
           <path d="M4,9L28,9" style="fill:none;stroke-width:3px;"/>

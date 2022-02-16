@@ -6,6 +6,7 @@ defmodule CandoneWeb.DashboardLive.Index do
   import CandoneWeb.Components.CardComponents
   import CandoneWeb.Components.UiComponents
   import CandoneWeb.Components.Icons
+  import CandoneWeb.DashboardLive.ConfirmComponent
 
   alias Candone.Projects.Project
   alias Candone.Tasks.Task
@@ -40,6 +41,7 @@ defmodule CandoneWeb.DashboardLive.Index do
           |> assign(:page_title, "Candone")
           |> assign(:sorting, :date)
           |> assign(:hide_done, false)
+          |> assign(:delete_card, nil)
           |> set_project(current_project_id)
     }
   end
@@ -159,6 +161,26 @@ defmodule CandoneWeb.DashboardLive.Index do
     }
   end
 
+  def handle_event("task-delete-confirm", %{"id" => id}, socket) do
+    task = Tasks.get_task!(id)
+    {:noreply,
+        socket
+        |> assign(:delete_card, {:task, task})}
+  end
+
+  def handle_event("note-delete-confirm", %{"id" => id}, socket) do
+    note = Notes.get_note!(id)
+    {:noreply,
+        socket
+        |> assign(:delete_card, {:note, note})}
+  end
+
+  def handle_event("close_confirmation", _, socket) do
+    {:noreply, socket
+                |> assign(:delete_card, nil)
+    }
+  end
+
   def handle_event("task-delete", %{"id" => id}, socket) do
     task = Tasks.get_task!(id)
 
@@ -172,6 +194,7 @@ defmodule CandoneWeb.DashboardLive.Index do
     {:noreply, socket
                 |> assign(Enum.at(@stage_types, stage), Projects.get_project_tasks_with_stage(project, stage))
                 |> put_flash(:info, "Task deleted")
+                |> assign(:delete_card, nil)
     }
   end
 
@@ -182,6 +205,8 @@ defmodule CandoneWeb.DashboardLive.Index do
 
     {:noreply, socket
                 |> assign(:notes, Projects.get_project_notes(project))
+                |> put_flash(:info, "Note deleted")
+                |> assign(:delete_card, nil)
     }
   end
 

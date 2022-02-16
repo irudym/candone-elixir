@@ -1,4 +1,14 @@
 <div class="px-12">
+  <%= if @delete_card do %>
+    <.modal 
+      title={"Delete"}
+    >
+      <.confirm_delete
+          item={@delete_card}
+      />
+    </.modal>
+  <% end %>
+
   <%= if @live_action in [:new_project] do %>
     <.modal 
       return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
