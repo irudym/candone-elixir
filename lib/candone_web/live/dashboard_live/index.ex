@@ -175,6 +175,14 @@ defmodule CandoneWeb.DashboardLive.Index do
         |> assign(:delete_card, {:note, note})}
   end
 
+  def handle_event("project-delete-confirm", %{"id" => id}, socket) do
+    project = Projects.get_project!(id)
+    {:noreply,
+            socket
+            |> assign(:delete_card, {:project, project})
+    }
+  end
+
   def handle_event("close_confirmation", _, socket) do
     {:noreply, socket
                 |> assign(:delete_card, nil)
@@ -221,6 +229,8 @@ defmodule CandoneWeb.DashboardLive.Index do
                 |> assign(:projects, projects)
                 |> assign(:current_project_id, current_project_id)
                 |> set_project(current_project_id)
+                |> assign(:delete_card, nil)
+                |> put_flash(:info, "Project deleted")
     }
   end
 

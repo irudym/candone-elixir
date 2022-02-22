@@ -56,5 +56,6 @@ defmodule CandoneWeb.DashboardLive.ConfirmComponent do
 
   defp get_type({:task, _}), do: "task"
   defp get_type({:note, _}), do: "note"
+  defp get_type({:project, _}), do: "project"
 
 end
