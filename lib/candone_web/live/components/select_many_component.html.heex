@@ -1,27 +1,50 @@
 <div
   id={@id}
   class="mt-1 relative" 
-  x-data={"{ open: false, idx: -1, selectedIdx: [], selectedIdx: null, removeOptionIdx: null, max: #{length(@options) - 1}}"}
-  x-init={"$watch('selectedIdx', val => $dispatch('selected-add', { selectedIdx: val, id: '#{@id}'}))"}
+  x-data={"{ 
+    open: false,
+    idx: -1,
+    selectedIdx: null,
+    removeOptionIdx: null, 
+    max: #{length(@options) - 1},
+    options: #{Jason.encode! @options},
+    selected_options: [],
+    filtered_options: #{Jason.encode! @options},
+    select_option(idx) {
+      if(idx < 0) return;
+      console.log('idx:', idx)
+      this.selected_options.push(this.filtered_options.splice(idx, 1)[0]);
+      this.max = this.filtered_options.length - 1;
+    },
+    remove_option(idx) {
+      this.filtered_options = [this.selected_options.splice(idx, 1)[0], ...this.filtered_options];
+      this.max = this.filtered_options.length - 1;
+    },
+    search_options(text) {
+      options = this.options.filter(option => !this.selected_options.find(elem => elem.id === option.id));
+      this.filtered_options = options.filter(elem => elem.name.toLowerCase().match(text.toLowerCase()));
+      this.idx = -1;
+    }
+  }"}
+  x-init={""}
   x-on:reset="open = false"
   phx-hook="SelectManyComponent"
 >
+
   <button
-    @click="open = !open"
-    @keydown.escape.window="open = false"
-    @keydown.enter.stop.prevent="selectedIdx = idx"
-    @keydown.arrow-up.prevent="idx = idx === 0 ? max : idx -1"
-    @keydown.arrow-down.prevent="idx = idx === max ? 0: idx + 1"
+    
+    @click.stop="open = true"
     x-ref="button"
     type="button"
     class="min-h-[2.5rem] relative w-full bg-white border border-primary-200 rounded-md pl-2 pr-10 py-0.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-primary2-200 focus:border-primary2-200 text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
 
     <div class="flex items-center">
-      <div class="ml-3">
-        <%= for option <- @selected_options do %>
+      <div class="ml-3 flex flex-row flex-wrap">
+
+        <template x-for="(option, index) in selected_options" :key="option.id">
           <div class="border border-primary-200 inline-flex items-center px-0.5 py-0.5 bg-gray-100 hover:bg-gray-300 font-medium rounded-md m-0.5 text-xs">
             <div 
-              x-on:click.stop={"$dispatch('selected-remove', { selectedIdx: #{option.id}, id: '#{@id}'})"}
+              x-on:click.stop={"remove_option(index)"}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -41,9 +64,23 @@
                 </g>
               </svg>
             </div>
-            <span class="pr-2 text-gray-600"><%= option.name %></span>
+            <span class="pr-2 text-gray-600" x-text="option.name"></span>
           </div>
-        <% end %>
+        </template>
+
+        <input
+          id="search"
+          type="text"
+          autofocus
+          class="p-0.5 outline-none"
+          x-on:click.stop="open = true"
+          x-on:keydown.enter.stop.prevent="select_option(idx)"
+          x-on:keydown.arrow-up.prevent="idx = idx === 0 ? max : idx -1"
+          x-on:keydown.arrow-down.prevent="idx = idx === max ? 0: idx + 1"
+          x-on:input.debounce="search_options($event.target.value)"
+        />
+
+
       </div>
     </div>
     <span class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -57,32 +94,28 @@
 
   <%= hidden_input @f, @name %>
 
-
   <ul
-    phx-update="replace"
     x-cloak
+    phx-update="replace"
     x-show="open"
     tabindex="-1"
-    @click.away="open = false"
     role="listbox"
-    class="absolute z-100 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md border border-primary-200 py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
-
-
-
-    <%= for {option, idx} <- Enum.with_index(@available_options) do %>
+    x-on:click.away="open = false"
+    class="absolute z-100 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md border border-primary-200 py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3"
+  >
+    <template x-for="(option, index) in filtered_options" :key="option.id">
       <li 
         role="option"
-        :class={"{ 'text-white bg-primary2-200' : idx === #{idx}, 'text-gray-900' : !(idx === #{idx})}"}
-        x-on:click={"selectedIdx = #{option.id}"}
-        x-on:mouseenter={"idx = #{idx}"}
-        id={"option-#{option.id}"}
-        class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9" id={"listbox-option-#{option.id}"} role="option">
+        :class="{ 'text-white bg-primary2-200' : idx === index, 'text-gray-900' : !(idx === index)}"
+        x-on:click.stop="select_option(index)"
+        x-on:mouseenter="idx = index"
+        class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9" role="option">
         <div class="flex items-center">
-          <span class="font-normal ml-3 block truncate">
-            <%= option.name %>
+          <span class="font-normal ml-3 block truncate" x-text="option.name">
           </span>
         </div>
       </li>
-    <% end %>
+    </template>  
   </ul>
+
 </div>
