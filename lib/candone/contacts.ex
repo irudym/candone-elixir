@@ -153,11 +153,16 @@ defmodule Candone.Contacts do
   @doc """
   Get list of people from provided string, for example "1,2,3"
   """
-  def get_people_from_string(""), do: []
+  def get_people_from_string(nil), do: []
 
   def get_people_from_string(str) do
-    get_people(String.split(str, ","))
+    if str == "" do
+      []
+    else
+      get_people(String.split(str, ","))
+    end
   end
+
 
 
 

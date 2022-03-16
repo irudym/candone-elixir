@@ -19,7 +19,7 @@ export const SelectManyComponent = {
 
       ids = data.value.map((value) => value.id)
 
-      this.el.querySelector('input[type=hidden]').value = ids.toString()
+      // this.el.querySelector('input[type=hidden]').value = ids.toString()
       // this.el.querySelector('input[type=hidden]').dispatchEvent(new Event("input", {bubbles: true}))
     })
   }

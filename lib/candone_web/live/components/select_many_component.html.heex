@@ -6,29 +6,34 @@
     idx: -1,
     selectedIdx: null,
     removeOptionIdx: null, 
-    max: #{length(@options) - 1},
+    max: #{length(@available_options) - 1},
     options: #{Jason.encode! @options},
-    selected_options: [],
-    filtered_options: #{Jason.encode! @options},
+    available_options: #{Jason.encode! @available_options},
+    selected_options: #{Jason.encode! @selected_options},
+    selected_list: '#{@filtered_ids}',
+    filtered_options: #{Jason.encode! @available_options},
     select_option(idx) {
       if(idx < 0) return;
-      console.log('idx:', idx)
+
+      console.log('option: ', this.filtered_options[idx]);
+      option_id = this.filtered_options[idx].id;
+      
       this.selected_options.push(this.filtered_options.splice(idx, 1)[0]);
+      this.available_options = this.available_options.filter(elem => elem.id !== option_id);
+
       this.max = this.filtered_options.length - 1;
     },
     remove_option(idx) {
-      this.filtered_options = [this.selected_options.splice(idx, 1)[0], ...this.filtered_options];
+      this.available_options = [this.selected_options.splice(idx, 1)[0], ...this.available_options];
       this.max = this.filtered_options.length - 1;
     },
     search_options(text) {
-      options = this.options.filter(option => !this.selected_options.find(elem => elem.id === option.id));
-      this.filtered_options = options.filter(elem => elem.name.toLowerCase().match(text.toLowerCase()));
+      this.filtered_options = this.available_options.filter(elem => elem.name.toLowerCase().match(text.toLowerCase()));
       this.idx = -1;
     }
   }"}
-  x-init={""}
-  x-on:reset="open = false"
-  phx-hook="SelectManyComponent"
+  x-init="$watch('selected_options', value => selected_list = value.map(elem => elem.id).join(','))"
+  x-on:reset="open = false" 
 >
 
   <button
@@ -72,7 +77,7 @@
           id="search"
           type="text"
           autofocus
-          class="p-0.5 outline-none"
+          class="p-0.5 outline-none w-full"
           x-on:click.stop="open = true"
           x-on:keydown.enter.stop.prevent="select_option(idx)"
           x-on:keydown.arrow-up.prevent="idx = idx === 0 ? max : idx -1"
@@ -92,7 +97,13 @@
   </button>
  
 
-  <%= hidden_input @f, @name %>
+  <%= # hidden_input @f, @name %>
+  <input
+    id={"#{@f.id}_#{@name}"}
+    name={"#{@f.name}[#{@name}]"}
+    x-model="selected_list"
+    type="hidden"
+  />
 
   <ul
     x-cloak

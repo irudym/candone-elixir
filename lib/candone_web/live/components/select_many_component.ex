@@ -11,8 +11,7 @@ defmodule CandoneWeb.Components.SelectManyComponent do
   def update(assigns, socket) do
     %{f: f, name: name, options: options, id: id} = assigns
 
-    IO.inspect(options, label: "SelectMany:options")
-
+    IO.inspect(f, label: "UPDATE/f")
 
     # get stored values of options ids
     value = Map.get(f.params, "#{name}")
@@ -24,22 +23,24 @@ defmodule CandoneWeb.Components.SelectManyComponent do
 
 
     selected_options = Enum.map(values_ids, fn id -> Enum.find(options, & "#{&1.id}" == "#{id}") end)
-    filtered_options = Enum.filter(options, fn val_id -> !Enum.find(selected_options, & "#{&1.id}" == "#{val_id.id}") end)
+    available_options = Enum.filter(options, fn val_id -> !Enum.find(selected_options, & "#{&1.id}" == "#{val_id.id}") end)
 
-    available_ids = Enum.map(filtered_options, & &1.id)
+    # available_ids = Enum.map(filtered_options, & &1.id)
 
     {:ok,
       socket
       |> push_event("close-selected", %{id: id, value: selected_options})
       |> assign(assigns)
       |> assign(:selected_options, selected_options)
-      |> assign(:filtered_options, options)
-      |> assign(:filtered_ids, available_ids)
+      |> assign(:available_options, available_options)
+      |> assign(:filtered_ids, Enum.join(values_ids,","))
     }
   end
 
   @impl true
   def handle_event("update", %{"selectedIdx" => idx, "id" => id}, socket) do
+
+    IO.inspect(socket, label: "HANDLE UPDATE/socket")
 
 
     selected_options = Enum.concat(socket.assigns.selected_options, [Enum.find(socket.assigns.options, & "#{&1.id}" == "#{idx}")])
@@ -56,7 +57,7 @@ defmodule CandoneWeb.Components.SelectManyComponent do
       |> push_event("close-selected", %{id: id, value: selected_options})
       |> assign(:selected_options, selected_options)
       |> assign(:filtered_options, filtered_options)
-      |> assign(:filtered_ids, available_ids)
+      |> assign(:filtered_ids, Enum.join(available_ids, ","))
     }
   end
 
