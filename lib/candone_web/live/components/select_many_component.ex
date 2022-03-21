@@ -3,6 +3,7 @@ defmodule CandoneWeb.Components.SelectManyComponent do
 
 
   def mount(_params, _session, socket) do
+    # IO.inspect(socket, label: "SELECT_MANY/mount/socket: ")
     {:ok, socket
           |> assign(filtered_options: [])}
   end
@@ -10,8 +11,6 @@ defmodule CandoneWeb.Components.SelectManyComponent do
   @impl true
   def update(assigns, socket) do
     %{f: f, name: name, options: options, id: id} = assigns
-
-    IO.inspect(f, label: "UPDATE/f")
 
     # get stored values of options ids
     value = Map.get(f.params, "#{name}")
@@ -21,77 +20,69 @@ defmodule CandoneWeb.Components.SelectManyComponent do
       Map.get(f.data, name)
     end
 
-
     selected_options = Enum.map(values_ids, fn id -> Enum.find(options, & "#{&1.id}" == "#{id}") end)
     available_options = Enum.filter(options, fn val_id -> !Enum.find(selected_options, & "#{&1.id}" == "#{val_id.id}") end)
 
-    # available_ids = Enum.map(filtered_options, & &1.id)
-
     {:ok,
       socket
-      |> push_event("close-selected", %{id: id, value: selected_options})
       |> assign(assigns)
       |> assign(:selected_options, selected_options)
-      |> assign(:available_options, available_options)
+      |> assign(:filtered_options, available_options)
       |> assign(:filtered_ids, Enum.join(values_ids,","))
+      |> push_event("update_input", %{id: id, input_id: "#{f.id}_#{name}", value: values_ids})
     }
   end
 
   @impl true
-  def handle_event("update", %{"selectedIdx" => idx, "id" => id}, socket) do
+  def handle_event("select", %{"id" => id}, socket) do
+    %{selected_options: selected_options, filtered_options: filtered_options} = socket.assigns
 
-    IO.inspect(socket, label: "HANDLE UPDATE/socket")
+    option = Enum.find(filtered_options, & "#{&1.id}" == "#{id}")
+    selected_options = Enum.concat(selected_options, [option])
 
-
-    selected_options = Enum.concat(socket.assigns.selected_options, [Enum.find(socket.assigns.options, & "#{&1.id}" == "#{idx}")])
-
-    # remove idx from options
-    filtered_options = Enum.filter(socket.assigns.filtered_options, & "#{&1.id}" != "#{idx}")
-    available_ids = Enum.map(filtered_options, & &1.id)
-
-    IO.inspect(filtered_options, label: "HANDLE UPDATE/filtered_options")
-    IO.inspect(available_ids, label: "HANDLE UPDATE/available_ids")
-    {
-      :noreply,
-      socket
-      |> push_event("close-selected", %{id: id, value: selected_options})
-      |> assign(:selected_options, selected_options)
-      |> assign(:filtered_options, filtered_options)
-      |> assign(:filtered_ids, Enum.join(available_ids, ","))
-    }
-  end
-
-  def handle_event("remove", %{"selectedIdx" => idx, "id" => id}, socket) do
-    # remove the option from selected options
-    selected_options = Enum.filter(socket.assigns.selected_options,& "#{&1.id}" != "#{idx}")
-
-    # return the option to available list
-    filtered_options = Enum.filter(socket.assigns.options, fn val_id -> !Enum.find(selected_options, & "#{&1.id}" == "#{val_id.id}") end)
-
-    # available_options = [Enum.find(socket.assigns.options, & "#{&1.id}" == "#{idx}") | socket.assigns.filtered_options]
-    available_ids = Enum.map(filtered_options, & &1.id)
-
-    {
-      :noreply,
-      socket
-      |> push_event("close-selected", %{id: id, value: selected_options})
-      |> assign(:selected_options, selected_options)
-      |> assign(:filtered_options, filtered_options)
-      |> assign(:filtered_ids, available_ids)
-    }
-  end
-
-  def handle_event("search-input", %{"value" => text}, socket) do
-    IO.inspect(text, label: "Search-Input:Params")
-
-    available_options = Enum.filter(socket.assigns.options, fn val_id -> !Enum.find(socket.assigns.selected_options, & "#{&1.id}" == "#{val_id.id}") end)
-    filtered_options = Enum.filter(available_options, fn el -> String.contains?(el.name, text) end)
-    available_ids = Enum.map(filtered_options, & &1.id)
+    filtered_options = Enum.reject(filtered_options, & "#{&1.id}" == "#{id}")
 
     {:noreply,
-              socket
-              |> assign(:filtered_options, filtered_options)
-              |> assign(:filtered_ids, available_ids)
+        socket
+        |> assign(:selected_options, selected_options)
+        |> assign(:filtered_options, filtered_options)
+        |> push_update_event(selected_options)
+    }
+  end
+
+  defp push_update_event(socket, selected_options) do
+    %{f: f, name: name} = socket.assigns
+    values_ids = Enum.map(selected_options, & &1.id)
+
+    push_event(socket, "update_input", %{id: socket.assigns.id, input_id: "#{f.id}_#{name}", value: values_ids})
+  end
+
+  @impl true
+  def handle_event("remove", %{"id" => id}, socket) do
+    %{selected_options: selected_options, filtered_options: filtered_options} = socket.assigns
+
+    option = Enum.find(selected_options, & "#{&1.id}" == "#{id}")
+    filtered_options = [option | filtered_options]
+    selected_options = Enum.reject(selected_options, & "#{&1.id}" == "#{id}")
+
+    {:noreply,
+        socket
+        |> assign(:selected_options, selected_options)
+        |> assign(:filtered_options, filtered_options)
+        |> push_update_event(selected_options)
+    }
+  end
+
+  @impl true
+  def handle_event("search", %{"value" => value}, socket) do
+    %{selected_options: selected_options, options: options} = socket.assigns
+
+    available_options = Enum.filter(options, fn val_id -> !Enum.find(selected_options, & "#{&1.id}" == "#{val_id.id}") end)
+    filtered_options = Enum.filter(available_options, & String.contains?(&1.name, value))
+
+    {:noreply,
+        socket
+        |> assign(:filtered_options, filtered_options)
     }
   end
 

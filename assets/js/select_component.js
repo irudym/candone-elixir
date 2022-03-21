@@ -1,5 +1,6 @@
 export const SelectComponent = {
   mounted() {
+    console.log("mount SelectComponent");
     this.el.addEventListener("selected-change", event => {
       this.pushEventTo(`#${event.detail.id}`, "update", event.detail)
     })
