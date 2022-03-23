@@ -16,7 +16,7 @@
     class="min-h-[2.5rem] relative w-full bg-white border border-primary-200 rounded-md pl-2 pr-10 py-0.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-primary2-200 focus:border-primary2-200 text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
 
     <div class="flex items-center">
-      <div class="ml-3 flex flex-row flex-wrap">
+      <div class="ml-3 flex flex-row flex-wrap w-full">
 
         <%= for {option, idx} <- Enum.with_index(@selected_options) do %>
           <div class="border border-primary-200 inline-flex items-center px-0.5 py-0.5 bg-gray-100 hover:bg-gray-300 font-medium rounded-md m-0.5 text-xs">
@@ -50,7 +50,7 @@
         <input
           type="text"
           autofocus
-          class="p-0.5 outline-none w-full"
+          class="p-0.5 outline-none flex-auto w-28"
           x-on:click.stop="open = true"
           x-on:keydown.enter.stop.prevent=""
           x-on:keydown.arrow-up.prevent="idx = idx === 0 ? max : idx - 1"
