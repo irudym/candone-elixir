@@ -58,6 +58,8 @@
           phx-debounce="500"
           phx-keyup="search"
           phx-target={@myself}
+          id={"#{@f.name}-form_#{@name}_filter"}
+          name={"#{@f.name}[#{@name}_filter]"}
         />
 
 

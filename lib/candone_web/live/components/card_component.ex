@@ -73,7 +73,7 @@ defmodule CandoneWeb.Components.CardComponents do
         </div>
 
         <!-- vertical tool bar -->
-        <div class="absolute left-4 top-0 invisible group-hover:visible h-full flex flex-col-reverse py-3 ease-out duration-100">
+        <div class="absolute left-4 top-0 invisible group-hover:visible h-full flex flex-col-reverse py-4 ease-out duration-100">
           <.delete_button_icon type={@type} value={@value} />
         </div>
 

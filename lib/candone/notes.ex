@@ -18,7 +18,8 @@ defmodule Candone.Notes do
 
   """
   def list_notes do
-    Repo.all(Note)
+    query = from n in Note, left_join: p in assoc(n, :people), group_by: n.id, select_merge: %{people_count: count(p.id)}
+    Repo.all query
   end
 
   @doc """
@@ -101,12 +102,12 @@ defmodule Candone.Notes do
   def change_note(%Note{} = note, attrs \\ %{}) do
     note
     |> Repo.preload(:people)
-    |> Note.changeset(attrs) 
+    |> Note.changeset(attrs)
   end
 
   def create_note_with_projects(attrs, projects) do
     case create_note(attrs) do
-      {:ok, note} -> 
+      {:ok, note} ->
         {:ok, note
         |> Repo.preload(:projects)
         |> Ecto.Changeset.change()
@@ -118,9 +119,9 @@ defmodule Candone.Notes do
   end
 
   @doc """
-  Create a task with people 
+  Create a task with people
 
-  ## Example 
+  ## Example
     iex> create_note_with_people(%{field: value}, people)
     {:ok, %Note{}}
 
@@ -129,7 +130,7 @@ defmodule Candone.Notes do
   """
   def create_note_with_people(attrs, people) do
     case create_note(attrs) do
-      {:ok, note} -> 
+      {:ok, note} ->
         {:ok, note
         |> Repo.preload(:people)
         |> Ecto.Changeset.change()
@@ -142,7 +143,7 @@ defmodule Candone.Notes do
 
   def create_note_with_people_projects(attrs, people, project) do
     case create_note(attrs) do
-      {:ok, note} -> 
+      {:ok, note} ->
         {:ok, note
         |> Repo.preload(:people)
         |> Repo.preload(:projects)

@@ -35,18 +35,21 @@ defmodule CandoneWeb.Components.SelectManyComponent do
 
   @impl true
   def handle_event("select", %{"id" => id}, socket) do
-    %{selected_options: selected_options, filtered_options: filtered_options} = socket.assigns
+    %{selected_options: selected_options, filtered_options: filtered_options, options: options} = socket.assigns
 
     option = Enum.find(filtered_options, & "#{&1.id}" == "#{id}")
     selected_options = Enum.concat(selected_options, [option])
 
-    filtered_options = Enum.reject(filtered_options, & "#{&1.id}" == "#{id}")
+    filtered_options = Enum.filter(options, fn val_id -> !Enum.find(selected_options, & "#{&1.id}" == "#{val_id.id}") end)
+
+    # filtered_options = Enum.reject(filtered_options, & "#{&1.id}" == "#{id}")
 
     {:noreply,
         socket
         |> assign(:selected_options, selected_options)
         |> assign(:filtered_options, filtered_options)
         |> push_update_event(selected_options)
+        # |> push_event("clear_filter", %{id: socket.assigns.id, input_id: "#{f.id}_#{name}_filter"})
     }
   end
 
@@ -78,11 +81,12 @@ defmodule CandoneWeb.Components.SelectManyComponent do
     %{selected_options: selected_options, options: options} = socket.assigns
 
     available_options = Enum.filter(options, fn val_id -> !Enum.find(selected_options, & "#{&1.id}" == "#{val_id.id}") end)
-    filtered_options = Enum.filter(available_options, & String.contains?(&1.name, value))
+    filtered_options = Enum.filter(available_options, & String.contains?(String.downcase(&1.name), String.downcase(value)))
 
     {:noreply,
         socket
         |> assign(:filtered_options, filtered_options)
+        |> push_update_event(selected_options)
     }
   end
 
