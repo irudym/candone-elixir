@@ -9,4 +9,8 @@ defmodule Candone.DateUtils do
     trunc(adjusted / 7)
   end
 
+  def get_current_week() do
+    get_work_week(NaiveDateTime.utc_now)
+  end
+
 end
