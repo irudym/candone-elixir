@@ -28,11 +28,21 @@ defmodule CandoneWeb.DashboardLive.Index do
     :tasks_done
   ]
 
+  defp get_project_id(projects) do
+    if List.first(projects) do
+      List.first(projects).id
+    else
+      :none
+    end
+  end
+
 
   @impl true
   def mount(_params, _session, socket) do
     projects = Candone.Projects.list_projects()
-    current_project_id = List.first(projects).id || :none
+
+    current_project_id = get_project_id(projects)
+
 
     {:ok, socket
           |> assign(:title, "Dashboard")

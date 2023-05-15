@@ -1,6 +1,6 @@
 <div class="px-12">
   <%= if @delete_card do %>
-    <.modal 
+    <.modal
       title={"Delete"}
     >
       <.confirm_delete
@@ -10,7 +10,7 @@
   <% end %>
 
   <%= if @live_action in [:new_project] do %>
-    <.modal 
+    <.modal
       return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
       title={@page_title}
     >
@@ -26,7 +26,7 @@
   <% end %>
 
   <%= if @live_action in [:new_task, :edit_task] do %>
-    <.modal 
+    <.modal
       return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
       title={@page_title}
     >
@@ -44,9 +44,9 @@
   <% end %>
 
   <%= if @live_action in [:new_note, :edit_note] do %>
-  <.modal 
+  <.modal
       return_to={Routes.dashboard_index_path(@socket, :show_project, @current_project_id)}
-      title={@page_title}  
+      title={@page_title}
   >
     <.live_component
       module={CandoneWeb.NoteLive.FormComponent}
@@ -70,7 +70,7 @@
         Projects
       </div>
       <div class="py-4">
-        <.add_project_button 
+        <.add_project_button
           to={Routes.dashboard_index_path(@socket, :new_project)}
         />
       </div>
@@ -108,7 +108,7 @@
               Sort by date
             </.dropdown_menu_item>
             <.dropdown_menu_item click="sort-cost">
-              <.cog_icon checked={@sorting == :cost} /> 
+              <.cog_icon checked={@sorting == :cost} />
               Sort by cost
             </.dropdown_menu_item>
             <.dropdown_menu_item click="sort-urgency">
@@ -117,20 +117,20 @@
             </.dropdown_menu_item>
           </.dropdown_menu_custom>
       </div>
-      
+
       <div class="py-4">
-        <.add_task_button 
+        <.add_task_button
           to={Routes.dashboard_index_path(@socket, :new_task)}
         />
       </div>
-      <div class={"grid grid-cols-3 #{if @hide_done, do: "grid-cols-2"}"}>  
+      <div class={"grid grid-cols-3 #{if @hide_done, do: "grid-cols-2"}"}>
         <div class="py-4 mx-1 flex flex-col">
           <div class="mb-2 text-base font-md">Backlog</div>
           <div class="rounded-lg px-4 py-0.5 min-h-full bg-gray-100">
             <%= for task <- @tasks_backlog do %>
               <.card
                 name={task.name}
-                description={task.description} 
+                description={task.description}
                 date={task.inserted_at}
                 counter1={task.people_count}
                 counter2 = {task.cost}
@@ -145,11 +145,11 @@
         </div>
         <div class="py-4 mx-1 flex flex-col ">
           <div class="mb-2 text-base font-md">Sprint | Cost: <%= @sprint_cost %></div>
-          <div class="rounded-lg px-4 py-0.5 bg-gray-100">
+          <div class="rounded-lg px-4 py-0.5 min-h-full bg-gray-100">
             <%= for task <- @tasks_sprint do %>
               <.card
                 name={task.name}
-                description={task.description} 
+                description={task.description}
                 date={task.inserted_at}
                 counter1={task.people_count}
                 counter2 = {task.cost}
@@ -165,12 +165,12 @@
         <%= if !@hide_done do %>
           <div class={"py-4 mx-1 flex flex-col"}>
             <div class="mb-2 text-base font-md">Done</div>
-            <div class="rounded-lg px-4 py-0.5 bg-gray-100">
+            <div class="rounded-lg px-4 py-0.5 min-h-full bg-gray-100">
               <%= for task <- @tasks_done do %>
                 <.card
 
                   name={task.name}
-                  description={task.description} 
+                  description={task.description}
                   date={task.inserted_at}
                   counter1={task.people_count}
                   counter2 = {task.cost}
@@ -183,7 +183,7 @@
               <% end %>
             </div>
           </div>
-        <% end %>  
+        <% end %>
       </div>
     </div>
 
@@ -193,7 +193,7 @@
         Notes
       </div>
       <div class="py-4">
-        <.add_note_button 
+        <.add_note_button
           to={Routes.dashboard_index_path(@socket, :new_note)}
         />
       </div>
