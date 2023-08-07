@@ -120,6 +120,12 @@ defmodule Candone.Tasks do
     |> Repo.update()
   end
 
+  def update_task_stage(%Task{} = task, stage) do
+    task
+    |> Task.changeset(%{stage: stage})
+    |> Repo.update()
+  end
+
   def update_task_with_people(%Task{} = task, attrs, people) do
     task
     |> Repo.preload(:people)

@@ -26,6 +26,8 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import Alpine from 'alpinejs'
+import Sortable from "../vendor/sortable"
+
 
 import {SelectComponent} from "./select_component"
 import {SelectManyComponent} from "./select_many_component"
@@ -39,6 +41,24 @@ let Hooks = {}
 Hooks.SelectComponent = SelectComponent
 Hooks.SelectManyComponent = SelectManyComponent
 Hooks.Flash = FlashMessage
+
+Hooks.Sortable = {
+  mounted()
+  {
+    let group = this.el.dataset.group
+    let sorter = new Sortable(this.el, {
+      group: 'shared',
+      animation: 150,
+      dragClass: "drag-item",
+      ghostClass: "drag-ghost",
+      onEnd: e => {
+        const expression = /\d(\d+)/i
+        let params = {old: e.from.id, new: e.to.id, to: e.to.dataset, ...e.item.dataset, item: expression.exec(e.item.id)[0]}
+        this.pushEventTo(this.el, this.el.dataset["drop"] || "reposition", params)
+      }
+    })
+  }
+}
 
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")

@@ -199,6 +199,18 @@ defmodule CandoneWeb.DashboardLive.Index do
     }
   end
 
+  # Drag and Drop
+  def handle_event("reposition", %{"item" => id, "new" => new, "old" => old}, socket) when new != old do
+    IO.inspect(id)
+    update_task_stage(id, new)
+    {:noreply, socket}
+  end
+
+  def handle_event("reposition", _, socket) do
+    {:noreply, socket}
+  end
+
+
   def handle_event("task-delete", %{"id" => id}, socket) do
     task = Tasks.get_task!(id)
 
@@ -279,5 +291,17 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   def get_colour_from_urgency(value) do
     Map.get(@urgency, value, "bg-gray-200")
+  end
+
+  defp update_task_stage(id, new_stage) do
+    task = Tasks.get_task!(id)
+    stage = case new_stage do
+      "backlog-list" -> 0
+      "sprint-list" -> 1
+      "done-list" -> 2
+      _ -> 0
+    end
+
+    Tasks.update_task_stage(task, stage)
   end
 end
