@@ -51,9 +51,8 @@ Hooks.Sortable = {
       animation: 150,
       dragClass: "drag-item",
       ghostClass: "drag-ghost",
-      onEnd: e => {
-        const expression = /\d(\d+)/i
-        let params = {old: e.from.id, new: e.to.id, to: e.to.dataset, ...e.item.dataset, item: expression.exec(e.item.id)[0]}
+      onEnd: e => {        
+        let params = {old: e.from.id, new: e.to.id, item: e.item.id.split('-')[1]}
         this.pushEventTo(this.el, this.el.dataset["drop"] || "reposition", params)
       }
     })

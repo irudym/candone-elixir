@@ -201,7 +201,6 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   # Drag and Drop
   def handle_event("reposition", %{"item" => id, "new" => new, "old" => old}, socket) when new != old do
-    IO.inspect(id)
     update_task_stage(id, new)
     {:noreply, socket}
   end
