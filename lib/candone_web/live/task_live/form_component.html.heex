@@ -1,13 +1,12 @@
 <div>
   <.form
-    let={f}
-    for={@changeset}
-    id="task-form"
-    phx-target={@myself}
-    phx-change="validate"
-    phx-submit="save">
-
-
+      :let={f}
+      for={@changeset}
+      id="task-form"
+      phx-target={@myself}
+      phx-change="validate"
+      phx-submit="save"
+  >
     <div class="mb-4">
       <%= label f, :name, class: "block text-primary-300 text-sm font-semibold mb-2" %>
       <%= text_input f, :name, class: "appearance-none border border-primary-200 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
@@ -37,7 +36,6 @@
         <%= error_tag f, :urgency %>
       </div>
     </div>
-  
 
     <div class="mb-4">
       <label id="listbox-label" class="block text-primary-300 text-sm font-semibold mb-2">
@@ -64,10 +62,10 @@
         </div>
       </div>
     <% end %>
-  
+
     <div class="flex flex-row-reverse gap-6">
       <.cancel_button return_to={@return_to}/>
       <%= submit "Save", phx_disable_with: "Save", class: "bg-primary2-200 hover:bg-primary2-300 text-sm leading-5 rounded-lg font-semibold text-white py-2 px-8 rounded-lg focus:outline-none focus:shadow-outline" %>
     </div>
-  </.form>
+  </.form>  
 </div>

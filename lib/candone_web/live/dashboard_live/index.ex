@@ -43,7 +43,6 @@ defmodule CandoneWeb.DashboardLive.Index do
 
     current_project_id = get_project_id(projects)
 
-
     {:ok, socket
           |> assign(:title, "Dashboard")
           |> assign(:projects, projects)
@@ -153,11 +152,12 @@ defmodule CandoneWeb.DashboardLive.Index do
   def handle_event("project-select", %{"id" => project_id}, socket) do
     {:noreply,
       socket
-      |> push_patch(to: Routes.dashboard_index_path(socket, :show_project, project_id))
+      |> push_navigate(to: Routes.dashboard_index_path(socket, :show_project, project_id), replace: true)
     }
   end
 
   def handle_event("task-select", %{"id" => task_id}, socket) do
+    dbg(Routes.dashboard_index_path(socket, :edit_task, task_id))
     {:noreply,
       socket
       |> push_patch(to: Routes.dashboard_index_path(socket, :edit_task, task_id))

@@ -1,5 +1,7 @@
 defmodule CandoneWeb.CompanyLive.FormComponent do
   use CandoneWeb, :live_component
+  import Phoenix.Component
+
 
   alias Candone.Contacts
 

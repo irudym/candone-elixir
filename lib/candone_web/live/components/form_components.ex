@@ -1,6 +1,5 @@
 defmodule CandoneWeb.Components.FormComponents do
-	import Phoenix.LiveView
-  import Phoenix.LiveView.Helpers
+	import Phoenix.Component
 
 
   def radio_button(assigns) do

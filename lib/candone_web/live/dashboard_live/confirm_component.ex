@@ -1,6 +1,5 @@
 defmodule CandoneWeb.DashboardLive.ConfirmComponent do
-  import Phoenix.LiveView
-  import Phoenix.LiveView.Helpers
+  import Phoenix.Component
 
   # import CandoneWeb.Components.UiComponents
 

@@ -1,6 +1,6 @@
 <div>
   <.form
-    let={f}
+    :let={form}
     for={@changeset}
     id="company-form"
     phx-target={@myself}
@@ -8,21 +8,21 @@
     phx-submit="save">
 
     <div class="mb-4">
-      <%= label f, :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
-      <%= text_input f, :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      <%= error_tag f, :name, "text-red-500 text-xs italic" %>
+      <%= label form, :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= text_input form, :name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= error_tag form, :name, "text-red-500 text-xs italic" %>
     </div>
 
     <div class="mb-6">
-      <%= label f, :address, class: "block text-gray-700 text-sm font-bold mb-2" %>
-      <%= textarea f, :address, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      <%= error_tag f, :name, "text-red-500 text-xs italic" %>
+      <%= label form, :address, class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= textarea form, :address, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= error_tag form, :name, "text-red-500 text-xs italic" %>
     </div>
 
     <div class="mb-6">
-      <%= label f, :description, class: "block text-gray-700 text-sm font-bold mb-2" %>
-      <%= textarea f, :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      <%= error_tag f, :name, "text-red-500 text-xs italic" %>
+      <%= label form, :description, class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= textarea form, :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <%= error_tag form, :name, "text-red-500 text-xs italic" %>
     </div>
 
     <div class="flex items-center justify-between">

@@ -52,7 +52,7 @@ Hooks.Sortable = {
       dragClass: "drag-item",
       ghostClass: "drag-ghost",
       onEnd: e => {        
-        let params = {old: e.from.id, new: e.to.id, item: e.item.id.split('-')[1]}
+        let params = {old: e.from.id, new: e.to.id, item: e.item.id.split('-')[2]}
         this.pushEventTo(this.el, this.el.dataset["drop"] || "reposition", params)
       }
     })

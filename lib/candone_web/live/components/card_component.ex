@@ -1,5 +1,5 @@
 defmodule CandoneWeb.Components.CardComponents do
-  import Phoenix.LiveView.Helpers
+  import Phoenix.Component
 
   import CandoneWeb.Components.Icons
 
@@ -71,7 +71,7 @@ defmodule CandoneWeb.Components.CardComponents do
           class={"group relative cursor-pointer bg-white py-2 px-6 rounded-xl my-4 drop-shadow #{if assigns.selected, do: "bg-gray-100"}"}
           phx-click={"#{@type}-select"}
           phx-value-id={@value}
-          id={"card-#{@value}"}
+          id={"card-#{@type}-#{@value}"}
         >
         <div
             class={"absolute top-[0px] bottom-[0px] left-[0px] rounded-l-xl #{Map.get(assigns, :colour, "bg-primary-200")} w-[6px]"}>

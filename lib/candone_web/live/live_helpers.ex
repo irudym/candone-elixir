@@ -1,6 +1,5 @@
 defmodule CandoneWeb.LiveHelpers do
-  import Phoenix.LiveView
-  import Phoenix.LiveView.Helpers
+  use Phoenix.Component
 
   alias Phoenix.LiveView.JS
 
@@ -23,6 +22,9 @@ defmodule CandoneWeb.LiveHelpers do
         />
       </.modal>
   """
+  slot :inner_block, required: true
+
+
   def modal(assigns) do
     assigns = assigns
               |> assign_new(:return_to, fn -> nil end)

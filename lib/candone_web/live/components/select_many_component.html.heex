@@ -78,7 +78,9 @@
 
   <ul
     x-cloak
+    id={'ul-#{@id}'}
     phx-update="replace"
+    id="comp"
     x-show="open"
     tabindex="-1"
     role="listbox"
@@ -87,7 +89,7 @@
     <%= for {option, index} <- Enum.with_index(@filtered_options) do %>
       <li 
         role="option"
-        :class={"{ 'text-white bg-primary2-200' : idx === #{index}, 'text-gray-900' : !(idx === #{index})}"}
+        class={"{ 'text-white bg-primary2-200' : idx === #{index}, 'text-gray-900' : !(idx === #{index})}"}
         phx-click="select"
         phx-value-id={option.id}
         phx-target={@myself}

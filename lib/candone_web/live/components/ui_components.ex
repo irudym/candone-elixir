@@ -1,6 +1,5 @@
 defmodule CandoneWeb.Components.UiComponents do
-  import Phoenix.LiveView
-  import Phoenix.LiveView.Helpers
+  import Phoenix.Component
 
   alias Phoenix.LiveView.JS
 
@@ -31,7 +30,7 @@ defmodule CandoneWeb.Components.UiComponents do
         xmlns:serif="http://www.serif.com/"
         class="h-4 w-4 stroke-current inline mb-1 mr-1"
         style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
-        <g id="Layer1">
+        <g>
           <g transform="matrix(1.71429,0,0,1.71429,-397.143,-350.235)">
               <path d="M241,221L235.417,221C234.583,221 234,220.637 234,219.833L234,210L246.583,210C247.634,210 248,210.755 248,210.917L248,213" style="fill:none;stroke-width:1.75px;"/>
               <path d="M234,210.363C234,210.363 234.798,207 236,207L241,207C242.202,207 243,210 243,210" style="fill:none;stroke-width:1.75px;stroke-linecap:butt;"/>
@@ -72,7 +71,7 @@ defmodule CandoneWeb.Components.UiComponents do
         style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"
         class="h-4 w-4 stroke-current inline mb-1 mr-1"
       >
-        <g id="Layer1">
+        <g>
           <g transform="matrix(1.71429,0,0,1.71429,-397.143,-350.235)">
               <path d="M241,221L238.261,221C237.611,221 237.083,220.473 237.083,219.822L237.083,207.797C237.083,207.156 237.603,206.637 238.243,206.637C239.904,206.637 243.009,206.637 245.271,206.637L248,209.366L248,213" style="fill:none;stroke-width:1.75px;"/>
           </g>
@@ -123,12 +122,7 @@ defmodule CandoneWeb.Components.UiComponents do
   def cancel_button(assigns) do
     assigns = assign_new(assigns, :return_to, fn -> nil end)
     ~H"""
-      <%= live_patch "Cancel",
-                to: @return_to,
-                id: "close",
-                class: "cursor-pointer bg-primary-100 hover:bg-primary-200 px-5 py-3 text-sm leading-5 rounded-lg font-semibold text-white",
-                phx_click: hide_modal()
-              %>
+      <.link patch={@return_to} class="cursor-pointer bg-primary-100 hover:bg-primary-200 px-5 py-3 text-sm leading-5 rounded-lg font-semibold text-white" >Cancel</.link>
     """
   end
 

@@ -23,7 +23,7 @@ defmodule Candone.Markdown do
 		#		], []}
 		#	{:ok, ast, _} -> {:ok, ast, []}
 		#end
-		{_, ast, _} = EarmarkParser.as_ast(markdown)
+		{_, ast, _} = Earmark.Parser.as_ast(markdown)
 
 		ast
 		|> Earmark.Transform.map_ast(fn {t, a, _, m} -> {t, a ++ [{"class", Map.get(@class_map, t, "")}], nil, m} end, true)
