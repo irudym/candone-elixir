@@ -36,6 +36,27 @@ Hooks.SelectComponent = SelectComponent
 Hooks.SelectManyComponent = SelectManyComponent
 Hooks.Flash = FlashMessage
 
+Hooks.StoreSettings = {
+  // Called when a LiveView is mounted, if it includes an element that uses this hook
+  mounted()
+  {
+    // Send a restore event to the LiveView
+    // if nothing is stored yet, send a 'null' value    
+    this.pushEvent("restore", {
+      sorting: localStorage.getItem("sorting"),
+      hide_done: localStorage.getItem("hide_done"),
+    })
+    
+    this.handleEvent("saveConfigHide", ({ hide_done}) => 
+      localStorage.setItem("hide_done", hide_done)
+    )
+    this.handleEvent("saveConfigSorting", ({sorting}) => 
+      localStorage.setItem("sorting", sorting)
+    )
+  }
+}
+
+
 Hooks.Sortable = {
   mounted()
   {
@@ -46,13 +67,13 @@ Hooks.Sortable = {
       dragClass: "drag-item",
       ghostClass: "drag-ghost",
       onEnd: e => {        
-        console.log("ID: ", e.item.id)
         let params = {old: e.from.id, new: e.to.id, item: e.item.id.split('-')[1]}
         this.pushEventTo(this.el, this.el.dataset["drop"] || "reposition", params)
       }
     })
   }
 }
+
 
 
 

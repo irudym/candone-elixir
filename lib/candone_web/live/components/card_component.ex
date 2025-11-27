@@ -69,7 +69,7 @@ defmodule CandoneWeb.Components.CardComponents do
   def card(assigns) do
  		 ~H"""
  		 	<div
-          class={"group relative cursor-pointer bg-white py-2 px-6 rounded-xl my-4 drop-shadow #{if assigns.selected, do: "bg-gray-100"}"}
+          class={"group relative cursor-pointer bg-white py-1 px-6 rounded-xl my-4 drop-shadow #{if assigns.selected, do: "bg-gray-100"}"}
           phx-click={@click}
           phx-value-id={@value}
           id={"#{@type}-#{@value}"}
@@ -84,23 +84,23 @@ defmodule CandoneWeb.Components.CardComponents do
         </div>
 
         <div class="mt-1 ml-9">
-          <p class="text-base mt-2">
+          <p class={"text-sm mt-2 #{Map.get(assigns, :disabled, "")}"}>
             <%= assigns.name %>
           </p>
-          <div class="felx space-x-2 text-primary-200 text-xs">
-            <%= Calendar.strftime(assigns.date, "%d %B %Y") %>
+          <div class="flex space-x-2 text-primary-200 text-xs">
+            <%= Calendar. strftime(assigns.date, "%d %B %Y") %>
           </div>
 
-          <div class="my-5 text-primary-200 text-sm font-light max-h-20 text-ellipsis overflow-hidden">
+          <div class="truncate my-2 text-primary-200 text-xs font-light max-h-20">
             <%= assigns.description %>
           </div>
 
           <div class="flex">
-            <div class="rounded-full text-center py-1 text-sm text-primary-200 mr-4 mb-1">
-              <.people_icon />
+            <div class="rounded-full text-center py-1 text-xs text-primary-200 mr-4 mb-1">
+              <.people_icon />x
             	<%= assigns.counter1 %>
             </div>
-            <div class="rounded-full text-center py-1 text-sm text-primary-200 mb-1">
+            <div class="rounded-full text-center py-1 text-xs text-primary-200 mb-1">
               <.cog_icon />
             	<%= assigns.counter2 %>
             </div>

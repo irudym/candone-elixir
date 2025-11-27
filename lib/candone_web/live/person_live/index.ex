@@ -31,7 +31,7 @@ defmodule CandoneWeb.PersonLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing People")
+    |> assign(:title, "Listing People")
     |> assign(:person, nil)
   end
 

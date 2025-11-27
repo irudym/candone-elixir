@@ -94,7 +94,7 @@
 
     <!-- Tasks -->
     <div class="grow basis-3/6 mr-4">
-      <div class="flex flex-row">
+      <div class="flex flex-row" phx-hook="StoreSettings" id="drop_down_menu_config">
           <.dropdown_menu_custom title="Tasks">
             <.dropdown_menu_item click="hide-done">
               <%= if @hide_done do %>
@@ -189,7 +189,7 @@
                 <.card
 
                   name={task.name}
-                  description={task.description}
+                  description=""
                   date={task.inserted_at}
                   counter1={task.people_count}
                   counter2 = {task.cost}
@@ -198,6 +198,7 @@
                   value={task.id}
                   selected={false}
                   colour={get_colour_from_urgency(task.urgency)}
+                  disabled="text-primary-200"
                 />
               <% end %>
             </div>

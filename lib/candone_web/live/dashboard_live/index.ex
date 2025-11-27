@@ -282,6 +282,7 @@ defmodule CandoneWeb.DashboardLive.Index do
     {:noreply, socket
               |> assign(:hide_done, !hide_done)
               |> update_after_show(hide_done)
+              |> push_event("saveConfigHide", %{"hide_done" => !hide_done})
     }
   end
 
@@ -297,6 +298,7 @@ defmodule CandoneWeb.DashboardLive.Index do
               |> stream(:tasks_backlog, backlog, reset: true)
               |> stream(:tasks_sprint, sprint, reset: true)
               |> stream(:tasks_done, done, reset: true)
+              |> push_event("saveConfigSorting", %{"sorting" => :urgency})
     }
   end
 
@@ -310,6 +312,7 @@ defmodule CandoneWeb.DashboardLive.Index do
               |> stream(:tasks_backlog, backlog, reset: true)
               |> stream(:tasks_sprint, sprint, reset: true)
               |> stream(:tasks_done, done, reset: true)
+              |> push_event("saveConfigSorting", %{"sorting" => :date})
     }
   end
 
@@ -323,6 +326,23 @@ defmodule CandoneWeb.DashboardLive.Index do
               |> stream(:tasks_backlog, backlog, reset: true)
               |> stream(:tasks_sprint, sprint, reset: true)
               |> stream(:tasks_done, done, reset: true)
+              |> push_event("saveConfigSorting", %{"sorting" => :cost})
+    }
+  end
+
+  def handle_event("restore", %{"sorting" => sorting, "hide_done" => hide_done}, socket) do
+    sorting = sorting2symbol(sorting)
+    project = Projects.get_project!(socket.assigns.current_project_id)
+    backlog = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 0), sorting)
+    sprint = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 1), sorting)
+    done = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 2), sorting)
+
+    {:noreply, socket
+                |> assign(:sorting, sorting2symbol(sorting))
+                |> assign(:hide_done, string2bool(hide_done))
+                |> stream(:tasks_backlog, backlog, reset: true)
+                |> stream(:tasks_sprint, sprint, reset: true)
+                |> stream(:tasks_done, done, reset: true)
     }
   end
 
@@ -351,5 +371,13 @@ defmodule CandoneWeb.DashboardLive.Index do
     end
     Tasks.update_task_stage(task, stage)
   end
+
+  defp string2bool(nil), do: true
+  defp string2bool("true"), do: true
+  defp string2bool(_value), do: false
+
+  defp sorting2symbol("cost"), do: :cost
+  defp sorting2symbol("urgency"), do: :urgency
+  defp sorting2symbol(_value), do: :date
 
 end
