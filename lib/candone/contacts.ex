@@ -121,7 +121,8 @@ defmodule Candone.Contacts do
   Return the list which containe only IDs and Full Names of persons
   """
   def list_people_with_full_names do
-    list_people()
+    query = from p in Person, select: %{id: p.id, first_name: p.first_name, middle_name: p.middle_name, last_name: p.last_name}
+    Repo.all(query)
     |> Enum.map(& %{id: &1.id, name: Person.full_name(&1)})
   end
 
@@ -154,12 +155,23 @@ defmodule Candone.Contacts do
   """
   def get_people_from_string(nil), do: []
 
+  def get_people_from_string(""), do: []
+
   def get_people_from_string(str) do
-    if str == "" do
-      []
-    else
-      get_people(String.split(str, ","))
-    end
+    ids =
+      str
+      |> String.split(",")
+      |> Enum.map(&String.trim/1)
+      |> Enum.filter(fn s -> s != "" end)
+      |> Enum.reduce([], fn s, acc ->
+        case Integer.parse(s) do
+          {id, ""} -> [id | acc]
+          _ -> acc
+        end
+      end)
+      |> Enum.reverse()
+
+    get_people(ids)
   end
 
   @doc """

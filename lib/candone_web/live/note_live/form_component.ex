@@ -105,8 +105,6 @@ defmodule CandoneWeb.NoteLive.FormComponent do
     assign(socket, :form, to_form(changeset))
   end
 
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
-
   defp save_note(socket, :new_note, note_params) do
     save_note(socket, :new, note_params)
   end

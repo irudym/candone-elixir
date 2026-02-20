@@ -49,6 +49,6 @@ defmodule Candone.Tasks.Task do
     Get a string representation of the stage
   """
   def get_stage(%{stage: 0}), do: "In Backlog"
-  def get_stage(%{stage: 1}), do: "In Srint"
+  def get_stage(%{stage: 1}), do: "In Sprint"
   def get_stage(%{stage: 2}), do: "Done"
 end

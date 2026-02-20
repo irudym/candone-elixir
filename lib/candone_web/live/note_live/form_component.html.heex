@@ -23,7 +23,7 @@
       />
     </div>
 
-    <.input field={@form[:name]} type="text" label="Name" />
+    <.input field={@form[:name]} type="text" label="Name" phx-debounce="300" />
 
     <%= if @show_markdown do %>
       <div class="py-2">
@@ -44,7 +44,7 @@
     <% end %>
 
     <div class={"mb-4 #{if @show_markdown, do: "hidden"}"}>
-      <.input field={@form[:content]} type="textarea" label="Content" rows="18"/>
+      <.input field={@form[:content]} type="textarea" label="Content" rows="18" phx-debounce="300" />
     </div>
     
     <:actions>

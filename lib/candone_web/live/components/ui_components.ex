@@ -175,18 +175,4 @@ defmodule CandoneWeb.Components.UiComponents do
     """
   end
 
-
-  def text_input(assigns) do
-    ~H"""
-      <input field={@form[@name]} type="text" class={@class} label={@name}/>
-    """
-  end
-
-  def textarea(assigns) do
-  ~H"""
-    <textarea class={@class} />
-  """
-  end
-
-
 end

@@ -16,7 +16,7 @@ defmodule Candone.Contacts.Person do
   @doc false
   def changeset(person, attrs) do
     person
-    |> cast(attrs, [:first_name, :last_name, :middle_name, :description])
+    |> cast(attrs, [:first_name, :last_name, :middle_name, :description, :company_id])
     |> validate_required([:first_name, :last_name])
   end
 

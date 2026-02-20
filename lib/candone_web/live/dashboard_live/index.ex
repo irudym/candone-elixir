@@ -39,7 +39,7 @@ defmodule CandoneWeb.DashboardLive.Index do
 
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     projects = Candone.Projects.list_projects()
     current_project_id = get_project_id(projects)
 
@@ -58,8 +58,6 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
-    IO.inspect("======> apply_action(_url) <======")
-    IO.inspect(socket.assigns.live_action)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -106,15 +104,11 @@ defmodule CandoneWeb.DashboardLive.Index do
   end
 
   defp apply_action(socket, :index, _params) do
-    projects = Candone.Projects.list_projects()
-    current_project_id = get_project_id(projects)
-
     socket
-    |> set_project(current_project_id)
+    |> set_project(socket.assigns.current_project_id)
   end
 
   defp apply_action(socket, :show_project, %{"id" => id}) do
-    IO.inspect("======> apply_action(:show_project) <======")
     socket
     |> set_project(id)
   end
@@ -137,12 +131,12 @@ defmodule CandoneWeb.DashboardLive.Index do
   defp set_project(socket, id) do
     project = Projects.get_project!(id)
 
-    IO.inspect("======> set_project #{id} <=======")
-
     sorting = socket.assigns.sorting
-    backlog_tasks = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 0), sorting)
-    sprint_tasks = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 1), sorting)
-    done_tasks = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 2), sorting)
+    all_tasks = Projects.get_project_tasks(project)
+    grouped = Enum.group_by(all_tasks, & &1.stage)
+    backlog_tasks = Tasks.sort_by(Map.get(grouped, 0, []), sorting)
+    sprint_tasks = Tasks.sort_by(Map.get(grouped, 1, []), sorting)
+    done_tasks = Tasks.sort_by(Map.get(grouped, 2, []), sorting)
 
     notes = Projects.get_project_notes(project)
 
@@ -159,7 +153,7 @@ defmodule CandoneWeb.DashboardLive.Index do
   end
 
   defp update_sprint_cost(tasks) do
-    Enum.reduce(tasks, 0, fn task, acc -> acc + task.cost end)
+    Enum.reduce(tasks, 0, fn task, acc -> acc + (task.cost || 0) end)
   end
 
   @impl true
@@ -260,13 +254,14 @@ defmodule CandoneWeb.DashboardLive.Index do
   end
 
   def handle_event("project-delete", %{"id" => id}, socket) do
-    IO.inspect("======> handle_event('project-delete') <======")
-
     project = Projects.get_project!(id)
     {:ok, _} = Projects.delete_project(project)
 
     projects = Candone.Projects.list_projects()
-    current_project_id = List.first(projects).id || :none
+    current_project_id = case List.first(projects) do
+      nil -> :none
+      project -> project.id
+    end
 
     {:noreply, socket
                 |> assign(:projects, projects)
@@ -288,71 +283,38 @@ defmodule CandoneWeb.DashboardLive.Index do
 
 
 
-  def handle_event("sort-urgency", _, socket) do
-    project = Projects.get_project!(socket.assigns.current_project_id)
-    backlog = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 0), :urgency)
-    sprint = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 1), :urgency)
-    done = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 2), :urgency)
-    {:noreply, socket
-              |> assign(:sorting, :urgency)
-              |> stream(:tasks_backlog, backlog, reset: true)
-              |> stream(:tasks_sprint, sprint, reset: true)
-              |> stream(:tasks_done, done, reset: true)
-              |> push_event("saveConfigSorting", %{"sorting" => :urgency})
-    }
-  end
-
-  def handle_event("sort-date", _, socket) do
-    project = Projects.get_project!(socket.assigns.current_project_id)
-    backlog = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 0), :date)
-    sprint = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 1), :date)
-    done = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 2), :date)
-    {:noreply, socket
-              |> assign(:sorting, :date)
-              |> stream(:tasks_backlog, backlog, reset: true)
-              |> stream(:tasks_sprint, sprint, reset: true)
-              |> stream(:tasks_done, done, reset: true)
-              |> push_event("saveConfigSorting", %{"sorting" => :date})
-    }
-  end
-
-  def handle_event("sort-cost", _, socket) do
-    project = Projects.get_project!(socket.assigns.current_project_id)
-    backlog = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 0), :cost)
-    sprint = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 1), :cost)
-    done = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 2), :cost)
-    {:noreply, socket
-              |> assign(:sorting, :cost)
-              |> stream(:tasks_backlog, backlog, reset: true)
-              |> stream(:tasks_sprint, sprint, reset: true)
-              |> stream(:tasks_done, done, reset: true)
-              |> push_event("saveConfigSorting", %{"sorting" => :cost})
+  def handle_event("sort-" <> field, _, socket) do
+    sorting = sorting2symbol(field)
+    {:noreply, apply_sorting(socket, sorting)
+              |> push_event("saveConfigSorting", %{"sorting" => sorting})
     }
   end
 
   def handle_event("restore", %{"sorting" => sorting, "hide_done" => hide_done}, socket) do
     sorting = sorting2symbol(sorting)
-    project = Projects.get_project!(socket.assigns.current_project_id)
-    backlog = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 0), sorting)
-    sprint = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 1), sorting)
-    done = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 2), sorting)
-
     {:noreply, socket
-                |> assign(:sorting, sorting2symbol(sorting))
                 |> assign(:hide_done, string2bool(hide_done))
-                |> stream(:tasks_backlog, backlog, reset: true)
-                |> stream(:tasks_sprint, sprint, reset: true)
-                |> stream(:tasks_done, done, reset: true)
+                |> apply_sorting(sorting)
     }
   end
 
-  defp update_after_show(socket, true) do
+  defp apply_sorting(socket, sorting) do
     project = Projects.get_project!(socket.assigns.current_project_id)
-    sorting = socket.assigns.sorting
-    done = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, 2), sorting)
+    all_tasks = Projects.get_project_tasks(project)
+    grouped = Enum.group_by(all_tasks, & &1.stage)
+    backlog = Tasks.sort_by(Map.get(grouped, 0, []), sorting)
+    sprint = Tasks.sort_by(Map.get(grouped, 1, []), sorting)
+    done = Tasks.sort_by(Map.get(grouped, 2, []), sorting)
 
     socket
+    |> assign(:sorting, sorting)
+    |> stream(:tasks_backlog, backlog, reset: true)
+    |> stream(:tasks_sprint, sprint, reset: true)
     |> stream(:tasks_done, done, reset: true)
+  end
+
+  defp update_after_show(socket, true) do
+    apply_sorting(socket, socket.assigns.sorting)
   end
 
   defp update_after_show(socket, false), do: socket
