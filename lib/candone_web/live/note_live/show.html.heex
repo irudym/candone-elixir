@@ -1,27 +1,29 @@
-<.header>
-  Note <%= @note.id %>
-  <:subtitle>This is a note record from your database.</:subtitle>
-  <:actions>
-    <.link patch={~p"/notes/#{@note}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit note</.button>
-    </.link>
-  </:actions>
-</.header>
+<div style="padding: 24px 32px; max-width: 1200px; margin: 0 auto;">
+  <.header>
+    Note <%= @note.id %>
+    <:subtitle>This is a note record from your database.</:subtitle>
+    <:actions>
+      <.link patch={~p"/notes/#{@note}/show/edit"} phx-click={JS.push_focus()}>
+        <.button>Edit note</.button>
+      </.link>
+    </:actions>
+  </.header>
 
-<.list>
-  <:item title="Name"><%= @note.name %></:item>
-  <:item title="Content"><%= @note.content %></:item>
-</.list>
+  <.list>
+    <:item title="Name"><%= @note.name %></:item>
+    <:item title="Content"><%= @note.content %></:item>
+  </.list>
 
-<.back navigate={~p"/notes"}>Back to notes</.back>
+  <.back navigate={~p"/notes"}>Back to notes</.back>
 
-<.modal :if={@live_action == :edit} id="note-modal" show on_cancel={JS.patch(~p"/notes/#{@note}")}>
-  <.live_component
-    module={CandoneWeb.NoteLive.FormComponent}
-    id={@note.id}
-    title={@page_title}
-    action={@live_action}
-    note={@note}
-    patch={~p"/notes/#{@note}"}
-  />
-</.modal>
+  <.modal title="Edit Note" :if={@live_action == :edit} id="note-modal" show on_cancel={JS.patch(~p"/notes/#{@note}")}>
+    <.live_component
+      module={CandoneWeb.NoteLive.FormComponent}
+      id={@note.id}
+      title={@page_title}
+      action={@live_action}
+      note={@note}
+      patch={~p"/notes/#{@note}"}
+    />
+  </.modal>
+</div>

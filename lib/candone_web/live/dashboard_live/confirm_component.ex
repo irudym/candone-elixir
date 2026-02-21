@@ -1,14 +1,12 @@
 defmodule CandoneWeb.DashboardLive.ConfirmComponent do
   import Phoenix.Component
 
-  # import CandoneWeb.Components.UiComponents
-
 
   defp cancel_button(assigns) do
     ~H"""
       <a
         href="#"
-        class="cursor-pointer bg-primary-100 hover:bg-primary-200 px-5 py-3 text-sm leading-5 rounded-lg font-semibold text-white"
+        class="cursor-pointer filter-btn font-semibold"
         phx-click="close_confirmation"
       >
         Cancel
@@ -20,7 +18,8 @@ defmodule CandoneWeb.DashboardLive.ConfirmComponent do
     ~H"""
       <span
         href="#"
-        class="cursor-pointer bg-red-200 hover:bg-red-200 px-5 py-3 text-sm leading-5 rounded-lg font-semibold text-white"
+        class="cursor-pointer py-2 px-5 text-sm leading-5 rounded-lg font-semibold text-white"
+        style="background: #c75c5c;"
         phx-click={@event}
         phx-value-id={@item_id}
       >
@@ -33,11 +32,11 @@ defmodule CandoneWeb.DashboardLive.ConfirmComponent do
   def confirm_delete(assigns) do
     ~H"""
       <div>
-        <div class="mb-4">
+        <div class="mb-4" style="color: #3d3d4a; font-size: 14px;">
           Are you sure you want to delete <b><%= get_name(@item) %></b> <%= get_type(@item) %>?
         </div>
 
-        <div class="flex flex-row-reverse gap-6">
+        <div class="flex flex-row-reverse gap-4">
           <.cancel_button />
           <.delete_button event={"#{get_type(@item)}-delete"} item_id={get_id(@item)}/>
         </div>
