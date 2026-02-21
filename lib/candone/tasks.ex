@@ -159,9 +159,8 @@ defmodule Candone.Tasks do
 
   """
   def change_task(%Task{} = task, attrs \\ %{}) do
-    task
-    |> Repo.preload(:people)
-    |> Task.changeset(attrs)
+    task = if Ecto.assoc_loaded?(task.people), do: task, else: Repo.preload(task, :people)
+    Task.changeset(task, attrs)
   end
 
   def sort_by(tasks, :date) do

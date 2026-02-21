@@ -3,54 +3,53 @@ defmodule CandoneWeb.Components.CardComponents do
 
   import CandoneWeb.Components.Icons
 
+  @urgency_classes %{
+    0 => "urgency-0",
+    1 => "urgency-1",
+    2 => "urgency-2",
+    3 => "urgency-3"
+  }
+
+  @urgency_icons %{
+    0 => "○",
+    1 => "◉",
+    2 => "◉",
+    3 => "◉"
+  }
+
+  defp urgency_class(urgency), do: Map.get(@urgency_classes, urgency, "urgency-0")
+  defp urgency_icon(urgency), do: Map.get(@urgency_icons, urgency, "○")
 
   def project_card(assigns) do
     ~H"""
-      <div class={"group border-2 relative cursor-pointer border-gray-100 bg-white #{if assigns.selected, do: "bg-gray-100"} py-1 px-2 rounded-xl my-4"}
+      <div class={"project-item group #{if assigns.selected, do: "project-item-active"}"}
             phx-click={"#{@type}-select"}
             phx-value-id={@value}
             id={"#{@type}-#{@value}"}
         >
-        <div
-            class={"absolute top-[-1px] bottom-[-1px] left-[-2px] rounded-l-xl border-primary-200 #{if assigns.selected, do: "bg-primary-300", else: "bg-primary-200"} w-[10px]"}>
-        </div>
-        <!-- vertical tool bar -->
-          <div class="absolute left-3 top-0 invisible group-hover:visible h-full flex flex-col-reverse py-1 ease-out duration-100">
-          <.delete_button_icon type={@type} value={@value} />
-        </div>
-        <div class="ml-9">
-          <p class="text-base mt-1">
-            <%= @name %>
-          </p>
-          <div class="space-x-2 text-gray-400 text-xs">
-            <%= Calendar.strftime(assigns.date, "%d %B %Y") %>
+        <span style="font-size: 11px; width: 20px; text-align: center;">◆</span>
+        <span style="flex: 1;"><%= @name %></span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="nav-count"><%= @tasks %></span>
+          <!-- Delete button on hover -->
+          <div class="invisible group-hover:visible">
+            <.delete_button_icon type={@type} value={@value} />
           </div>
-          <div class="flex">
-            <div class="mt-4 text-xs text-primary-200 mr-4">
-              <.task_icon />
-              <%= @tasks %>
-            </div>
-            <div class="mt-4 text-xs text-primary-200">
-              <.note_icon />
-              <%= @notes %>
-            </div>
-          </div>
-
         </div>
-    </div>
+      </div>
     """
   end
 
   def delete_button_icon(assigns) do
     ~H"""
     <svg
-      width="100%" height="100%"
+      width="16" height="16"
       viewBox="0 0 32 32"
       version="1.1" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       xml:space="preserve" xmlns:serif="http://www.serif.com/"
       style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"
-      class="h-7 w-7 stroke-current text-red-200 p-1 rounded-lg hover:bg-red-200 hover:text-red-50"
+      class="stroke-current text-red-200 cursor-pointer hover:text-red-500 transition-colors"
       phx-click={"#{@type}-delete-confirm"}
       phx-value-id={@value}
     >
@@ -67,47 +66,52 @@ defmodule CandoneWeb.Components.CardComponents do
 
 
   def card(assigns) do
- 		 ~H"""
- 		 	<div
-          class={"group relative cursor-pointer bg-white py-1 px-6 rounded-xl my-4 drop-shadow #{if assigns.selected, do: "bg-gray-100"}"}
-          phx-click={@click}
-          phx-value-id={@value}
-          id={"#{@type}-#{@value}"}
-        >
-        <div
-            class={"absolute top-[0px] bottom-[0px] left-[0px] rounded-l-xl #{Map.get(assigns, :colour, "bg-primary-200")} w-[6px]"}>
+    urgency = Map.get(assigns, :urgency, 0)
+    assigns = assign(assigns, :urgency_class, urgency_class(urgency))
+    assigns = assign(assigns, :urgency_icon, urgency_icon(urgency))
+
+    ~H"""
+      <div
+        class="task-card group"
+        phx-click={@click}
+        phx-value-id={@value}
+        id={"#{@type}-#{@value}"}
+      >
+        <!-- Top row: priority icon + task ID -->
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+          <span class={@urgency_class} style="font-size: 13px;"><%= @urgency_icon %></span>
+          <span style="font-size: 11.5px; color: #a5a5b0; font-weight: 500;">
+            TSK-<%= @value %>
+          </span>
         </div>
 
-        <!-- vertical tool bar -->
-        <div class="absolute left-4 top-0 invisible group-hover:visible h-full flex flex-col-reverse py-4 ease-out duration-100">
-          <.delete_button_icon type={@type} value={@value} />
+        <!-- Title -->
+        <div style={"font-size: 13px; color: #3d3d4a; font-weight: 500; line-height: 1.5; margin-bottom: 10px; #{if Map.get(assigns, :disabled, nil), do: "color: #b0b0be;", else: ""}"}>
+          <%= @name %>
         </div>
 
-        <div class="mt-1 ml-9">
-          <p class={"text-sm mt-2 #{Map.get(assigns, :disabled, "")}"}>
-            <%= assigns.name %>
-          </p>
-          <div class="flex space-x-2 text-primary-200 text-xs">
-            <%= Calendar. strftime(assigns.date, "%d %B %Y") %>
+        <!-- Bottom row: info badges + people + delete -->
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+            <%= if @counter2 && @counter2 != "0" && @counter2 != 0 do %>
+              <span class="subtask-badge">
+                Cost: <%= @counter2 %>
+              </span>
+            <% end %>
           </div>
-
-          <div class="truncate my-2 text-primary-200 text-xs font-light max-h-20">
-            <%= assigns.description %>
-          </div>
-
-          <div class="flex">
-            <div class="rounded-full text-center py-1 text-xs text-primary-200 mr-4 mb-1">
-              <.people_icon />x
-            	<%= assigns.counter1 %>
-            </div>
-            <div class="rounded-full text-center py-1 text-xs text-primary-200 mb-1">
-              <.cog_icon />
-            	<%= assigns.counter2 %>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <%= if @counter1 && @counter1 != 0 do %>
+              <span class="subtask-badge">
+                <.people_icon class="!h-3 !w-3 !p-0" /> <%= @counter1 %>
+              </span>
+            <% end %>
+            <!-- Delete icon on hover -->
+            <div class="invisible group-hover:visible">
+              <.delete_button_icon type={@type} value={@value} />
             </div>
           </div>
-
         </div>
       </div>
- 		 """
+    """
   end
 end

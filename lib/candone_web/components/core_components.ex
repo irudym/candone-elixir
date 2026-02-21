@@ -36,9 +36,10 @@ defmodule CandoneWeb.CoreComponents do
       </.modal>
 
   """
-  attr :id, :string, required: true
+  attr :id, :string, default: "modal"
   attr :show, :boolean, default: false
   attr :on_cancel, JS, default: %JS{}
+  attr :title, :string, default: ""
   slot :inner_block, required: true
 
   def modal(assigns) do
@@ -48,60 +49,45 @@ defmodule CandoneWeb.CoreComponents do
 
 
     ~H"""
-    <div id="modal" class="fixed z-10 inset-0 overflow-y-auto" phx-remove={hide_modal()}>
-      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">>
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+    <div id="modal" class="fixed z-10 inset-0 overflow-y-auto" phx-remove={hide_modal()} style="backdrop-filter: blur(4px);">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true" style="background: rgba(80,75,65,0.25);"></div>
 
         <!-- This element is to trick the browser into centering the modal contents. -->
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-        <div class="inline-block align-bottom bg-white text-left rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="inline-block align-bottom text-left rounded-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" style="background: #faf7f2; border: 1px solid #e2ded6; box-shadow: 0 20px 60px rgba(0,0,0,0.1);">
           <!-- modal header -->
-          <div class={"absolute w-full -top-0.5 left-0 h-12 bg-primary-300 rounded-t-lg #{@class}"}>
+          <div class={"w-full h-12 rounded-t-xl #{@class}"} style="background: #3d3d4a; border-radius: 12px 12px 0 0;">
             <div class="relative flex flex-row-reverse justify-between items-center p-1 px-3">
               <%= if @return_to do %>
                   <a
-                    class="m-2 text-gray-100"
                     href={@return_to}
                     id="close"
                     data-phx-link="patch"
                     data-phx-link-state="push"
                     phx-click={hide_modal()}
+                    style="color: #a5a5b0; font-size: 16px; cursor: pointer; padding: 4px 8px; border-radius: 6px; margin: 4px;"
                   >
-                    <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="mx-1 p-1 rounded-md w-5 h-5 cursor-pointer text-gray-100 stroke-current hover:bg-primary-250"
-                    style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-miterlimit:2;"
-                    fill="none"
-                    viewBox="0 0 10 10"
-                    stroke="currentColor"
-                    width="100%" height="100%"
-                    xml:space="preserve" xmlns:serif="http://www.serif.com/"
-                    >
-                      <g transform="matrix(0.646062,-0.149612,-0.148781,0.649668,-0.319038,-1.14623)">
-                        <path d="M3,4L18.991,19.991" style="fill:none;stroke-width:3.2px;"/>
-                      </g>
-                      <g transform="matrix(0.148781,0.649668,-0.646062,-0.149612,11.1139,-0.350554)">
-                          <path d="M3,4L18.991,19.991" style="fill:none;stroke-width:3.2px;stroke-linejoin:round;stroke-miterlimit:1.5;"/>
-                      </g>
-                    </svg>
+                    &#10005;
                   </a>
                 <% else %>
-                  <div class="m-2 text-gray-100 h-5">
+                  <div class="m-2 h-5">
                   </div>
               <% end %>
-              <div class="font-medium text-gray-100 text-base pl-4">
+              <div class="font-semibold text-base pl-4" style="color: #f5f1eb;">
                 <%= @title %>
               </div>
             </div>
           </div>
           <div
             id="modal-content"
-            class="bg-white px-1 pt-5 pb-4 sm:p-6 sm:pb-4 rounded-lg"
+            class="px-1 pt-5 pb-4 sm:p-6 sm:pb-4 rounded-b-xl"
+            style="background: #faf7f2;"
             phx-window-keydown={JS.dispatch("click", to: "#close")}
             phx-key="escape"
           >
-            <div class="p-1 pt-14 space-y-6">
+            <div class="p-1 pt-4 space-y-6">
               <%= render_slot(@inner_block) %>
             </div>
           </div>
@@ -260,7 +246,7 @@ defmodule CandoneWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "bg-primary2-200 hover:bg-primary2-300 text-sm leading-5 rounded-lg font-semibold text-white py-2 px-8 rounded-lg focus:outline-none focus:shadow-outline",
+        "new-issue-btn py-2 px-8 focus:outline-none focus:shadow-outline",
         @class
       ]}
       {@rest}
@@ -405,7 +391,7 @@ defmodule CandoneWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "appearance-none border border-primary-200 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
+          "appearance-none border rounded-lg w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
@@ -424,7 +410,7 @@ defmodule CandoneWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-primary-300 text-sm font-semibold mb-2">
+    <label for={@for} class="block text-sm font-semibold mb-2" style="color: #3d3d4a;">
       <%= render_slot(@inner_block) %>
     </label>
     """

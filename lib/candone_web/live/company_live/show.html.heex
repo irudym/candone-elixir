@@ -1,28 +1,30 @@
-<.header>
-  Company <%= @company.id %>
-  <:subtitle>This is a company record from your database.</:subtitle>
-  <:actions>
-    <.link patch={~p"/companies/#{@company}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit company</.button>
-    </.link>
-  </:actions>
-</.header>
+<div style="padding: 24px 32px; max-width: 1200px; margin: 0 auto;">
+  <.header>
+    Company <%= @company.id %>
+    <:subtitle>This is a company record from your database.</:subtitle>
+    <:actions>
+      <.link patch={~p"/companies/#{@company}/show/edit"} phx-click={JS.push_focus()}>
+        <.button>Edit company</.button>
+      </.link>
+    </:actions>
+  </.header>
 
-<.list>
-  <:item title="Address"><%= @company.address %></:item>
-  <:item title="Description"><%= @company.description %></:item>
-  <:item title="Name"><%= @company.name %></:item>
-</.list>
+  <.list>
+    <:item title="Address"><%= @company.address %></:item>
+    <:item title="Description"><%= @company.description %></:item>
+    <:item title="Name"><%= @company.name %></:item>
+  </.list>
 
-<.back navigate={~p"/companies"}>Back to companies</.back>
+  <.back navigate={~p"/companies"}>Back to companies</.back>
 
-<.modal :if={@live_action == :edit} id="company-modal" show on_cancel={JS.patch(~p"/companies/#{@company}")}>
-  <.live_component
-    module={CandoneWeb.CompanyLive.FormComponent}
-    id={@company.id}
-    title={@page_title}
-    action={@live_action}
-    company={@company}
-    patch={~p"/companies/#{@company}"}
-  />
-</.modal>
+  <.modal title="Edit Company" :if={@live_action == :edit} id="company-modal" show on_cancel={JS.patch(~p"/companies/#{@company}")}>
+    <.live_component
+      module={CandoneWeb.CompanyLive.FormComponent}
+      id={@company.id}
+      title={@page_title}
+      action={@live_action}
+      company={@company}
+      patch={~p"/companies/#{@company}"}
+    />
+  </.modal>
+</div>

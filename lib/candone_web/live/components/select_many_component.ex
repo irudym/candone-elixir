@@ -12,10 +12,6 @@ defmodule CandoneWeb.Components.SelectManyComponent do
   def update(assigns, socket) do
     %{f: f, name: name, options: options, id: id} = assigns
 
-    # get stored values of options ids
-    IO.inspect("======> Select many Component: update <======")
-    IO.inspect(f)
-
     value = Map.get(f.params, "#{name}")
 
     values_ids = if value && value != "" do

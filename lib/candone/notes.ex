@@ -100,9 +100,8 @@ defmodule Candone.Notes do
 
   """
   def change_note(%Note{} = note, attrs \\ %{}) do
-    note
-    |> Repo.preload(:people)
-    |> Note.changeset(attrs)
+    note = if Ecto.assoc_loaded?(note.people), do: note, else: Repo.preload(note, :people)
+    Note.changeset(note, attrs)
   end
 
   def create_note_with_projects(attrs, projects) do
