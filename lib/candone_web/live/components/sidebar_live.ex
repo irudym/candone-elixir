@@ -2,11 +2,9 @@ defmodule CandoneWeb.SidebarLive do
   use CandoneWeb, :live_component
 
   alias Candone.Projects
-  alias Candone.Notes
 
   import CandoneWeb.Components.CardComponents
   import CandoneWeb.Components.UiComponents
-  import CandoneWeb.Components.Icons
 
   @impl true
   def mount(socket) do
@@ -16,7 +14,6 @@ defmodule CandoneWeb.SidebarLive do
       |> assign(:sidebar_collapsed, false)
       |> assign(:delete_item, nil)
       |> assign(:projects, projects)
-      |> assign(:notes, [])
       |> assign(:current_project_id, :none)
     }
   end
@@ -24,24 +21,7 @@ defmodule CandoneWeb.SidebarLive do
   @impl true
   def update(assigns, socket) do
     current_project_id = Map.get(assigns, :current_project_id, :none)
-    prev_project_id = socket.assigns.current_project_id
-
-    socket = assign(socket, :current_project_id, current_project_id)
-
-    socket =
-      if current_project_id != prev_project_id do
-        if current_project_id != :none do
-          project = Projects.get_project!(current_project_id)
-          notes = Projects.get_project_notes(project)
-          assign(socket, :notes, notes)
-        else
-          assign(socket, :notes, [])
-        end
-      else
-        socket
-      end
-
-    {:ok, socket}
+    {:ok, assign(socket, :current_project_id, current_project_id)}
   end
 
   @impl true
@@ -53,18 +33,9 @@ defmodule CandoneWeb.SidebarLive do
     {:noreply, push_navigate(socket, to: ~p"/dashboard/projects/#{id}")}
   end
 
-  def handle_event("note-select", %{"id" => id}, socket) do
-    {:noreply, push_navigate(socket, to: ~p"/notes/#{id}")}
-  end
-
   def handle_event("projects-delete-confirm", %{"id" => id}, socket) do
     project = Projects.get_project!(id)
     {:noreply, assign(socket, :delete_item, {:project, project})}
-  end
-
-  def handle_event("note-delete-confirm", %{"id" => id}, socket) do
-    note = Notes.get_note!(id)
-    {:noreply, assign(socket, :delete_item, {:note, note})}
   end
 
   def handle_event("project-delete", %{"id" => id}, socket) do
@@ -75,24 +46,6 @@ defmodule CandoneWeb.SidebarLive do
 
     {:noreply, socket
       |> assign(:projects, projects)
-      |> assign(:delete_item, nil)
-    }
-  end
-
-  def handle_event("note-delete", %{"id" => id}, socket) do
-    note = Notes.get_note!(id)
-    {:ok, _} = Notes.delete_note(note)
-
-    notes =
-      if socket.assigns.current_project_id != :none do
-        project = Projects.get_project!(socket.assigns.current_project_id)
-        Projects.get_project_notes(project)
-      else
-        []
-      end
-
-    {:noreply, socket
-      |> assign(:notes, notes)
       |> assign(:delete_item, nil)
     }
   end
@@ -197,26 +150,6 @@ defmodule CandoneWeb.SidebarLive do
           <% end %>
         </div>
 
-        <div class="nav-divider"></div>
-        <!-- Notes section in sidebar -->
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 14px;">
-          <div class="nav-section-label">Notes</div>
-          <.add_note_button to={~p"/dashboard/notes/new"} />
-        </div>
-
-        <div style="padding: 4px 8px; max-height: 200px; overflow-y: auto; margin-bottom: 8px;">
-          <%= for note <- @notes do %>
-            <div class="sidebar-nav-item group" phx-click="note-select" phx-value-id={note.id} phx-target={@myself}>
-              <span style="font-size: 11px; width: 20px; text-align: center;">●</span>
-              <span style="flex: 1; overflow: hidden; text-overflow: ellipsis;">
-                <%= note.name %>
-              </span>
-              <div class="invisible group-hover:visible">
-                <.delete_button_icon type="note" value={note.id} target={@myself} />
-              </div>
-            </div>
-          <% end %>
-        </div>
       <% end %>
     </aside>
     """
