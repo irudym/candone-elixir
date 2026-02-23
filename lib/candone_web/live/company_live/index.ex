@@ -4,9 +4,16 @@ defmodule CandoneWeb.CompanyLive.Index do
   alias Candone.Contacts
   alias Candone.Contacts.Company
 
+  import CandoneWeb.Components.UiComponents
+  import CandoneWeb.Components.Icons
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :companies, Contacts.list_companies())}
+    sorting = :date
+    {:ok, socket
+      |> assign(:sorting, sorting)
+      |> stream(:companies, sorted(Contacts.list_companies(), sorting))
+    }
   end
 
   @impl true
@@ -38,10 +45,21 @@ defmodule CandoneWeb.CompanyLive.Index do
   end
 
   @impl true
+  def handle_event("sort-" <> field, _, socket) do
+    sorting = String.to_existing_atom(field)
+    {:noreply, socket
+      |> assign(:sorting, sorting)
+      |> stream(:companies, sorted(Contacts.list_companies(), sorting), reset: true)
+    }
+  end
+
   def handle_event("delete", %{"id" => id}, socket) do
     company = Contacts.get_company!(id)
     {:ok, _} = Contacts.delete_company(company)
 
     {:noreply, stream_delete(socket, :companies, company)}
   end
+
+  defp sorted(items, :name), do: Enum.sort_by(items, & &1.name)
+  defp sorted(items, :date), do: Enum.sort_by(items, & &1.inserted_at, {:desc, NaiveDateTime})
 end

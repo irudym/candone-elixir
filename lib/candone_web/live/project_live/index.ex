@@ -4,9 +4,16 @@ defmodule CandoneWeb.ProjectLive.Index do
   alias Candone.Projects
   alias Candone.Projects.Project
 
+  import CandoneWeb.Components.UiComponents
+  import CandoneWeb.Components.Icons
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :projects, Projects.list_projects())}
+    sorting = :date
+    {:ok, socket
+      |> assign(:sorting, sorting)
+      |> stream(:projects, sorted(Projects.list_projects(), sorting))
+    }
   end
 
   @impl true
@@ -38,10 +45,21 @@ defmodule CandoneWeb.ProjectLive.Index do
   end
 
   @impl true
+  def handle_event("sort-" <> field, _, socket) do
+    sorting = String.to_existing_atom(field)
+    {:noreply, socket
+      |> assign(:sorting, sorting)
+      |> stream(:projects, sorted(Projects.list_projects(), sorting), reset: true)
+    }
+  end
+
   def handle_event("delete", %{"id" => id}, socket) do
     project = Projects.get_project!(id)
     {:ok, _} = Projects.delete_project(project)
 
     {:noreply, stream_delete(socket, :projects, project)}
   end
+
+  defp sorted(items, :name), do: Enum.sort_by(items, & &1.name)
+  defp sorted(items, :date), do: Enum.sort_by(items, & &1.inserted_at, {:desc, NaiveDateTime})
 end

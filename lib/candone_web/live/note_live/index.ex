@@ -4,9 +4,16 @@ defmodule CandoneWeb.NoteLive.Index do
   alias Candone.Notes
   alias Candone.Notes.Note
 
+  import CandoneWeb.Components.UiComponents
+  import CandoneWeb.Components.Icons
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :notes, Notes.list_notes())}
+    sorting = :date
+    {:ok, socket
+      |> assign(:sorting, sorting)
+      |> stream(:notes, sorted(Notes.list_notes(), sorting))
+    }
   end
 
   @impl true
@@ -38,10 +45,21 @@ defmodule CandoneWeb.NoteLive.Index do
   end
 
   @impl true
+  def handle_event("sort-" <> field, _, socket) do
+    sorting = String.to_existing_atom(field)
+    {:noreply, socket
+      |> assign(:sorting, sorting)
+      |> stream(:notes, sorted(Notes.list_notes(), sorting), reset: true)
+    }
+  end
+
   def handle_event("delete", %{"id" => id}, socket) do
     note = Notes.get_note!(id)
     {:ok, _} = Notes.delete_note(note)
 
     {:noreply, stream_delete(socket, :notes, note)}
   end
+
+  defp sorted(items, :name), do: Enum.sort_by(items, & &1.name)
+  defp sorted(items, :date), do: Enum.sort_by(items, & &1.inserted_at, {:desc, NaiveDateTime})
 end

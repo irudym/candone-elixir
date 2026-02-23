@@ -1,21 +1,33 @@
-<div style="padding: 24px 32px; max-width: 1200px; margin: 0 auto;">
-  <.header>
-    Listing Companies
-    <:actions>
-      <.link patch={~p"/companies/new"}>
-        <.button>New Company</.button>
-      </.link>
-    </:actions>
-  </.header>
-
+<!-- Top bar -->
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid #e2ded6; background: #f5f1eb; flex-shrink: 0;">
+  <div style="font-size: 13px; font-weight: 500; color: #3d3d4a;">
+    <span style="opacity: 0.4;">Candone</span>
+    <span style="opacity: 0.2; margin: 0 8px;">/</span>
+    <span>Companies</span>
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <.dropdown_menu_custom title="Sort">
+      <.dropdown_menu_item click="sort-name">
+        <.cog_icon checked={@sorting == :name} /> Sort by name
+      </.dropdown_menu_item>
+      <.dropdown_menu_item click="sort-date">
+        <.calendar_icon checked={@sorting == :date} /> Sort by date
+      </.dropdown_menu_item>
+    </.dropdown_menu_custom>
+    <div class="top-divider-v"></div>
+    <.add_button to={~p"/companies/new"} name="Company" />
+  </div>
+</header>
+<!-- Content -->
+<div style="padding: 24px 32px; max-width: 1200px; margin: 0 auto; width: 100%;">
   <.table
     id="companies"
     rows={@streams.companies}
     row_click={fn {_id, company} -> JS.navigate(~p"/companies/#{company}") end}
   >
+    <:col :let={{_id, company}} label="Name"><%= company.name %></:col>
     <:col :let={{_id, company}} label="Address"><%= company.address %></:col>
     <:col :let={{_id, company}} label="Description"><%= company.description %></:col>
-    <:col :let={{_id, company}} label="Name"><%= company.name %></:col>
     <:action :let={{_id, company}}>
       <div class="sr-only">
         <.link navigate={~p"/companies/#{company}"}>Show</.link>

@@ -1,13 +1,25 @@
-<div style="padding: 24px 32px; max-width: 1200px; margin: 0 auto;">
-  <.header>
-    Listing Projects
-    <:actions>
-      <.link patch={~p"/projects/new"}>
-        <.button>New Project</.button>
-      </.link>
-    </:actions>
-  </.header>
-
+<!-- Top bar -->
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid #e2ded6; background: #f5f1eb; flex-shrink: 0;">
+  <div style="font-size: 13px; font-weight: 500; color: #3d3d4a;">
+    <span style="opacity: 0.4;">Candone</span>
+    <span style="opacity: 0.2; margin: 0 8px;">/</span>
+    <span>Projects</span>
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <.dropdown_menu_custom title="Sort">
+      <.dropdown_menu_item click="sort-name">
+        <.cog_icon checked={@sorting == :name} /> Sort by name
+      </.dropdown_menu_item>
+      <.dropdown_menu_item click="sort-date">
+        <.calendar_icon checked={@sorting == :date} /> Sort by date
+      </.dropdown_menu_item>
+    </.dropdown_menu_custom>
+    <div class="top-divider-v"></div>
+    <.add_button to={~p"/projects/new"} name="Project" />
+  </div>
+</header>
+<!-- Content -->
+<div style="padding: 24px 32px; max-width: 1200px; margin: 0 auto; width: 100%;">
   <.table
     id="projects"
     rows={@streams.projects}

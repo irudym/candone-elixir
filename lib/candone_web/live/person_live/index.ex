@@ -4,11 +4,16 @@ defmodule CandoneWeb.PersonLive.Index do
   alias Candone.Contacts
   alias Candone.Contacts.Person
 
+  import CandoneWeb.Components.UiComponents
+  import CandoneWeb.Components.Icons
+
   @impl true
   def mount(_params, _session, socket) do
+    sorting = :date
     {:ok, socket
-          |> stream(:people, Contacts.list_people())
-          |> assign(:companies, [%{id: "", name: "N/A"} | list_companies()])
+      |> assign(:sorting, sorting)
+      |> stream(:people, sorted(Contacts.list_people(), sorting))
+      |> assign(:companies, [%{id: "", name: "N/A"} | list_companies()])
     }
   end
 
@@ -41,6 +46,14 @@ defmodule CandoneWeb.PersonLive.Index do
   end
 
   @impl true
+  def handle_event("sort-" <> field, _, socket) do
+    sorting = String.to_existing_atom(field)
+    {:noreply, socket
+      |> assign(:sorting, sorting)
+      |> stream(:people, sorted(Contacts.list_people(), sorting), reset: true)
+    }
+  end
+
   def handle_event("delete", %{"id" => id}, socket) do
     person = Contacts.get_person!(id)
     {:ok, _} = Contacts.delete_person(person)
@@ -48,8 +61,10 @@ defmodule CandoneWeb.PersonLive.Index do
     {:noreply, stream_delete(socket, :people, person)}
   end
 
-
   defp list_companies do
     Contacts.list_companies()
   end
+
+  defp sorted(items, :name), do: Enum.sort_by(items, & &1.last_name)
+  defp sorted(items, :date), do: Enum.sort_by(items, & &1.inserted_at, {:desc, NaiveDateTime})
 end
