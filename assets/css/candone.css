@@ -79,6 +79,12 @@
   font-weight: 600;
 }
 
+.project-item-active {
+  background: #ede8df;
+  color: #3d3d4a;
+  font-weight: 600;
+}
+
 /* ===== Board columns ===== */
 .board-column {
   flex: 1;
