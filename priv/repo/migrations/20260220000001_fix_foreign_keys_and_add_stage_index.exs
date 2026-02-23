@@ -3,8 +3,8 @@ defmodule Candone.Repo.Migrations.FixForeignKeysAndAddStageIndex do
 
   def up do
     # Fix tasks_people foreign keys to cascade on delete
-    drop constraint(:tasks_people, "tasks_people_task_id_fkey")
-    drop constraint(:tasks_people, "tasks_people_person_id_fkey")
+    # drop constraint(:tasks_people, "tasks_people_task_id_fkey")
+    # drop constraint(:tasks_people, "tasks_people_person_id_fkey")
 
     alter table(:tasks_people) do
       modify :task_id, references(:tasks, on_delete: :delete_all), from: references(:tasks, on_delete: :nothing)
@@ -12,8 +12,8 @@ defmodule Candone.Repo.Migrations.FixForeignKeysAndAddStageIndex do
     end
 
     # Fix projects_tasks foreign keys to cascade on delete
-    drop constraint(:projects_tasks, "projects_tasks_task_id_fkey")
-    drop constraint(:projects_tasks, "projects_tasks_project_id_fkey")
+    # drop constraint(:projects_tasks, "projects_tasks_task_id_fkey")
+    # drop constraint(:projects_tasks, "projects_tasks_project_id_fkey")
 
     alter table(:projects_tasks) do
       modify :task_id, references(:tasks, on_delete: :delete_all), from: references(:tasks, on_delete: :nothing)
@@ -21,8 +21,8 @@ defmodule Candone.Repo.Migrations.FixForeignKeysAndAddStageIndex do
     end
 
     # Fix projects_notes foreign keys to cascade on delete
-    drop constraint(:projects_notes, "projects_notes_note_id_fkey")
-    drop constraint(:projects_notes, "projects_notes_project_id_fkey")
+    # drop constraint(:projects_notes, "projects_notes_note_id_fkey")
+    # drop constraint(:projects_notes, "projects_notes_project_id_fkey")
 
     alter table(:projects_notes) do
       modify :note_id, references(:notes, on_delete: :delete_all), from: references(:notes, on_delete: :nothing)
@@ -30,8 +30,8 @@ defmodule Candone.Repo.Migrations.FixForeignKeysAndAddStageIndex do
     end
 
     # Fix notes_people foreign keys to cascade on delete
-    drop constraint(:notes_people, "notes_people_note_id_fkey")
-    drop constraint(:notes_people, "notes_people_person_id_fkey")
+    # drop constraint(:notes_people, "notes_people_note_id_fkey")
+    # drop constraint(:notes_people, "notes_people_person_id_fkey")
 
     alter table(:notes_people) do
       modify :note_id, references(:notes, on_delete: :delete_all), from: references(:notes, on_delete: :nothing)

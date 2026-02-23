@@ -22,7 +22,7 @@ defmodule CandoneWeb.Components.UiComponents do
         to={@to}
         class="new-issue-btn"
     >
-      + Add Project
+      +
     </.live_patch_custom>
     """
   end

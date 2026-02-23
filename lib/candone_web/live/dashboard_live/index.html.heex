@@ -1,12 +1,8 @@
 <div style="display: flex; height: 100vh; width: 100%; overflow: hidden;">
   <!-- ===== Modals ===== -->
   <%= if @delete_card do %>
-    <.modal
-      title={"Delete"}
-    >
-      <.confirm_delete
-          item={@delete_card}
-      />
+    <.modal title="Delete">
+      <.confirm_delete item={@delete_card} />
     </.modal>
   <% end %>
 
@@ -47,10 +43,7 @@
   <% end %>
 
   <%= if @live_action in [:new_note, :edit_note] do %>
-    <.modal
-      return_to={~p"/dashboard/projects/#{@current_project_id}"}
-      title={@page_title}
-    >
+    <.modal return_to={~p"/dashboard/projects/#{@current_project_id}"} title={@page_title}>
       <.live_component
         module={CandoneWeb.NoteLive.FormComponent}
         id={@note.id || :new}
@@ -63,7 +56,6 @@
       />
     </.modal>
   <% end %>
-
   <!-- ===== Sidebar ===== -->
   <aside class={"sidebar #{if @sidebar_collapsed, do: "sidebar-collapsed"}"}>
     <!-- Sidebar header -->
@@ -72,8 +64,12 @@
         <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
           <div class="workspace-icon">C</div>
           <div>
-            <div style="font-size: 13.5px; font-weight: 700; color: #3d3d4a; white-space: nowrap;">Candone</div>
-            <div style="font-size: 10.5px; color: #9a9a9a; white-space: nowrap;">Task Manager</div>
+            <div style="font-size: 13.5px; font-weight: 700; color: #3d3d4a; white-space: nowrap;">
+              Candone
+            </div>
+            <div style="font-size: 10.5px; color: #9a9a9a; white-space: nowrap;">
+              Task Manager
+            </div>
           </div>
         </div>
       <% end %>
@@ -107,14 +103,13 @@
       </div>
 
       <div class="nav-divider"></div>
-
       <!-- Projects section -->
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 14px;">
         <div class="nav-section-label">Projects</div>
         <.add_project_button to={~p"/dashboard/projects/new"} />
       </div>
 
-      <div style="padding: 4px 8px; flex: 1; overflow-y: auto;">
+      <div style="padding: 8px 8px; flex: 1; overflow-y: auto;">
         <%= for project <- @projects do %>
           <.project_card
             name={project.name}
@@ -129,7 +124,6 @@
       </div>
 
       <div class="nav-divider"></div>
-
       <!-- Notes section in sidebar -->
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 14px;">
         <div class="nav-section-label">Notes</div>
@@ -138,13 +132,11 @@
 
       <div style="padding: 4px 8px; max-height: 200px; overflow-y: auto; margin-bottom: 8px;">
         <%= for note <- @notes do %>
-          <div
-            class="sidebar-nav-item group"
-            phx-click="note-select"
-            phx-value-id={note.id}
-          >
+          <div class="sidebar-nav-item group" phx-click="note-select" phx-value-id={note.id}>
             <span style="font-size: 11px; width: 20px; text-align: center;">●</span>
-            <span style="flex: 1; overflow: hidden; text-overflow: ellipsis;"><%= note.name %></span>
+            <span style="flex: 1; overflow: hidden; text-overflow: ellipsis;">
+              <%= note.name %>
+            </span>
             <div class="invisible group-hover:visible">
               <.delete_button_icon type="note" value={note.id} />
             </div>
@@ -153,7 +145,6 @@
       </div>
     <% end %>
   </aside>
-
   <!-- ===== Main content ===== -->
   <main style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
     <!-- Top bar -->
@@ -169,35 +160,28 @@
           <.dropdown_menu_custom title="Sort">
             <.dropdown_menu_item click="hide-done">
               <%= if @hide_done do %>
-                <.show_icon />
-                Show done tasks
+                <.show_icon /> Show done tasks
               <% else %>
-                <.hide_icon />
-                Hide done tasks
+                <.hide_icon /> Hide done tasks
               <% end %>
             </.dropdown_menu_item>
             <.dropdown_menu_item click="sort-date">
-              <.calendar_icon checked={@sorting == :date} />
-              Sort by date
+              <.calendar_icon checked={@sorting == :date} /> Sort by date
             </.dropdown_menu_item>
             <.dropdown_menu_item click="sort-cost">
-              <.cog_icon checked={@sorting == :cost} />
-              Sort by cost
+              <.cog_icon checked={@sorting == :cost} /> Sort by cost
             </.dropdown_menu_item>
             <.dropdown_menu_item click="sort-urgency">
-              <.exclamation_icon checked={@sorting == :urgency} />
-              Sort by urgency
+              <.exclamation_icon checked={@sorting == :urgency} /> Sort by urgency
             </.dropdown_menu_item>
           </.dropdown_menu_custom>
         </div>
 
         <div class="top-divider-v"></div>
-
         <!-- New Task button -->
         <.add_task_button to={~p"/dashboard/tasks/new"} />
       </div>
     </header>
-
     <!-- ===== Board ===== -->
     <div style="flex: 1; display: flex; gap: 0; overflow: auto; background: #efeae2;">
       <!-- Backlog column -->
@@ -232,7 +216,6 @@
           <% end %>
         </div>
       </div>
-
       <!-- In Progress / Sprint column -->
       <div class="board-column col-enter" style="animation-delay: 80ms;">
         <div class="board-column-header">
@@ -268,7 +251,6 @@
           <% end %>
         </div>
       </div>
-
       <!-- Done column -->
       <%= if !@hide_done do %>
         <div class="board-column col-enter" style="animation-delay: 160ms;">

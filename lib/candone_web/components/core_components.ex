@@ -43,10 +43,10 @@ defmodule CandoneWeb.CoreComponents do
   slot :inner_block, required: true
 
   def modal(assigns) do
-    assigns = assigns
-              |> assign_new(:return_to, fn -> nil end)
-              |> assign_new(:class, fn -> nil end)
-
+    assigns =
+      assigns
+      |> assign_new(:return_to, fn -> nil end)
+      |> assign_new(:class, fn -> nil end)
 
     ~H"""
     <div id="modal" class="fixed z-10 inset-0 overflow-y-auto" phx-remove={hide_modal()} style="backdrop-filter: blur(4px);">
@@ -102,8 +102,6 @@ defmodule CandoneWeb.CoreComponents do
     |> JS.hide(to: "#modal", transition: "fade-out")
     |> JS.hide(to: "#modal-content", transition: "fade-out-scale")
   end
-
-
 
   @doc """
   Renders flash notices.
@@ -217,7 +215,7 @@ defmodule CandoneWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10 space-y-8 bg-white">
+      <div class="mt-10 space-y-8">
         <%= render_slot(@inner_block, f) %>
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           <%= render_slot(action, f) %>
@@ -645,8 +643,6 @@ defmodule CandoneWeb.CoreComponents do
     |> JS.add_class("overflow-hidden", to: "body")
     |> JS.focus_first(to: "##{id}-content")
   end
-
-
 
   @doc """
   Translates an error message using gettext.
