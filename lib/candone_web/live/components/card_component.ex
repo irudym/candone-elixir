@@ -21,20 +21,24 @@ defmodule CandoneWeb.Components.CardComponents do
   defp urgency_icon(urgency), do: Map.get(@urgency_icons, urgency, "○")
 
   def project_card(assigns) do
+    assigns = assign_new(assigns, :target, fn -> nil end)
+
     ~H"""
     <div
       class={"sidebar-nav-item project-item group #{if assigns.selected, do: "project-item-active"}"}
       phx-click={"#{@type}-select"}
       phx-value-id={@value}
+      phx-target={@target}
       id={"#{@type}-#{@value}"}
     >
-      <span style="font-size: 11px; width: 20px; text-align: center;">◆</span>
+      <span style="font-size: 11px; width: 20px; text-align: left;">
+        <span class="nav-count"><%= @tasks %></span>
+      </span>
       <span style="flex: 1;"><%= @name %></span>
       <div style="display: flex; align-items: center; gap: 8px;">
-        <span class="nav-count"><%= @tasks %></span>
         <!-- Delete button on hover -->
         <div class="invisible group-hover:visible">
-          <.delete_button_icon type={@type} value={@value} />
+          <.delete_button_icon type={@type} value={@value} target={@target} />
         </div>
       </div>
     </div>
@@ -42,6 +46,8 @@ defmodule CandoneWeb.Components.CardComponents do
   end
 
   def delete_button_icon(assigns) do
+    assigns = assign_new(assigns, :target, fn -> nil end)
+
     ~H"""
     <svg
       width="16"
@@ -56,6 +62,7 @@ defmodule CandoneWeb.Components.CardComponents do
       class="stroke-current text-red-200 cursor-pointer hover:text-red-500 transition-colors"
       phx-click={"#{@type}-delete-confirm"}
       phx-value-id={@value}
+      phx-target={@target}
     >
       <g transform="matrix(1,0,0,1,0,0.622489)">
         <path d="M4,9L28,9" style="fill:none;stroke-width:3px;" />

@@ -1,152 +1,62 @@
-<div style="display: flex; height: 100vh; width: 100%; overflow: hidden;">
-  <!-- ===== Modals ===== -->
-  <%= if @delete_card do %>
-    <.modal title="Delete">
-      <.confirm_delete item={@delete_card} />
-    </.modal>
-  <% end %>
+<!-- ===== Modals ===== -->
+<%= if @delete_card do %>
+  <.modal title="Delete">
+    <.confirm_delete item={@delete_card} />
+  </.modal>
+<% end %>
 
-  <%= if @live_action in [:new_project] do %>
-    <.modal
-      return_to={~p"/dashboard/projects/#{@current_project_id}"}
+<%= if @live_action in [:new_project] do %>
+  <.modal
+    return_to={~p"/dashboard/projects/#{@current_project_id}"}
+    title={@page_title}
+    id="new_project_modal"
+  >
+    <.live_component
+      module={CandoneWeb.ProjectLive.FormComponent}
+      id={@project.id || :new}
       title={@page_title}
-      id="new_project_modal"
-    >
-      <.live_component
-        module={CandoneWeb.ProjectLive.FormComponent}
-        id={@project.id || :new}
-        title={@page_title}
-        action={@live_action}
-        project={@project}
-        patch={~p"/dashboard/projects/#{@current_project_id}"}
-      />
-    </.modal>
-  <% end %>
+      action={@live_action}
+      project={@project}
+      patch={~p"/dashboard/projects/#{@current_project_id}"}
+    />
+  </.modal>
+<% end %>
 
-  <%= if @live_action in [:new_task, :edit_task] do %>
-    <.modal
-      return_to={~p"/dashboard/projects/#{@current_project_id}"}
-      title={@page_title}
+<%= if @live_action in [:new_task, :edit_task] do %>
+  <.modal
+    return_to={~p"/dashboard/projects/#{@current_project_id}"}
+    title={@page_title}
+    id={@task.id || :new}
+  >
+    <.live_component
+      module={CandoneWeb.TaskLive.FormComponent}
       id={@task.id || :new}
-    >
-      <.live_component
-        module={CandoneWeb.TaskLive.FormComponent}
-        id={@task.id || :new}
-        title={@page_title}
-        action={@live_action}
-        task={@task}
-        people={@people}
-        project_id={@current_project_id}
-        return_to={~p"/dashboard/projects/#{@current_project_id}"}
-      />
-    </.modal>
-  <% end %>
+      title={@page_title}
+      action={@live_action}
+      task={@task}
+      people={@people}
+      project_id={@current_project_id}
+      return_to={~p"/dashboard/projects/#{@current_project_id}"}
+    />
+  </.modal>
+<% end %>
 
-  <%= if @live_action in [:new_note, :edit_note] do %>
-    <.modal return_to={~p"/dashboard/projects/#{@current_project_id}"} title={@page_title}>
-      <.live_component
-        module={CandoneWeb.NoteLive.FormComponent}
-        id={@note.id || :new}
-        title={@page_title}
-        action={@live_action}
-        note={@note}
-        people={@people}
-        project_id={@current_project_id}
-        return_to={~p"/dashboard/projects/#{@current_project_id}"}
-      />
-    </.modal>
-  <% end %>
-  <!-- ===== Sidebar ===== -->
-  <aside class={"sidebar #{if @sidebar_collapsed, do: "sidebar-collapsed"}"}>
-    <!-- Sidebar header -->
-    <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 14px 12px; gap: 8px;">
-      <%= if !@sidebar_collapsed do %>
-        <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
-          <div class="workspace-icon">C</div>
-          <div>
-            <div style="font-size: 13.5px; font-weight: 700; color: #3d3d4a; white-space: nowrap;">
-              Candone
-            </div>
-            <div style="font-size: 10.5px; color: #9a9a9a; white-space: nowrap;">
-              Task Manager
-            </div>
-          </div>
-        </div>
-      <% end %>
-      <button
-        phx-click="toggle-sidebar"
-        style="background: none; border: none; color: #9a9a9a; font-size: 16px; cursor: pointer; padding: 2px 6px; border-radius: 4px; flex-shrink: 0;"
-      >
-        <%= if @sidebar_collapsed, do: "›", else: "‹" %>
-      </button>
-    </div>
-
-    <%= if !@sidebar_collapsed do %>
-      <!-- Navigation -->
-      <div style="padding: 4px 8px;">
-        <a href="/" class="sidebar-nav-item sidebar-nav-item-active">
-          <span style="font-size: 14px; width: 20px; text-align: center;">◫</span>
-          <span>Board</span>
-        </a>
-        <a href="/people" class="sidebar-nav-item">
-          <span style="font-size: 14px; width: 20px; text-align: center;">⌂</span>
-          <span>People</span>
-        </a>
-        <a href="/notes" class="sidebar-nav-item">
-          <span style="font-size: 14px; width: 20px; text-align: center;">☰</span>
-          <span>Notes</span>
-        </a>
-        <a href="/companies" class="sidebar-nav-item">
-          <span style="font-size: 14px; width: 20px; text-align: center;">◷</span>
-          <span>Companies</span>
-        </a>
-      </div>
-
-      <div class="nav-divider"></div>
-      <!-- Projects section -->
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 14px;">
-        <div class="nav-section-label">Projects</div>
-        <.add_project_button to={~p"/dashboard/projects/new"} />
-      </div>
-
-      <div style="padding: 8px 8px; flex: 1; overflow-y: auto;">
-        <%= for project <- @projects do %>
-          <.project_card
-            name={project.name}
-            date={project.inserted_at}
-            tasks={project.task_count}
-            notes={project.note_count}
-            type="projects"
-            value={"#{project.id}"}
-            selected={"#{project.id}" == "#{@current_project_id}"}
-          />
-        <% end %>
-      </div>
-
-      <div class="nav-divider"></div>
-      <!-- Notes section in sidebar -->
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 14px;">
-        <div class="nav-section-label">Notes</div>
-        <.add_note_button to={~p"/dashboard/notes/new"} />
-      </div>
-
-      <div style="padding: 4px 8px; max-height: 200px; overflow-y: auto; margin-bottom: 8px;">
-        <%= for note <- @notes do %>
-          <div class="sidebar-nav-item group" phx-click="note-select" phx-value-id={note.id}>
-            <span style="font-size: 11px; width: 20px; text-align: center;">●</span>
-            <span style="flex: 1; overflow: hidden; text-overflow: ellipsis;">
-              <%= note.name %>
-            </span>
-            <div class="invisible group-hover:visible">
-              <.delete_button_icon type="note" value={note.id} />
-            </div>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-  </aside>
-  <!-- ===== Main content ===== -->
-  <main style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+<%= if @live_action in [:new_note, :edit_note] do %>
+  <.modal return_to={~p"/dashboard/projects/#{@current_project_id}"} title={@page_title}>
+    <.live_component
+      module={CandoneWeb.NoteLive.FormComponent}
+      id={@note.id || :new}
+      title={@page_title}
+      action={@live_action}
+      note={@note}
+      people={@people}
+      project_id={@current_project_id}
+      return_to={~p"/dashboard/projects/#{@current_project_id}"}
+    />
+  </.modal>
+<% end %>
+<!-- ===== Main content ===== -->
+<div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
     <!-- Top bar -->
     <header style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid #e2ded6; background: #f5f1eb; flex-shrink: 0;">
       <div style="font-size: 13px; font-weight: 500; color: #3d3d4a;">
@@ -287,5 +197,4 @@
         </div>
       <% end %>
     </div>
-  </main>
 </div>
