@@ -211,12 +211,12 @@
         class="flex-1 px-[10px] pb-4 overflow-y-auto flex flex-col gap-[3px]"
         phx-update="stream"
       >
-        <%= for {_, note} <- @streams.notes do %>
+        <%= for {dom_id, note} <- @streams.notes do %>
           <div
             class="task-card group"
             phx-click="note-select"
             phx-value-id={note.id}
-            id={"note-#{note.id}"}
+            id={dom_id}
           >
             <div class="flex items-center gap-2 mb-1.5">
               <span class="text-[11px] text-status-backlog">☰</span>

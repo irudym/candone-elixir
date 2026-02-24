@@ -250,6 +250,7 @@ defmodule CandoneWeb.DashboardLive.Index do
 
     {:noreply, socket
                 |> stream_delete(:notes, note)
+                |> assign(:notes_count, socket.assigns.notes_count - 1)
                 |> put_flash(:info, "Note deleted")
                 |> assign(:delete_card, nil)
     }
