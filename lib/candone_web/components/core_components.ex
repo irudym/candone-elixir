@@ -49,45 +49,38 @@ defmodule CandoneWeb.CoreComponents do
       |> assign_new(:class, fn -> nil end)
 
     ~H"""
-    <div id="modal" class="fixed z-10 inset-0 overflow-y-auto" phx-remove={hide_modal()} style="backdrop-filter: blur(4px);">
-      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity" aria-hidden="true" style="background: rgba(80,75,65,0.25);"></div>
+    <div id="modal" class="fixed z-10 inset-0 overflow-y-auto [backdrop-filter:blur(3px)]" phx-remove={hide_modal()}>
+      <div class="flex items-center justify-center min-h-screen px-4 py-8">
+        <div class="fixed inset-0 transition-opacity bg-sand-900/30" aria-hidden="true"></div>
 
-        <!-- This element is to trick the browser into centering the modal contents. -->
-        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-        <div class="inline-block align-bottom text-left rounded-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" style="background: #faf7f2; border: 1px solid #e2ded6; box-shadow: 0 20px 60px rgba(0,0,0,0.1);">
+        <div class="relative w-full sm:max-w-lg text-left rounded-xl transform transition-all bg-sand-50 border border-sand-400 shadow-[0_16px_48px_rgba(0,0,0,0.14)]">
           <!-- modal header -->
-          <div class={"w-full h-12 rounded-t-xl #{@class}"} style="background: #3d3d4a; border-radius: 12px 12px 0 0;">
-            <div class="relative flex flex-row-reverse justify-between items-center p-1 px-3">
-              <%= if @return_to do %>
-                  <a
-                    href={@return_to}
-                    id="close"
-                    data-phx-link="patch"
-                    data-phx-link-state="push"
-                    phx-click={hide_modal()}
-                    style="color: #a5a5b0; font-size: 16px; cursor: pointer; padding: 4px 8px; border-radius: 6px; margin: 4px;"
-                  >
-                    &#10005;
-                  </a>
-                <% else %>
-                  <div class="m-2 h-5">
-                  </div>
-              <% end %>
-              <div class="font-semibold text-base pl-4" style="color: #f5f1eb;">
-                <%= @title %>
-              </div>
-            </div>
+          <div class="flex items-center justify-between px-4 py-2.5 rounded-t-xl bg-sand-900 border-b border-sand-950">
+            <span class="font-semibold tracking-tight text-sand-100 text-[13px]">
+              <%= @title %>
+            </span>
+            <%= if @return_to do %>
+              <a
+                href={@return_to}
+                id="close"
+                data-phx-link="patch"
+                data-phx-link-state="push"
+                phx-click={hide_modal()}
+                class="text-[13px] text-sand-600 hover:text-sand-100 hover:bg-sand-800 px-2 py-0.5 rounded-md leading-snug transition-all cursor-pointer"
+              >
+                &#10005;
+              </a>
+            <% else %>
+              <div class="w-6 h-5"></div>
+            <% end %>
           </div>
           <div
             id="modal-content"
-            class="px-1 pt-5 pb-4 sm:p-6 sm:pb-4 rounded-b-xl"
-            style="background: #faf7f2;"
+            class="px-6 py-5 rounded-b-xl bg-sand-50"
             phx-window-keydown={JS.dispatch("click", to: "#close")}
             phx-key="escape"
           >
-            <div class="p-1 pt-4 space-y-6">
+            <div class="space-y-4">
               <%= render_slot(@inner_block) %>
             </div>
           </div>
@@ -215,9 +208,9 @@ defmodule CandoneWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10 space-y-8">
+      <div class="space-y-4">
         <%= render_slot(@inner_block, f) %>
-        <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
+        <div :for={action <- @actions} class="pt-2 flex items-center justify-end gap-3">
           <%= render_slot(action, f) %>
         </div>
       </div>
@@ -321,7 +314,7 @@ defmodule CandoneWeb.CoreComponents do
 
     ~H"""
     <div phx-feedback-for={@name}>
-      <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+      <label class="flex items-center gap-4 text-sm leading-6 text-sand-700">
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
@@ -329,7 +322,7 @@ defmodule CandoneWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
+          class="rounded border-sand-400 text-sand-900 focus:ring-0"
           {@rest}
         />
         <%= @label %>
@@ -346,7 +339,7 @@ defmodule CandoneWeb.CoreComponents do
       <select
         id={@id}
         name={@name}
-        class="mt-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm"
+        class="mt-2 block w-full rounded-md border border-sand-400 bg-sand-50 text-sand-900 shadow-sm focus:border-sand-500 focus:ring-0 sm:text-sm"
         multiple={@multiple}
         {@rest}
       >
@@ -366,9 +359,9 @@ defmodule CandoneWeb.CoreComponents do
         id={@id}
         name={@name}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-          "min-h-[6rem] phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
+          "block w-full rounded-lg text-sm focus:ring-0 leading-relaxed transition-colors bg-sand-50 text-sand-900 py-2 px-3",
+          "min-h-[6rem] phx-no-feedback:border-sand-400 phx-no-feedback:focus:border-sand-500",
+          @errors == [] && "border-sand-400 focus:border-sand-500",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
@@ -389,8 +382,8 @@ defmodule CandoneWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "appearance-none border rounded-lg w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
+          "appearance-none border rounded-lg w-full py-2 px-3 text-sm leading-tight focus:outline-none focus:ring-0 transition-colors bg-sand-50 text-sand-900",
+          @errors == [] && "border-sand-400 focus:border-sand-500",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
@@ -408,7 +401,7 @@ defmodule CandoneWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold mb-2" style="color: #3d3d4a;">
+    <label for={@for} class="block mb-1.5 font-semibold uppercase text-sand-700 text-[10.5px] tracking-[0.7px]">
       <%= render_slot(@inner_block) %>
     </label>
     """
