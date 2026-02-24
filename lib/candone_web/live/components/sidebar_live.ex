@@ -22,7 +22,13 @@ defmodule CandoneWeb.SidebarLive do
   @impl true
   def update(assigns, socket) do
     current_project_id = Map.get(assigns, :current_project_id, :none)
-    {:ok, assign(socket, :current_project_id, current_project_id)}
+    current_view = Map.get(assigns, :current_view, :none)
+
+    {:ok,
+     socket
+     |> assign(:current_project_id, current_project_id)
+     |> assign(:action, fn -> nil end)
+     |> assign(:current_view, current_view)}
   end
 
   @impl true
@@ -57,6 +63,8 @@ defmodule CandoneWeb.SidebarLive do
 
   @impl true
   def render(assigns) do
+    IO.inspect(assigns.current_view)
+
     ~H"""
     <aside class={"sidebar #{if @sidebar_collapsed, do: "sidebar-collapsed"}"}>
       <%= if @delete_item do %>
@@ -114,19 +122,31 @@ defmodule CandoneWeb.SidebarLive do
       <%= if !@sidebar_collapsed do %>
         <!-- Navigation -->
         <div class="px-2 py-1">
-          <a href="/" class="sidebar-nav-item sidebar-nav-item-active">
+          <a
+            href="/"
+            class={"sidebar-nav-item #{if @current_view == CandoneWeb.DashboardLive.Index, do: "sidebar-nav-item-active" }"}
+          >
             <span class="text-sm w-5 text-center"><.calendar_icon class="w-[22px]" /></span>
             <span>Board</span>
           </a>
-          <a href="/people" class="sidebar-nav-item">
+          <a
+            href="/people"
+            class={"sidebar-nav-item #{if @current_view == CandoneWeb.PersonLive.Index, do: "sidebar-nav-item-active" }"}
+          >
             <span class="text-sm w-5 text-center"><.people_icon class="w-[22px]" /></span>
             <span>People</span>
           </a>
-          <a href="/notes" class="sidebar-nav-item">
+          <a
+            href="/notes"
+            class={"sidebar-nav-item #{if @current_view == CandoneWeb.NoteLive.Index, do: "sidebar-nav-item-active" }"}
+          >
             <span class="text-sm w-5 text-center"><.note_icon class="w-[22px]" /></span>
             <span>Notes</span>
           </a>
-          <a href="/companies" class="sidebar-nav-item">
+          <a
+            href="/companies"
+            class={"sidebar-nav-item #{if @current_view == CandoneWeb.CompanyLive.Index, do: "sidebar-nav-item-active" }"}
+          >
             <span class="text-sm w-5 text-center">◷</span>
             <span>Companies</span>
           </a>

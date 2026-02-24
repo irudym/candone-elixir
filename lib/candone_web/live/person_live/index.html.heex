@@ -18,13 +18,14 @@
     <.add_person_button to={~p"/people/new"} />
   </div>
 </header>
-
 <!-- Three-column layout -->
 <div class="flex flex-1 overflow-hidden">
   <!-- Column 1: Contacts -->
   <div class="w-60 border-r border-sand-300 bg-sand-50 flex flex-col overflow-hidden shrink-0">
     <div class="px-4 py-2 border-b border-sand-200">
-      <span class="text-[11px] font-semibold text-sand-400 uppercase tracking-wide">Contacts</span>
+      <span class="text-[11px] font-semibold text-sand-400 uppercase tracking-wide">
+        Contacts
+      </span>
     </div>
     <div class="flex-1 overflow-y-auto py-2">
       <%= for person <- @people do %>
@@ -47,21 +48,24 @@
             <% end %>
           </div>
           <!-- Edit/Delete on hover -->
-          <div class="invisible group-hover:visible flex items-center gap-1 shrink-0" phx-click="noop">
+          <div
+            class="invisible group-hover:visible flex items-center gap-1 shrink-0"
+            phx-click="noop"
+          >
             <.link
               patch={~p"/people/#{person}/edit"}
-              class="text-[10px] text-sand-500 hover:text-sand-800 px-1 py-0.5 rounded hover:bg-sand-300 transition-colors"
+              class="items-center justify-center text-sand-500 hover:text-sand-800 p-1 rounded hover:bg-sand-300 transition-colors"
               onclick="event.stopPropagation()"
             >
-              Edit
+              <.pen_icon />
             </.link>
             <span
-              class="text-[10px] text-red-300 hover:text-red-500 px-1 py-0.5 rounded hover:bg-red-50 transition-colors cursor-pointer"
+              class="items-center justify-center text-red-300 hover:text-red-500 p-2 rounded hover:bg-red-50 transition-colors cursor-pointer"
               phx-click={JS.push("delete", value: %{id: person.id})}
               data-confirm="Are you sure?"
               onclick="event.stopPropagation()"
             >
-              Del
+              <.trash_icon class="w-[16px]" />
             </span>
           </div>
         </div>
@@ -71,7 +75,6 @@
       <% end %>
     </div>
   </div>
-
   <!-- Column 2: Tasks -->
   <div class="flex-1 border-r border-sand-300 flex flex-col overflow-hidden bg-[#efeae2]">
     <div class="px-4 py-2 border-b border-sand-200 bg-sand-50 flex items-center gap-2">
@@ -91,9 +94,13 @@
               phx-click={JS.navigate(~p"/tasks/#{task}")}
             >
               <div class="flex items-start gap-2 mb-1.5">
-                <span class="text-[11px] text-sand-400 font-medium shrink-0">TSK-<%= task.id %></span>
+                <span class="text-[11px] text-sand-400 font-medium shrink-0">
+                  TSK-<%= task.id %>
+                </span>
               </div>
-              <div class="text-[13px] font-medium text-sand-900 leading-snug"><%= task.name %></div>
+              <div class="text-[13px] font-medium text-sand-900 leading-snug">
+                <%= task.name %>
+              </div>
               <div class="mt-2">
                 <span class={"text-[10px] font-medium px-1.5 py-0.5 rounded #{task_stage_class(task.stage)}"}>
                   <%= task_stage_label(task.stage) %>
@@ -107,7 +114,6 @@
       <% end %>
     </div>
   </div>
-
   <!-- Column 3: Notes -->
   <div class="flex-1 flex flex-col overflow-hidden bg-[#efeae2]">
     <div class="px-4 py-2 border-b border-sand-200 bg-sand-50 flex items-center gap-2">
@@ -126,9 +132,13 @@
               class="bg-sand-100 rounded-lg p-3 border border-sand-300 hover:border-sand-400 transition-colors cursor-pointer"
               phx-click={JS.navigate(~p"/notes/#{note}")}
             >
-              <div class="text-[13px] font-medium text-sand-900 leading-snug"><%= note.name %></div>
+              <div class="text-[13px] font-medium text-sand-900 leading-snug">
+                <%= note.name %>
+              </div>
               <%= if note.content && note.content != "" do %>
-                <div class="mt-1.5 text-[11px] text-sand-500 leading-relaxed line-clamp-2"><%= note.content %></div>
+                <div class="mt-1.5 text-[11px] text-sand-500 leading-relaxed line-clamp-2">
+                  <%= note.content %>
+                </div>
               <% end %>
             </div>
           <% end %>
@@ -141,8 +151,8 @@
 </div>
 
 <.modal
-  title="Contacts"
   :if={@live_action in [:new, :edit]}
+  title="Contacts"
   id="person-modal"
   show
   on_cancel={
@@ -158,6 +168,10 @@
     action={@live_action}
     person={@person}
     companies={@companies}
-    patch={if @live_action == :edit && @selected_person, do: ~p"/people/#{@selected_person}", else: ~p"/people"}
+    patch={
+      if @live_action == :edit && @selected_person,
+        do: ~p"/people/#{@selected_person}",
+        else: ~p"/people"
+    }
   />
 </.modal>
