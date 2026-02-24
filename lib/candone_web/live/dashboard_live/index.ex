@@ -244,17 +244,24 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   def handle_event("task-delete", %{"id" => id}, socket) do
     task = Tasks.get_task!(id)
-    stage = task.stage
     {:ok, _} = Tasks.delete_task(task)
 
     project = Projects.get_project!(socket.assigns.current_project_id)
-    updated_tasks = Projects.get_project_tasks_with_stage(project, stage)
-    stream_name = Enum.at(@stage_types, stage)
-    count_key = Enum.at(@stage_counts, stage)
+    sorting = socket.assigns.sorting
+    all_tasks = Projects.get_project_tasks(project)
+    grouped = Enum.group_by(all_tasks, & &1.stage)
+    backlog_tasks = Tasks.sort_by(Map.get(grouped, 0, []), sorting)
+    sprint_tasks = Tasks.sort_by(Map.get(grouped, 1, []), sorting)
+    done_tasks = Tasks.sort_by(Map.get(grouped, 2, []), sorting)
 
     {:noreply, socket
-                |> stream(stream_name, updated_tasks, reset: true)
-                |> assign(count_key, length(updated_tasks))
+                |> stream(:tasks_backlog, backlog_tasks, reset: true)
+                |> stream(:tasks_sprint, sprint_tasks, reset: true)
+                |> stream(:tasks_done, done_tasks, reset: true)
+                |> assign(:backlog_count, length(backlog_tasks))
+                |> assign(:sprint_count, length(sprint_tasks))
+                |> assign(:done_count, length(done_tasks))
+                |> assign(:sprint_cost, update_sprint_cost(sprint_tasks))
                 |> put_flash(:info, "Task deleted")
                 |> assign(:delete_card, nil)
     }
