@@ -247,10 +247,14 @@ defmodule CandoneWeb.DashboardLive.Index do
     stage = task.stage
     {:ok, _} = Tasks.delete_task(task)
 
+    project = Projects.get_project!(socket.assigns.current_project_id)
+    updated_tasks = Projects.get_project_tasks_with_stage(project, stage)
+    stream_name = Enum.at(@stage_types, stage)
     count_key = Enum.at(@stage_counts, stage)
+
     {:noreply, socket
-                |> stream_delete(Enum.at(@stage_types, stage), task)
-                |> assign(count_key, socket.assigns[count_key] - 1)
+                |> stream(stream_name, updated_tasks, reset: true)
+                |> assign(count_key, length(updated_tasks))
                 |> put_flash(:info, "Task deleted")
                 |> assign(:delete_card, nil)
     }
