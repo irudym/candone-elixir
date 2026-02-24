@@ -18,8 +18,7 @@ defmodule CandoneWeb.DashboardLive.ConfirmComponent do
     ~H"""
       <span
         href="#"
-        class="cursor-pointer py-2 px-5 text-sm leading-5 rounded-lg font-semibold text-white"
-        style="background: #c75c5c;"
+        class="cursor-pointer py-2 px-5 text-sm leading-5 rounded-lg font-semibold text-white bg-red-200"
         phx-click={@event}
         phx-value-id={@item_id}
       >
@@ -32,7 +31,7 @@ defmodule CandoneWeb.DashboardLive.ConfirmComponent do
   def confirm_delete(assigns) do
     ~H"""
       <div>
-        <div class="mb-4" style="color: #3d3d4a; font-size: 14px;">
+        <div class="mb-4 text-sand-900 text-sm">
           Are you sure you want to delete <b><%= get_name(@item) %></b> <%= get_type(@item) %>?
         </div>
 

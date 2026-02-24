@@ -61,7 +61,7 @@ defmodule CandoneWeb.SidebarLive do
       <%= if @delete_item do %>
         <.modal title="Delete">
           <div>
-            <div class="mb-4" style="color: #3d3d4a; font-size: 14px;">
+            <div class="mb-4 text-sand-900 text-sm">
               Are you sure you want to delete <b><%= get_item_name(@delete_item) %></b> <%= get_item_type(@delete_item) %>?
             </div>
             <div class="flex flex-row-reverse gap-4">
@@ -72,8 +72,7 @@ defmodule CandoneWeb.SidebarLive do
                 phx-target={@myself}
               >Cancel</a>
               <span
-                class="cursor-pointer py-2 px-5 text-sm leading-5 rounded-lg font-semibold text-white"
-                style="background: #c75c5c;"
+                class="cursor-pointer py-2 px-5 text-sm leading-5 rounded-lg font-semibold text-white bg-red-200"
                 phx-click={"#{get_item_type(@delete_item)}-delete"}
                 phx-value-id={get_item_id(@delete_item)}
                 phx-target={@myself}
@@ -84,15 +83,15 @@ defmodule CandoneWeb.SidebarLive do
       <% end %>
 
       <!-- Sidebar header -->
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 14px 12px; gap: 8px;">
+      <div class="flex items-center justify-between pt-4 px-3.5 pb-3 gap-2">
         <%= if !@sidebar_collapsed do %>
-          <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
+          <div class="flex items-center gap-2.5 overflow-hidden">
             <div class="workspace-icon">C</div>
             <div>
-              <div style="font-size: 13.5px; font-weight: 700; color: #3d3d4a; white-space: nowrap;">
+              <div class="text-[13.5px] font-bold text-sand-900 whitespace-nowrap">
                 Candone
               </div>
-              <div style="font-size: 10.5px; color: #9a9a9a; white-space: nowrap;">
+              <div class="text-[10.5px] text-[#9a9a9a] whitespace-nowrap">
                 Task Manager
               </div>
             </div>
@@ -101,7 +100,7 @@ defmodule CandoneWeb.SidebarLive do
         <button
           phx-click="toggle-sidebar"
           phx-target={@myself}
-          style="background: none; border: none; color: #9a9a9a; font-size: 16px; cursor: pointer; padding: 2px 6px; border-radius: 4px; flex-shrink: 0;"
+          class="bg-transparent border-0 text-[#9a9a9a] text-base cursor-pointer py-0.5 px-1.5 rounded shrink-0"
         >
           <%= if @sidebar_collapsed, do: "›", else: "‹" %>
         </button>
@@ -109,33 +108,33 @@ defmodule CandoneWeb.SidebarLive do
 
       <%= if !@sidebar_collapsed do %>
         <!-- Navigation -->
-        <div style="padding: 4px 8px;">
+        <div class="px-2 py-1">
           <a href="/" class="sidebar-nav-item sidebar-nav-item-active">
-            <span style="font-size: 14px; width: 20px; text-align: center;">◫</span>
+            <span class="text-sm w-5 text-center">◫</span>
             <span>Board</span>
           </a>
           <a href="/people" class="sidebar-nav-item">
-            <span style="font-size: 14px; width: 20px; text-align: center;">⌂</span>
+            <span class="text-sm w-5 text-center">⌂</span>
             <span>People</span>
           </a>
           <a href="/notes" class="sidebar-nav-item">
-            <span style="font-size: 14px; width: 20px; text-align: center;">☰</span>
+            <span class="text-sm w-5 text-center">☰</span>
             <span>Notes</span>
           </a>
           <a href="/companies" class="sidebar-nav-item">
-            <span style="font-size: 14px; width: 20px; text-align: center;">◷</span>
+            <span class="text-sm w-5 text-center">◷</span>
             <span>Companies</span>
           </a>
         </div>
 
         <div class="nav-divider"></div>
         <!-- Projects section -->
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 14px;">
+        <div class="flex items-center justify-between px-3.5">
           <div class="nav-section-label">Projects</div>
           <.add_project_button to={~p"/dashboard/projects/new"} />
         </div>
 
-        <div style="padding: 8px 8px; flex: 1; overflow-y: auto;">
+        <div class="p-2 flex-1 overflow-y-auto">
           <%= for project <- @projects do %>
             <.project_card
               name={project.name}

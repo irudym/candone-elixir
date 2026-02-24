@@ -30,8 +30,10 @@ defmodule CandoneWeb.Components.UiComponents do
   end
 
   def add_note_button(assigns) do
+    assigns = assign_new(assigns, :class, fn -> "" end)
+
     ~H"""
-    <.live_patch_custom to={@to} class="new-issue-btn" style={Map.get(assigns, :style, "")}>
+    <.live_patch_custom to={@to} class={"new-issue-btn #{@class}"}>
       + Add Note
     </.live_patch_custom>
     """
@@ -55,7 +57,6 @@ defmodule CandoneWeb.Components.UiComponents do
       data-phx-link-state="push"
       href={@to}
       phx-click={@phx_click}
-      style={Map.get(assigns, :style, "")}
     >
       <%= render_slot(@inner_block) %>
     </a>
@@ -78,22 +79,14 @@ defmodule CandoneWeb.Components.UiComponents do
 
   def dropdown_menu(assigns) do
     ~H"""
-    <div class="group relative font-medium py-1 text-sm" style="color: #3d3d4a;">
+    <div class="group relative font-medium py-1 text-sm text-sand-900">
       <button class="filter-btn">
         <%= @title %>
         <.arrow_down_icon class="!h-3 !w-3" />
       </button>
-      <ul
-        class="invisible group-hover:visible absolute z-50 mt-1 w-full min-w-[14rem] rounded-lg border py-1 text-sm shadow-lg overflow-auto focus:outline-none"
-        style="background: #faf7f2; border-color: #e2ded6;"
-      >
+      <ul class="invisible group-hover:visible absolute z-50 mt-1 w-full min-w-[14rem] rounded-lg border border-sand-300 py-1 text-sm shadow-lg overflow-auto focus:outline-none bg-sand-50">
         <%= for item <- @items do %>
-          <li
-            class="cursor-pointer select-none relative py-2 pl-3 pr-9"
-            style="color: #3d3d4a; transition: background 0.15s;"
-            onmouseenter="this.style.background='#f0ece4'"
-            onmouseleave="this.style.background='transparent'"
-          >
+          <li class="cursor-pointer select-none relative py-2 pl-3 pr-9 text-sand-900 transition-colors duration-150 hover:bg-[#f0ece4]">
             <span phx-click={item.click}>
               <%= item.name %>
             </span>
@@ -111,14 +104,11 @@ defmodule CandoneWeb.Components.UiComponents do
     ~H"""
     <div class="group relative font-medium py-1 text-sm">
       <button class="filter-btn">
-        <span style="font-size: 12px;">↕</span>
+        <span class="text-xs">↕</span>
         <%= @title %>
         <.arrow_down_icon class="!h-3 !w-3" />
       </button>
-      <ul
-        class="invisible group-hover:visible absolute z-50 mt-1 w-full min-w-[14rem] rounded-lg border py-1 text-sm shadow-lg overflow-auto focus:outline-none"
-        style="background: #faf7f2; border-color: #e2ded6;"
-      >
+      <ul class="invisible group-hover:visible absolute z-50 mt-1 w-full min-w-[14rem] rounded-lg border border-sand-300 py-1 text-sm shadow-lg overflow-auto focus:outline-none bg-sand-50">
         <%= render_slot(@inner_block) %>
       </ul>
     </div>
@@ -129,12 +119,9 @@ defmodule CandoneWeb.Components.UiComponents do
     ~H"""
     <li
       phx-click={@click}
-      class="cursor-pointer select-none relative py-2 pl-3 pr-9"
-      style="color: #3d3d4a; transition: background 0.15s;"
-      onmouseenter="this.style.background='#f0ece4'"
-      onmouseleave="this.style.background='transparent'"
+      class="cursor-pointer select-none relative py-2 pl-3 pr-9 text-sand-900 transition-colors duration-150 hover:bg-[#f0ece4]"
     >
-      <span style="display: flex; align-items: center; gap: 6px;">
+      <span class="flex items-center gap-1.5">
         <%= render_slot(@inner_block) %>
       </span>
     </li>

@@ -1,11 +1,11 @@
 <!-- Top bar -->
-<header style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid #e2ded6; background: #f5f1eb; flex-shrink: 0;">
-  <div style="font-size: 13px; font-weight: 500; color: #3d3d4a;">
-    <span style="opacity: 0.4;">Candone</span>
-    <span style="opacity: 0.2; margin: 0 8px;">/</span>
+<header class="flex items-center justify-between py-3 px-6 border-b border-sand-300 bg-sand-100 shrink-0">
+  <div class="text-[13px] font-medium text-sand-900">
+    <span class="opacity-40">Candone</span>
+    <span class="opacity-20 mx-2">/</span>
     <span>Projects</span>
   </div>
-  <div style="display: flex; align-items: center; gap: 8px;">
+  <div class="flex items-center gap-2">
     <.dropdown_menu_custom title="Sort">
       <.dropdown_menu_item click="sort-name">
         <.cog_icon checked={@sorting == :name} /> Sort by name
@@ -19,7 +19,7 @@
   </div>
 </header>
 <!-- Content -->
-<div style="padding: 24px 32px; max-width: 1200px; margin: 0 auto; width: 100%;">
+<div class="py-6 px-8 max-w-[1200px] mx-auto w-full">
   <.table
     id="projects"
     rows={@streams.projects}
