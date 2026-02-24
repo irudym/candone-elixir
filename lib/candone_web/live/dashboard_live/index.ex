@@ -185,11 +185,10 @@ defmodule CandoneWeb.DashboardLive.Index do
     }
   end
 
-  def handle_event("task-delete-confirm", %{"id" => id}, socket) do
+  def handle_event(event, %{"id" => id}, socket)
+      when event in ["task-delete-confirm", "tasks_backlog-delete-confirm", "tasks_sprint-delete-confirm", "tasks_done-delete-confirm"] do
     task = Tasks.get_task!(id)
-    {:noreply,
-        socket
-        |> assign(:delete_card, {:task, task})}
+    {:noreply, assign(socket, :delete_card, {:task, task})}
   end
 
   def handle_event("note-delete-confirm", %{"id" => id}, socket) do
