@@ -28,6 +28,12 @@ defmodule CandoneWeb.DashboardLive.Index do
     :tasks_done
   ]
 
+  @stage_counts [
+    :backlog_count,
+    :sprint_count,
+    :done_count
+  ]
+
   defp get_project_id(projects) do
     if List.first(projects) do
       List.first(projects).id
@@ -237,8 +243,10 @@ defmodule CandoneWeb.DashboardLive.Index do
     stage = task.stage
     {:ok, _} = Tasks.delete_task(task)
 
+    count_key = Enum.at(@stage_counts, stage)
     {:noreply, socket
                 |> stream_delete(Enum.at(@stage_types, stage), task)
+                |> assign(count_key, socket.assigns[count_key] - 1)
                 |> put_flash(:info, "Task deleted")
                 |> assign(:delete_card, nil)
     }
