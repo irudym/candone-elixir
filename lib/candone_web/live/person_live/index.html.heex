@@ -55,17 +55,16 @@
         <% end %>
         <!-- Actions row -->
         <div class="flex items-center justify-end gap-2 mt-1">
-          <div class="invisible group-hover:visible flex items-center gap-2">
+          <div class="invisible group-hover:visible flex items-center gap-2" onclick="event.stopPropagation()">
             <.link
               patch={~p"/people/#{person}/edit"}
-              phx-click={JS.stop_propagation()}
               class="text-[11px] text-sand-600 hover:text-sand-900 transition-colors font-medium px-2 py-0.5 rounded hover:bg-sand-200"
             >
               Edit
             </.link>
             <span
               class="text-[11px] text-red-300 hover:text-red-500 transition-colors font-medium px-2 py-0.5 rounded hover:bg-red-50 cursor-pointer"
-              phx-click={JS.push("delete", value: %{id: person.id}) |> JS.stop_propagation()}
+              phx-click={JS.push("delete", value: %{id: person.id})}
               data-confirm="Are you sure?"
             >
               Delete
