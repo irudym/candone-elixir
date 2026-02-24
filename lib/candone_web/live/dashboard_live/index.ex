@@ -224,12 +224,16 @@ defmodule CandoneWeb.DashboardLive.Index do
   def handle_event("reposition", %{"item" => id, "new" => new, "old" => old}, socket) when new != old do
     update_task_stage(id, new)
 
-
     project = Projects.get_project!(socket.assigns.current_project_id)
     sprint_tasks = Projects.get_project_tasks_with_stage(project, 1)
 
+    old_count = list_to_count_key(old)
+    new_count = list_to_count_key(new)
+
     {:noreply, socket
                |> assign(:sprint_cost, update_sprint_cost(sprint_tasks))
+               |> assign(old_count, socket.assigns[old_count] - 1)
+               |> assign(new_count, socket.assigns[new_count] + 1)
               }
   end
 
@@ -355,6 +359,10 @@ defmodule CandoneWeb.DashboardLive.Index do
   defp string2bool(nil), do: true
   defp string2bool("true"), do: true
   defp string2bool(_value), do: false
+
+  defp list_to_count_key("backlog-list"), do: :backlog_count
+  defp list_to_count_key("sprint-list"), do: :sprint_count
+  defp list_to_count_key("done-list"), do: :done_count
 
   defp sorting2symbol("cost"), do: :cost
   defp sorting2symbol("urgency"), do: :urgency
