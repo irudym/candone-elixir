@@ -22,10 +22,8 @@
 <div class="flex flex-1 overflow-hidden">
   <!-- Column 1: Contacts -->
   <div class="w-60 border-r border-sand-300 bg-sand-50 flex flex-col overflow-hidden shrink-0">
-    <div class="px-4 py-2 border-b border-sand-200">
-      <span class="text-[11px] font-semibold text-sand-400 uppercase tracking-wide">
-        Contacts
-      </span>
+    <div class="px-4 py-2 border-b border-sand-200 bg-sand-50 flex items-center gap-2">
+      <span class="text-[11px] font-semibold text-sand-400 uppercase tracking-wide">Contacts</span>
     </div>
     <div class="flex-1 overflow-y-auto py-2">
       <%= for person <- @people do %>
