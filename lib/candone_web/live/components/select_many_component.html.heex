@@ -1,56 +1,55 @@
 <div
   id={@id}
   phx-hook="SelectManyComponent"
-  class="mt-1 relative" 
-  x-data = "{
-    open: false, 
-    idx: -1
-  }"
+  class="relative"
+  x-data="{open: false, idx: -1}"
   x-on:click.away="open = false"
 >
 
-  <button    
+  <button
     @click="open = true"
     x-ref="button"
     type="button"
-    class="min-h-[2.5rem] relative w-full bg-white border border-primary-200 rounded-md pl-2 pr-10 py-0.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-primary2-200 focus:border-primary2-200 text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-
+    class="min-h-[2.5rem] relative w-full bg-sand-50 border border-sand-400 rounded-lg pl-2 pr-10 py-0.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent text-sm transition-colors"
+    aria-haspopup="listbox"
+    aria-expanded="true"
+  >
     <div class="flex items-center">
-      <div class="ml-3 flex flex-row flex-wrap w-full">
+      <div class="ml-1 flex flex-row flex-wrap w-full">
 
-        <%= for {option, idx} <- Enum.with_index(@selected_options) do %>
-          <div class="border border-primary-200 inline-flex items-center px-0.5 py-0.5 bg-gray-100 hover:bg-gray-300 font-medium rounded-md m-0.5 text-xs">
-            <div 
+        <%= for option <- @selected_options do %>
+          <div class="inline-flex items-center bg-sand-200 border border-sand-400 rounded-md px-0.5 py-0.5 m-0.5 text-xs font-medium">
+            <div
               phx-click="remove"
               phx-value-id={option.id}
               phx-target={@myself}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="mx-1 p-1 rounded-md w-[1.1rem] h-[1.1rem] cursor-pointer text-primary-200 hover:text-gray-100 stroke-current hover:bg-gray-300"
-                style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-miterlimit:2;"
+                class="mx-1 p-1 rounded w-[1.1rem] h-[1.1rem] cursor-pointer text-sand-700 hover:text-sand-900 hover:bg-sand-300 stroke-current"
                 fill="none"
                 viewBox="0 0 10 10"
                 stroke="currentColor"
-                width="100%" height="100%"
-                xml:space="preserve" xmlns:serif="http://www.serif.com/"
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                stroke-linecap="round"
+                stroke-miterlimit="2"
               >
                 <g transform="matrix(0.646062,-0.149612,-0.148781,0.649668,-0.319038,-1.14623)">
-                  <path d="M3,4L18.991,19.991" style="fill:none;stroke-width:3.2px;"/>
+                  <path d="M3,4L18.991,19.991" fill="none" stroke-width="3.2"/>
                 </g>
                 <g transform="matrix(0.148781,0.649668,-0.646062,-0.149612,11.1139,-0.350554)">
-                    <path d="M3,4L18.991,19.991" style="fill:none;stroke-width:3.2px;stroke-linejoin:round;stroke-miterlimit:1.5;"/>
+                  <path d="M3,4L18.991,19.991" fill="none" stroke-width="3.2" stroke-linejoin="round" stroke-miterlimit="1.5"/>
                 </g>
               </svg>
             </div>
-            <span class="pr-2 text-gray-600"><%= option.name %></span>
+            <span class="pr-2 text-sand-900"><%= option.name %></span>
           </div>
         <% end %>
 
         <input
           type="text"
-          autofocus
-          class="p-0.5 outline-none flex-auto w-28 border-none"
+          class="p-0.5 outline-none flex-auto w-28 bg-transparent border-none text-sm text-sand-900"
           x-on:click.stop="open = true"
           x-on:keydown.enter.stop.prevent=""
           x-on:keydown.arrow-up.prevent="idx = idx === 0 ? max : idx - 1"
@@ -62,39 +61,36 @@
           name={"#{@f.name}[#{@name}_filter]"}
         />
 
-
       </div>
     </div>
+
     <span class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-      <!-- Heroicon name: solid/selector -->
-      <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <svg class="h-4 w-4 text-sand-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
       </svg>
     </span>
   </button>
- 
- 
-   <input type="text" class="hidden" name={"#{@f.name}[#{@name}]"} id={"#{@f.name}_#{@name}"} />
+
+  <input type="text" class="hidden" name={"#{@f.name}[#{@name}]"} id={"#{@f.name}_#{@name}"} />
 
   <ul
     x-cloak
-    id={'ul-#{@id}'}
+    id={"ul-#{@id}"}
     phx-update="replace"
-    id="comp"
     x-show="open"
     tabindex="-1"
     role="listbox"
-    class="absolute z-100 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md border border-primary-200 py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3"
+    class="absolute z-50 mt-1 w-full bg-sand-50 shadow-lg max-h-56 rounded-lg border border-sand-400 py-1 text-sm overflow-auto focus:outline-none"
   >
     <%= for {option, index} <- Enum.with_index(@filtered_options) do %>
-      <li 
+      <li
         role="option"
-        x-bind:class={"{ 'text-white bg-primary2-200' : idx === #{index}, 'text-gray-900' : !(idx === #{index})}"}
+        x-bind:class={"{ 'bg-accent text-white' : idx === #{index}, 'text-sand-900 hover:bg-sand-200' : !(idx === #{index})}"}
         phx-click="select"
         phx-value-id={option.id}
         phx-target={@myself}
         x-on:mouseenter={"idx = #{index}"}
-        class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9" role="option"
+        class="cursor-default select-none relative py-2 pl-3 pr-9 transition-colors"
       >
         <div class="flex items-center">
           <span class="font-normal ml-3 block truncate">
