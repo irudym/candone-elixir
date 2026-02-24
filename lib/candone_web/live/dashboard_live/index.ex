@@ -225,15 +225,24 @@ defmodule CandoneWeb.DashboardLive.Index do
     update_task_stage(id, new)
 
     project = Projects.get_project!(socket.assigns.current_project_id)
-    sprint_tasks = Projects.get_project_tasks_with_stage(project, 1)
+    sorting = socket.assigns.sorting
+    old_stage = list_to_stage(old)
+    new_stage = list_to_stage(new)
+    old_tasks = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, old_stage), sorting)
+    new_tasks = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, new_stage), sorting)
 
-    old_count = list_to_count_key(old)
-    new_count = list_to_count_key(new)
+    sprint_tasks = cond do
+      new_stage == 1 -> new_tasks
+      old_stage == 1 -> old_tasks
+      true -> Projects.get_project_tasks_with_stage(project, 1)
+    end
 
     {:noreply, socket
+               |> stream(Enum.at(@stage_types, old_stage), old_tasks, reset: true)
+               |> stream(Enum.at(@stage_types, new_stage), new_tasks, reset: true)
+               |> assign(Enum.at(@stage_counts, old_stage), length(old_tasks))
+               |> assign(Enum.at(@stage_counts, new_stage), length(new_tasks))
                |> assign(:sprint_cost, update_sprint_cost(sprint_tasks))
-               |> assign(old_count, socket.assigns[old_count] - 1)
-               |> assign(new_count, socket.assigns[new_count] + 1)
               }
   end
 
@@ -244,24 +253,18 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   def handle_event("task-delete", %{"id" => id}, socket) do
     task = Tasks.get_task!(id)
+    stage = task.stage
     {:ok, _} = Tasks.delete_task(task)
 
     project = Projects.get_project!(socket.assigns.current_project_id)
     sorting = socket.assigns.sorting
-    all_tasks = Projects.get_project_tasks(project)
-    grouped = Enum.group_by(all_tasks, & &1.stage)
-    backlog_tasks = Tasks.sort_by(Map.get(grouped, 0, []), sorting)
-    sprint_tasks = Tasks.sort_by(Map.get(grouped, 1, []), sorting)
-    done_tasks = Tasks.sort_by(Map.get(grouped, 2, []), sorting)
+    updated_tasks = Tasks.sort_by(Projects.get_project_tasks_with_stage(project, stage), sorting)
+    sprint_cost = if stage == 1, do: update_sprint_cost(updated_tasks), else: socket.assigns.sprint_cost
 
     {:noreply, socket
-                |> stream(:tasks_backlog, backlog_tasks, reset: true)
-                |> stream(:tasks_sprint, sprint_tasks, reset: true)
-                |> stream(:tasks_done, done_tasks, reset: true)
-                |> assign(:backlog_count, length(backlog_tasks))
-                |> assign(:sprint_count, length(sprint_tasks))
-                |> assign(:done_count, length(done_tasks))
-                |> assign(:sprint_cost, update_sprint_cost(sprint_tasks))
+                |> stream(Enum.at(@stage_types, stage), updated_tasks, reset: true)
+                |> assign(Enum.at(@stage_counts, stage), length(updated_tasks))
+                |> assign(:sprint_cost, sprint_cost)
                 |> put_flash(:info, "Task deleted")
                 |> assign(:delete_card, nil)
     }
@@ -370,6 +373,10 @@ defmodule CandoneWeb.DashboardLive.Index do
   defp string2bool(nil), do: true
   defp string2bool("true"), do: true
   defp string2bool(_value), do: false
+
+  defp list_to_stage("backlog-list"), do: 0
+  defp list_to_stage("sprint-list"), do: 1
+  defp list_to_stage("done-list"), do: 2
 
   defp list_to_count_key("backlog-list"), do: :backlog_count
   defp list_to_count_key("sprint-list"), do: :sprint_count
