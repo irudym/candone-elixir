@@ -202,15 +202,16 @@
         <div class="flex items-center gap-2">
           <span class="text-[#8b9db0] text-sm">☰</span>
           <span class="text-[13px] font-semibold text-sand-900">Notes</span>
-          <span class="column-count" id="notes-count"><%= length(@notes) %></span>
+          <span class="column-count" id="notes-count"><%= @notes_count %></span>
         </div>
         <.add_note_button to={~p"/dashboard/notes/new"} class="mr-[5px]" />
       </div>
       <div
         id="notes-list"
         class="flex-1 px-[10px] pb-4 overflow-y-auto flex flex-col gap-[3px]"
+        phx-update="stream"
       >
-        <%= for note <- @notes do %>
+        <%= for {_, note} <- @streams.notes do %>
           <div
             class="task-card group"
             phx-click="note-select"

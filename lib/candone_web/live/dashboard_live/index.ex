@@ -125,11 +125,12 @@ defmodule CandoneWeb.DashboardLive.Index do
     |> stream(:tasks_backlog, [], reset: true)
     |> stream(:tasks_sprint, [], reset: true)
     |> stream(:tasks_done, [], reset: true)
-    |> assign(:notes, [])
+    |> stream(:notes, [], reset: true)
     |> assign(:sprint_cost, 0)
     |> assign(:backlog_count, 0)
     |> assign(:sprint_count, 0)
     |> assign(:done_count, 0)
+    |> assign(:notes_count, 0)
   end
 
   defp set_project(socket, id) do
@@ -151,12 +152,13 @@ defmodule CandoneWeb.DashboardLive.Index do
     |> stream(:tasks_backlog, backlog_tasks, reset: true)
     |> stream(:tasks_sprint, sprint_tasks, reset: true)
     |> stream(:tasks_done, done_tasks, reset: true)
-    |> assign(:notes, notes)
+    |> stream(:notes, notes, reset: true)
     |> assign(:page_title, "Candone: #{project.name}")
     |> assign(:sprint_cost, sprint_cost)
     |> assign(:backlog_count, length(backlog_tasks))
     |> assign(:sprint_count, length(sprint_tasks))
     |> assign(:done_count, length(done_tasks))
+    |> assign(:notes_count, length(notes))
   end
 
   defp update_sprint_cost(tasks) do
@@ -243,12 +245,11 @@ defmodule CandoneWeb.DashboardLive.Index do
   end
 
   def handle_event("note-delete", %{"id" => id}, socket) do
-    project = Projects.get_project!(socket.assigns.current_project_id)
     note = Notes.get_note!(id)
     {:ok, _} = Notes.delete_note(note)
 
     {:noreply, socket
-                |> assign(:notes, Projects.get_project_notes(project))
+                |> stream_delete(:notes, note)
                 |> put_flash(:info, "Note deleted")
                 |> assign(:delete_card, nil)
     }
