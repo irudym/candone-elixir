@@ -57,178 +57,183 @@
 <% end %>
 <!-- ===== Main content ===== -->
 <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
-    <!-- Top bar -->
-    <header style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid #e2ded6; background: #f5f1eb; flex-shrink: 0;">
-      <div style="font-size: 13px; font-weight: 500; color: #3d3d4a;">
-        <span style="opacity: 0.4;">Candone</span>
-        <span style="opacity: 0.2; margin: 0 8px;">/</span>
-        <span>Board</span>
-      </div>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <!-- Sorting dropdown -->
-        <div phx-hook="StoreSettings" id="drop_down_menu_config">
-          <.dropdown_menu_custom title="Sort">
-            <.dropdown_menu_item click="hide-done">
-              <%= if @hide_done do %>
-                <.show_icon /> Show done tasks
-              <% else %>
-                <.hide_icon /> Hide done tasks
-              <% end %>
-            </.dropdown_menu_item>
-            <.dropdown_menu_item click="sort-date">
-              <.calendar_icon checked={@sorting == :date} /> Sort by date
-            </.dropdown_menu_item>
-            <.dropdown_menu_item click="sort-cost">
-              <.cog_icon checked={@sorting == :cost} /> Sort by cost
-            </.dropdown_menu_item>
-            <.dropdown_menu_item click="sort-urgency">
-              <.exclamation_icon checked={@sorting == :urgency} /> Sort by urgency
-            </.dropdown_menu_item>
-          </.dropdown_menu_custom>
-        </div>
-
-        <div class="top-divider-v"></div>
-        <!-- New Task button -->
-        <.add_task_button to={~p"/dashboard/tasks/new"} />
-      </div>
-    </header>
-    <!-- ===== Board ===== -->
-    <div style="flex: 1; display: flex; gap: 0; overflow: auto; background: #efeae2;">
-      <!-- Backlog column -->
-      <div class="board-column col-enter">
-        <div class="board-column-header">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="color: #a0aab4; font-size: 14px;">◎</span>
-            <span style="font-size: 13px; font-weight: 600; color: #3d3d4a;">Backlog</span>
-            <span class="column-count" id="backlog-count"><%= @backlog_count %></span>
-          </div>
-        </div>
-        <div
-          id="backlog-list"
-          style="flex: 1; padding: 0 10px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px;"
-          phx-update="stream"
-          phx-hook="Sortable"
-        >
-          <%= for {_, task} <- @streams.tasks_backlog do %>
-            <.card
-              name={task.name}
-              description={task.description}
-              date={task.inserted_at}
-              counter1={task.people_count}
-              counter2={task.cost}
-              click="task-select"
-              type="tasks_backlog"
-              value={task.id}
-              selected={false}
-              urgency={task.urgency}
-              colour={get_colour_from_urgency(task.urgency)}
-            />
-          <% end %>
-        </div>
-      </div>
-      <!-- In Progress / Sprint column -->
-      <div class="board-column col-enter" style="animation-delay: 80ms;">
-        <div class="board-column-header">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="color: #d4956a; font-size: 14px;">◑</span>
-            <span style="font-size: 13px; font-weight: 600; color: #3d3d4a;">In Progress</span>
-            <span class="column-count" id="sprint-count"><%= @sprint_count %></span>
-          </div>
-          <div style="font-size: 11px; color: #a0a0aa;">
-            Cost: <%= @sprint_cost %>
-          </div>
-        </div>
-        <div
-          id="sprint-list"
-          style="flex: 1; padding: 0 10px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px;"
-          phx-update="stream"
-          phx-hook="Sortable"
-        >
-          <%= for {_, task} <- @streams.tasks_sprint do %>
-            <.card
-              name={task.name}
-              description={task.description}
-              date={task.inserted_at}
-              counter1={task.people_count}
-              counter2={task.cost}
-              click="task-select"
-              type="tasks_sprint"
-              value={task.id}
-              selected={false}
-              urgency={task.urgency}
-              colour={get_colour_from_urgency(task.urgency)}
-            />
-          <% end %>
-        </div>
-      </div>
-      <!-- Done column -->
-      <%= if !@hide_done do %>
-        <div class="board-column col-enter" style="animation-delay: 160ms;">
-          <div class="board-column-header">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="color: #7bb89e; font-size: 14px;">●</span>
-              <span style="font-size: 13px; font-weight: 600; color: #3d3d4a;">Done</span>
-              <span class="column-count" id="done-count"><%= @done_count %></span>
-            </div>
-          </div>
-          <div
-            id="done-list"
-            style="flex: 1; padding: 0 10px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px;"
-            phx-update="stream"
-            phx-hook="Sortable"
-          >
-            <%= for {_, task} <- @streams.tasks_done do %>
-              <.card
-                name={task.name}
-                description=""
-                date={task.inserted_at}
-                counter1={task.people_count}
-                counter2={task.cost}
-                click="task-select"
-                type="tasks_done"
-                value={task.id}
-                selected={false}
-                urgency={task.urgency}
-                colour={get_colour_from_urgency(task.urgency)}
-                disabled="text-primary-200"
-              />
+  <!-- Top bar -->
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid #e2ded6; background: #f5f1eb; flex-shrink: 0;">
+    <div style="font-size: 13px; font-weight: 500; color: #3d3d4a;">
+      <span style="opacity: 0.4;">Candone</span>
+      <span style="opacity: 0.2; margin: 0 8px;">/</span>
+      <span>Board</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <!-- Sorting dropdown -->
+      <div phx-hook="StoreSettings" id="drop_down_menu_config">
+        <.dropdown_menu_custom title="Sort">
+          <.dropdown_menu_item click="hide-done">
+            <%= if @hide_done do %>
+              <.show_icon /> Show done tasks
+            <% else %>
+              <.hide_icon /> Hide done tasks
             <% end %>
-          </div>
+          </.dropdown_menu_item>
+          <.dropdown_menu_item click="sort-date">
+            <.calendar_icon checked={@sorting == :date} /> Sort by date
+          </.dropdown_menu_item>
+          <.dropdown_menu_item click="sort-cost">
+            <.cog_icon checked={@sorting == :cost} /> Sort by cost
+          </.dropdown_menu_item>
+          <.dropdown_menu_item click="sort-urgency">
+            <.exclamation_icon checked={@sorting == :urgency} /> Sort by urgency
+          </.dropdown_menu_item>
+        </.dropdown_menu_custom>
+      </div>
+
+      <div class="top-divider-v"></div>
+      <!-- New Task button -->
+      <.add_task_button to={~p"/dashboard/tasks/new"} />
+    </div>
+  </header>
+  <!-- ===== Board ===== -->
+  <div style="flex: 1; display: flex; gap: 0; overflow: auto; background: #efeae2;">
+    <!-- Backlog column -->
+    <div class="board-column col-enter">
+      <div class="board-column-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #a0aab4; font-size: 14px;">◎</span>
+          <span style="font-size: 13px; font-weight: 600; color: #3d3d4a;">Backlog</span>
+          <span class="column-count" id="backlog-count"><%= @backlog_count %></span>
         </div>
-      <% end %>
-      <!-- Notes column -->
-      <div class="board-column col-enter" style="animation-delay: 240ms;">
-        <div class="board-column-header">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="color: #8b9db0; font-size: 14px;">☰</span>
-            <span style="font-size: 13px; font-weight: 600; color: #3d3d4a;">Notes</span>
-            <span class="column-count" id="notes-count"><%= length(@notes) %></span>
-          </div>
-          <.add_note_button to={~p"/dashboard/notes/new"} />
-        </div>
-        <div
-          id="notes-list"
-          style="flex: 1; padding: 0 10px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px;"
-        >
-          <%= for note <- @notes do %>
-            <div class="task-card group" phx-click="note-select" phx-value-id={note.id} id={"note-#{note.id}"}>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                <span style="font-size: 11px; color: #a0aab4;">☰</span>
-                <span style="font-size: 11.5px; color: #a5a5b0; font-weight: 500;">
-                  NOTE-<%= note.id %>
-                </span>
-              </div>
-              <div style="font-size: 13px; color: #3d3d4a; font-weight: 500; line-height: 1.5; margin-bottom: 10px;">
-                <%= note.name %>
-              </div>
-              <div style="display: flex; align-items: center; justify-content: flex-end;">
-                <div class="invisible group-hover:visible">
-                  <.delete_button_icon type="note" value={note.id} />
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
+      </div>
+      <div
+        id="backlog-list"
+        style="flex: 1; padding: 0 10px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px;"
+        phx-update="stream"
+        phx-hook="Sortable"
+      >
+        <%= for {_, task} <- @streams.tasks_backlog do %>
+          <.card
+            name={task.name}
+            description={task.description}
+            date={task.inserted_at}
+            counter1={task.people_count}
+            counter2={task.cost}
+            click="task-select"
+            type="tasks_backlog"
+            value={task.id}
+            selected={false}
+            urgency={task.urgency}
+            colour={get_colour_from_urgency(task.urgency)}
+          />
+        <% end %>
       </div>
     </div>
+    <!-- In Progress / Sprint column -->
+    <div class="board-column col-enter" style="animation-delay: 80ms;">
+      <div class="board-column-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #d4956a; font-size: 14px;">◑</span>
+          <span style="font-size: 13px; font-weight: 600; color: #3d3d4a;">In Progress</span>
+          <span class="column-count" id="sprint-count"><%= @sprint_count %></span>
+        </div>
+        <div style="font-size: 11px; color: #a0a0aa;">
+          Cost: <%= @sprint_cost %>
+        </div>
+      </div>
+      <div
+        id="sprint-list"
+        style="flex: 1; padding: 0 10px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px;"
+        phx-update="stream"
+        phx-hook="Sortable"
+      >
+        <%= for {_, task} <- @streams.tasks_sprint do %>
+          <.card
+            name={task.name}
+            description={task.description}
+            date={task.inserted_at}
+            counter1={task.people_count}
+            counter2={task.cost}
+            click="task-select"
+            type="tasks_sprint"
+            value={task.id}
+            selected={false}
+            urgency={task.urgency}
+            colour={get_colour_from_urgency(task.urgency)}
+          />
+        <% end %>
+      </div>
+    </div>
+    <!-- Done column -->
+    <%= if !@hide_done do %>
+      <div class="board-column col-enter" style="animation-delay: 160ms;">
+        <div class="board-column-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="color: #7bb89e; font-size: 14px;">●</span>
+            <span style="font-size: 13px; font-weight: 600; color: #3d3d4a;">Done</span>
+            <span class="column-count" id="done-count"><%= @done_count %></span>
+          </div>
+        </div>
+        <div
+          id="done-list"
+          style="flex: 1; padding: 0 10px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px;"
+          phx-update="stream"
+          phx-hook="Sortable"
+        >
+          <%= for {_, task} <- @streams.tasks_done do %>
+            <.card
+              name={task.name}
+              description=""
+              date={task.inserted_at}
+              counter1={task.people_count}
+              counter2={task.cost}
+              click="task-select"
+              type="tasks_done"
+              value={task.id}
+              selected={false}
+              urgency={task.urgency}
+              colour={get_colour_from_urgency(task.urgency)}
+              disabled="text-primary-200"
+            />
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <!-- Notes column -->
+    <div class="board-column col-enter" style="animation-delay: 240ms;">
+      <div class="board-column-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #8b9db0; font-size: 14px;">☰</span>
+          <span style="font-size: 13px; font-weight: 600; color: #3d3d4a;">Notes</span>
+          <span class="column-count" id="notes-count"><%= length(@notes) %></span>
+        </div>
+        <.add_note_button to={~p"/dashboard/notes/new"} style="margin-right: 5px;" />
+      </div>
+      <div
+        id="notes-list"
+        style="flex: 1; padding: 0 10px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px;"
+      >
+        <%= for note <- @notes do %>
+          <div
+            class="task-card group"
+            phx-click="note-select"
+            phx-value-id={note.id}
+            id={"note-#{note.id}"}
+          >
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 11px; color: #a0aab4;">☰</span>
+              <span style="font-size: 11.5px; color: #a5a5b0; font-weight: 500;">
+                NOTE-<%= note.id %>
+              </span>
+            </div>
+            <div style="font-size: 13px; color: #3d3d4a; font-weight: 500; line-height: 1.5; margin-bottom: 10px;">
+              <%= note.name %>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: flex-end;">
+              <div class="invisible group-hover:visible">
+                <.delete_button_icon type="note" value={note.id} />
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
