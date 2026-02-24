@@ -232,16 +232,11 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   def handle_event("task-delete", %{"id" => id}, socket) do
     task = Tasks.get_task!(id)
-
-    # get task stage
     stage = task.stage
     {:ok, _} = Tasks.delete_task(task)
 
-    #update only corresponding list of tasks
-
-    project = Projects.get_project!(socket.assigns.current_project_id)
     {:noreply, socket
-                |> assign(Enum.at(@stage_types, stage), Projects.get_project_tasks_with_stage(project, stage))
+                |> stream_delete(Enum.at(@stage_types, stage), task)
                 |> put_flash(:info, "Task deleted")
                 |> assign(:delete_card, nil)
     }
