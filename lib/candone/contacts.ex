@@ -117,6 +117,14 @@ defmodule Candone.Contacts do
     Repo.all(Person)
   end
 
+  def list_people_with_company do
+    Repo.all(Person) |> Repo.preload(:company)
+  end
+
+  def get_person_with_company!(id) do
+    Repo.get!(Person, id) |> Repo.preload(:company)
+  end
+
   @doc """
   Return the list which containe only IDs and Full Names of persons
   """

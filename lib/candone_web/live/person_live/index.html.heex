@@ -19,41 +19,72 @@
   </div>
 </header>
 <!-- Content -->
-<div class="py-6 px-8 max-w-[1200px] mx-auto w-full">
-  <.table
+<div class="flex-1 overflow-auto bg-[#efeae2] p-6">
+  <div
     id="people"
-    rows={@streams.people}
-    row_click={fn {_id, person} -> JS.navigate(~p"/people/#{person}") end}
+    phx-update="stream"
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
   >
-    <:col :let={{_id, person}} label="First name"><%= person.first_name %></:col>
-    <:col :let={{_id, person}} label="Last name"><%= person.last_name %></:col>
-    <:col :let={{_id, person}} label="Middle name"><%= person.middle_name %></:col>
-    <:col :let={{_id, person}} label="Description"><%= person.description %></:col>
-    <:action :let={{_id, person}}>
-      <div class="sr-only">
-        <.link navigate={~p"/people/#{person}"}>Show</.link>
-      </div>
-      <.link patch={~p"/people/#{person}/edit"}>Edit</.link>
-    </:action>
-    <:action :let={{id, person}}>
-      <.link
-        phx-click={JS.push("delete", value: %{id: person.id}) |> hide("##{id}")}
-        data-confirm="Are you sure?"
+    <%= for {dom_id, person} <- @streams.people do %>
+      <div
+        id={dom_id}
+        class="bg-sand-100 rounded-lg p-4 border border-sand-300 hover:border-sand-400 cursor-pointer group transition-colors duration-100"
+        phx-click={JS.navigate(~p"/people/#{person}")}
       >
-        Delete
-      </.link>
-    </:action>
-  </.table>
-
-  <.modal title="Contacts" :if={@live_action in [:new, :edit]} id="person-modal" show on_cancel={JS.patch(~p"/people")}>
-    <.live_component
-      module={CandoneWeb.PersonLive.FormComponent}
-      id={@person.id || :new}
-      title={@page_title}
-      action={@live_action}
-      person={@person}
-      companies={@companies}
-      patch={~p"/people"}
-    />
-  </.modal>
+        <!-- Avatar + name row -->
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-white text-[13px] font-bold shrink-0">
+            <%= String.first(person.first_name || "?") %><%= String.first(person.last_name || "") %>
+          </div>
+          <div class="overflow-hidden">
+            <div class="text-[13px] font-semibold text-sand-900 truncate">
+              <%= Person.full_name(person) %>
+            </div>
+            <%= if person.company do %>
+              <div class="text-[11px] text-sand-600 truncate"><%= person.company.name %></div>
+            <% else %>
+              <div class="text-[11px] text-sand-400 italic">No company</div>
+            <% end %>
+          </div>
+        </div>
+        <!-- Description -->
+        <%= if person.description && person.description != "" do %>
+          <div class="text-[12px] text-sand-600 leading-relaxed line-clamp-2 mb-3">
+            <%= person.description %>
+          </div>
+        <% end %>
+        <!-- Actions row -->
+        <div class="flex items-center justify-end gap-2 mt-1">
+          <div class="invisible group-hover:visible flex items-center gap-2">
+            <.link
+              patch={~p"/people/#{person}/edit"}
+              phx-click={JS.stop_propagation()}
+              class="text-[11px] text-sand-600 hover:text-sand-900 transition-colors font-medium px-2 py-0.5 rounded hover:bg-sand-200"
+            >
+              Edit
+            </.link>
+            <span
+              class="text-[11px] text-red-300 hover:text-red-500 transition-colors font-medium px-2 py-0.5 rounded hover:bg-red-50 cursor-pointer"
+              phx-click={JS.push("delete", value: %{id: person.id}) |> JS.stop_propagation()}
+              data-confirm="Are you sure?"
+            >
+              Delete
+            </span>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
+
+<.modal title="Contacts" :if={@live_action in [:new, :edit]} id="person-modal" show on_cancel={JS.patch(~p"/people")}>
+  <.live_component
+    module={CandoneWeb.PersonLive.FormComponent}
+    id={@person.id || :new}
+    title={@page_title}
+    action={@live_action}
+    person={@person}
+    companies={@companies}
+    patch={~p"/people"}
+  />
+</.modal>

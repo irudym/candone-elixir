@@ -12,7 +12,7 @@ defmodule CandoneWeb.PersonLive.Index do
     sorting = :date
     {:ok, socket
       |> assign(:sorting, sorting)
-      |> stream(:people, sorted(Contacts.list_people(), sorting))
+      |> stream(:people, sorted(Contacts.list_people_with_company(), sorting))
       |> assign(:companies, [%{id: "", name: "N/A"} | list_companies()])
     }
   end
@@ -42,6 +42,7 @@ defmodule CandoneWeb.PersonLive.Index do
 
   @impl true
   def handle_info({CandoneWeb.PersonLive.FormComponent, {:saved, person}}, socket) do
+    person = Contacts.get_person_with_company!(person.id)
     {:noreply, stream_insert(socket, :people, person)}
   end
 
@@ -50,7 +51,7 @@ defmodule CandoneWeb.PersonLive.Index do
     sorting = String.to_existing_atom(field)
     {:noreply, socket
       |> assign(:sorting, sorting)
-      |> stream(:people, sorted(Contacts.list_people(), sorting), reset: true)
+      |> stream(:people, sorted(Contacts.list_people_with_company(), sorting), reset: true)
     }
   end
 

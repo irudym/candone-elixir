@@ -1,31 +1,86 @@
-<div class="py-6 px-8 max-w-[1200px] mx-auto">
-  <.header>
-    Person <%= @person.id %>
-    <:subtitle>This is a person record from your database.</:subtitle>
-    <:actions>
-      <.link patch={~p"/people/#{@person}/show/edit"} phx-click={JS.push_focus()}>
-        <.button>Edit person</.button>
+<!-- Top bar -->
+<header class="flex items-center justify-between py-3 px-6 border-b border-sand-300 bg-sand-100 shrink-0">
+  <div class="text-[13px] font-medium text-sand-900">
+    <span class="opacity-40">Candone</span>
+    <span class="opacity-20 mx-2">/</span>
+    <.link navigate={~p"/people"} class="opacity-40 hover:opacity-70 transition-opacity">People</.link>
+    <span class="opacity-20 mx-2">/</span>
+    <span><%= Person.full_name(@person) %></span>
+  </div>
+  <.link
+    patch={~p"/people/#{@person}/show/edit"}
+    phx-click={JS.push_focus()}
+    class="new-issue-btn"
+  >
+    Edit
+  </.link>
+</header>
+<!-- Content -->
+<div class="flex-1 overflow-auto bg-[#efeae2] p-6">
+  <div class="max-w-2xl mx-auto">
+    <!-- Profile card -->
+    <div class="bg-sand-100 rounded-lg border border-sand-300 overflow-hidden">
+      <!-- Card header with avatar -->
+      <div class="px-6 pt-6 pb-5 border-b border-sand-200 flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-accent flex items-center justify-center text-white text-xl font-bold shrink-0">
+          <%= String.first(@person.first_name || "?") %><%= String.first(@person.last_name || "") %>
+        </div>
+        <div>
+          <div class="text-[17px] font-bold text-sand-900"><%= Person.full_name(@person) %></div>
+          <%= if @person.company do %>
+            <div class="text-[13px] text-sand-600 mt-0.5"><%= @person.company.name %></div>
+          <% else %>
+            <div class="text-[13px] text-sand-400 italic mt-0.5">No company</div>
+          <% end %>
+        </div>
+      </div>
+      <!-- Fields -->
+      <div class="divide-y divide-sand-200">
+        <div class="flex items-start px-6 py-3">
+          <span class="text-[12px] text-sand-500 font-medium w-32 shrink-0 pt-px">First name</span>
+          <span class="text-[13px] text-sand-900"><%= @person.first_name %></span>
+        </div>
+        <%= if @person.middle_name && @person.middle_name != "" do %>
+          <div class="flex items-start px-6 py-3">
+            <span class="text-[12px] text-sand-500 font-medium w-32 shrink-0 pt-px">Middle name</span>
+            <span class="text-[13px] text-sand-900"><%= @person.middle_name %></span>
+          </div>
+        <% end %>
+        <div class="flex items-start px-6 py-3">
+          <span class="text-[12px] text-sand-500 font-medium w-32 shrink-0 pt-px">Last name</span>
+          <span class="text-[13px] text-sand-900"><%= @person.last_name %></span>
+        </div>
+        <div class="flex items-start px-6 py-3">
+          <span class="text-[12px] text-sand-500 font-medium w-32 shrink-0 pt-px">Company</span>
+          <span class="text-[13px] text-sand-900">
+            <%= if @person.company, do: @person.company.name, else: "—" %>
+          </span>
+        </div>
+        <%= if @person.description && @person.description != "" do %>
+          <div class="flex items-start px-6 py-3">
+            <span class="text-[12px] text-sand-500 font-medium w-32 shrink-0 pt-px">Description</span>
+            <span class="text-[13px] text-sand-900 leading-relaxed"><%= @person.description %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <.link navigate={~p"/people"} class="text-[12px] text-sand-500 hover:text-sand-700 transition-colors">
+        ← Back to people
       </.link>
-    </:actions>
-  </.header>
-
-  <.list>
-    <:item title="First name"><%= @person.first_name %></:item>
-    <:item title="Last name"><%= @person.last_name %></:item>
-    <:item title="Middle name"><%= @person.middle_name %></:item>
-    <:item title="Description"><%= @person.description %></:item>
-  </.list>
-
-  <.back navigate={~p"/people"}>Back to people</.back>
-
-  <.modal title="Edit Person" :if={@live_action == :edit} id="person-modal" show on_cancel={JS.patch(~p"/people/#{@person}")}>
-    <.live_component
-      module={CandoneWeb.PersonLive.FormComponent}
-      id={@person.id}
-      title={@page_title}
-      action={@live_action}
-      person={@person}
-      patch={~p"/people/#{@person}"}
-    />
-  </.modal>
+    </div>
+  </div>
 </div>
+
+<.modal title="Edit Person" :if={@live_action == :edit} id="person-modal" show on_cancel={JS.patch(~p"/people/#{@person}")}>
+  <.live_component
+    module={CandoneWeb.PersonLive.FormComponent}
+    id={@person.id}
+    title={@page_title}
+    action={@live_action}
+    person={@person}
+    companies={@companies}
+    patch={~p"/people/#{@person}"}
+  />
+</.modal>
