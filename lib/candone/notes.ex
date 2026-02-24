@@ -155,6 +155,14 @@ defmodule Candone.Notes do
     end
   end
 
+  def list_notes_for_person(person_id) do
+    query = from n in Note,
+      join: np in "notes_people", on: np.note_id == n.id,
+      where: np.person_id == ^person_id,
+      order_by: [desc: n.inserted_at]
+    Repo.all(query)
+  end
+
   def update_note_with_people(%Note{} = note, attrs, people) do
     note
     |> Repo.preload(:people)

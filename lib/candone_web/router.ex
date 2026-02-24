@@ -35,8 +35,7 @@ defmodule CandoneWeb.Router do
     live "/people", PersonLive.Index, :index
     live "/people/new", PersonLive.Index, :new
     live "/people/:id/edit", PersonLive.Index, :edit
-    live "/people/:id", PersonLive.Show, :show
-    live "/people/:id/show/edit", PersonLive.Show, :edit
+    live "/people/:id", PersonLive.Index, :show
 
     live "/projects", ProjectLive.Index, :index
     live "/projects/new", ProjectLive.Index, :new

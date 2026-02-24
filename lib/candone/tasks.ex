@@ -163,6 +163,14 @@ defmodule Candone.Tasks do
     Task.changeset(task, attrs)
   end
 
+  def list_tasks_for_person(person_id) do
+    query = from t in Task,
+      join: tp in "tasks_people", on: tp.task_id == t.id,
+      where: tp.person_id == ^person_id,
+      order_by: [desc: t.inserted_at]
+    Repo.all(query)
+  end
+
   def sort_by(tasks, :date) do
     Enum.sort_by(tasks, & &1.inserted_at, {:desc, NaiveDateTime})
   end

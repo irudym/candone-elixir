@@ -8,7 +8,7 @@
     <span><%= Person.full_name(@person) %></span>
   </div>
   <.link
-    patch={~p"/people/#{@person}/show/edit"}
+    patch={~p"/people/#{@person}/edit"}
     phx-click={JS.push_focus()}
     class="new-issue-btn"
   >

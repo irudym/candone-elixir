@@ -18,65 +18,139 @@
     <.add_person_button to={~p"/people/new"} />
   </div>
 </header>
-<!-- Content -->
-<div class="flex-1 overflow-auto bg-[#efeae2] p-6">
-  <div
-    id="people"
-    phx-update="stream"
-    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
-  >
-    <%= for {dom_id, person} <- @streams.people do %>
-      <div
-        id={dom_id}
-        class="bg-sand-100 rounded-lg p-4 border border-sand-300 hover:border-sand-400 cursor-pointer group transition-colors duration-100"
-        phx-click={JS.navigate(~p"/people/#{person}")}
-      >
-        <!-- Avatar + name row -->
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-white text-[13px] font-bold shrink-0">
+
+<!-- Three-column layout -->
+<div class="flex flex-1 overflow-hidden">
+  <!-- Column 1: Contacts -->
+  <div class="w-60 border-r border-sand-300 bg-sand-50 flex flex-col overflow-hidden shrink-0">
+    <div class="px-4 py-2 border-b border-sand-200">
+      <span class="text-[11px] font-semibold text-sand-400 uppercase tracking-wide">Contacts</span>
+    </div>
+    <div class="flex-1 overflow-y-auto py-2">
+      <%= for person <- @people do %>
+        <div
+          id={"person-#{person.id}"}
+          class={"flex items-center gap-2.5 px-3 py-2 cursor-pointer rounded-md mx-1 transition-colors group #{if @selected_person && @selected_person.id == person.id, do: "bg-sand-200", else: "hover:bg-sand-100"}"}
+          phx-click={JS.patch(~p"/people/#{person}")}
+        >
+          <div class="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-white text-[11px] font-bold shrink-0">
             <%= String.first(person.first_name || "?") %><%= String.first(person.last_name || "") %>
           </div>
-          <div class="overflow-hidden">
-            <div class="text-[13px] font-semibold text-sand-900 truncate">
+          <div class="overflow-hidden flex-1 min-w-0">
+            <div class="text-[12px] font-semibold text-sand-900 truncate">
               <%= Person.full_name(person) %>
             </div>
             <%= if person.company do %>
-              <div class="text-[11px] text-sand-600 truncate"><%= person.company.name %></div>
+              <div class="text-[11px] text-sand-500 truncate"><%= person.company.name %></div>
             <% else %>
               <div class="text-[11px] text-sand-400 italic">No company</div>
             <% end %>
           </div>
-        </div>
-        <!-- Description -->
-        <%= if person.description && person.description != "" do %>
-          <div class="text-[12px] text-sand-600 leading-relaxed line-clamp-2 mb-3">
-            <%= person.description %>
-          </div>
-        <% end %>
-        <!-- Actions row -->
-        <div class="flex items-center justify-end gap-2 mt-1">
-          <div class="invisible group-hover:visible flex items-center gap-2" onclick="event.stopPropagation()">
+          <!-- Edit/Delete on hover -->
+          <div class="invisible group-hover:visible flex items-center gap-1 shrink-0" phx-click="noop">
             <.link
               patch={~p"/people/#{person}/edit"}
-              class="text-[11px] text-sand-600 hover:text-sand-900 transition-colors font-medium px-2 py-0.5 rounded hover:bg-sand-200"
+              class="text-[10px] text-sand-500 hover:text-sand-800 px-1 py-0.5 rounded hover:bg-sand-300 transition-colors"
+              onclick="event.stopPropagation()"
             >
               Edit
             </.link>
             <span
-              class="text-[11px] text-red-300 hover:text-red-500 transition-colors font-medium px-2 py-0.5 rounded hover:bg-red-50 cursor-pointer"
+              class="text-[10px] text-red-300 hover:text-red-500 px-1 py-0.5 rounded hover:bg-red-50 transition-colors cursor-pointer"
               phx-click={JS.push("delete", value: %{id: person.id})}
               data-confirm="Are you sure?"
+              onclick="event.stopPropagation()"
             >
-              Delete
+              Del
             </span>
           </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+      <%= if @people == [] do %>
+        <div class="text-[12px] text-sand-400 italic text-center py-8">No people yet</div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Column 2: Tasks -->
+  <div class="flex-1 border-r border-sand-300 flex flex-col overflow-hidden bg-[#efeae2]">
+    <div class="px-4 py-2 border-b border-sand-200 bg-sand-50 flex items-center gap-2">
+      <span class="text-[11px] font-semibold text-sand-400 uppercase tracking-wide">Tasks</span>
+      <%= if @selected_person do %>
+        <span class="text-[11px] text-sand-400">— <%= Person.full_name(@selected_person) %></span>
+      <% end %>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3 space-y-2">
+      <%= if @selected_person do %>
+        <%= if @tasks == [] do %>
+          <div class="text-[12px] text-sand-400 italic text-center py-8">No tasks</div>
+        <% else %>
+          <%= for task <- @tasks do %>
+            <div
+              class="bg-sand-100 rounded-lg p-3 border border-sand-300 hover:border-sand-400 transition-colors cursor-pointer"
+              phx-click={JS.navigate(~p"/tasks/#{task}")}
+            >
+              <div class="flex items-start gap-2 mb-1.5">
+                <span class="text-[11px] text-sand-400 font-medium shrink-0">TSK-<%= task.id %></span>
+              </div>
+              <div class="text-[13px] font-medium text-sand-900 leading-snug"><%= task.name %></div>
+              <div class="mt-2">
+                <span class={"text-[10px] font-medium px-1.5 py-0.5 rounded #{task_stage_class(task.stage)}"}>
+                  <%= task_stage_label(task.stage) %>
+                </span>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="text-[12px] text-sand-400 italic text-center py-8">Select a person</div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Column 3: Notes -->
+  <div class="flex-1 flex flex-col overflow-hidden bg-[#efeae2]">
+    <div class="px-4 py-2 border-b border-sand-200 bg-sand-50 flex items-center gap-2">
+      <span class="text-[11px] font-semibold text-sand-400 uppercase tracking-wide">Notes</span>
+      <%= if @selected_person do %>
+        <span class="text-[11px] text-sand-400">— <%= Person.full_name(@selected_person) %></span>
+      <% end %>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3 space-y-2">
+      <%= if @selected_person do %>
+        <%= if @notes == [] do %>
+          <div class="text-[12px] text-sand-400 italic text-center py-8">No notes</div>
+        <% else %>
+          <%= for note <- @notes do %>
+            <div
+              class="bg-sand-100 rounded-lg p-3 border border-sand-300 hover:border-sand-400 transition-colors cursor-pointer"
+              phx-click={JS.navigate(~p"/notes/#{note}")}
+            >
+              <div class="text-[13px] font-medium text-sand-900 leading-snug"><%= note.name %></div>
+              <%= if note.content && note.content != "" do %>
+                <div class="mt-1.5 text-[11px] text-sand-500 leading-relaxed line-clamp-2"><%= note.content %></div>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="text-[12px] text-sand-400 italic text-center py-8">Select a person</div>
+      <% end %>
+    </div>
   </div>
 </div>
 
-<.modal title="Contacts" :if={@live_action in [:new, :edit]} id="person-modal" show on_cancel={JS.patch(~p"/people")}>
+<.modal
+  title="Contacts"
+  :if={@live_action in [:new, :edit]}
+  id="person-modal"
+  show
+  on_cancel={
+    if @live_action == :edit && @selected_person,
+      do: JS.patch(~p"/people/#{@selected_person}"),
+      else: JS.patch(~p"/people")
+  }
+>
   <.live_component
     module={CandoneWeb.PersonLive.FormComponent}
     id={@person.id || :new}
@@ -84,6 +158,6 @@
     action={@live_action}
     person={@person}
     companies={@companies}
-    patch={~p"/people"}
+    patch={if @live_action == :edit && @selected_person, do: ~p"/people/#{@selected_person}", else: ~p"/people"}
   />
 </.modal>
