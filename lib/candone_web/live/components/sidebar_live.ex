@@ -5,17 +5,18 @@ defmodule CandoneWeb.SidebarLive do
 
   import CandoneWeb.Components.CardComponents
   import CandoneWeb.Components.UiComponents
+  import CandoneWeb.Components.Icons
 
   @impl true
   def mount(socket) do
     projects = Projects.list_projects()
 
-    {:ok, socket
-      |> assign(:sidebar_collapsed, false)
-      |> assign(:delete_item, nil)
-      |> assign(:projects, projects)
-      |> assign(:current_project_id, :none)
-    }
+    {:ok,
+     socket
+     |> assign(:sidebar_collapsed, false)
+     |> assign(:delete_item, nil)
+     |> assign(:projects, projects)
+     |> assign(:current_project_id, :none)}
   end
 
   @impl true
@@ -44,10 +45,10 @@ defmodule CandoneWeb.SidebarLive do
 
     projects = Projects.list_projects()
 
-    {:noreply, socket
-      |> assign(:projects, projects)
-      |> assign(:delete_item, nil)
-    }
+    {:noreply,
+     socket
+     |> assign(:projects, projects)
+     |> assign(:delete_item, nil)}
   end
 
   def handle_event("close_confirmation", _, socket) do
@@ -62,7 +63,8 @@ defmodule CandoneWeb.SidebarLive do
         <.modal title="Delete">
           <div>
             <div class="mb-4 text-sand-900 text-sm">
-              Are you sure you want to delete <b><%= get_item_name(@delete_item) %></b> <%= get_item_type(@delete_item) %>?
+              Are you sure you want to delete
+              <b><%= get_item_name(@delete_item) %></b> <%= get_item_type(@delete_item) %>?
             </div>
             <div class="flex flex-row-reverse gap-4">
               <a
@@ -70,18 +72,21 @@ defmodule CandoneWeb.SidebarLive do
                 class="cursor-pointer filter-btn font-semibold"
                 phx-click="close_confirmation"
                 phx-target={@myself}
-              >Cancel</a>
+              >
+                Cancel
+              </a>
               <span
                 class="cursor-pointer py-2 px-5 text-sm leading-5 rounded-lg font-semibold text-white bg-red-200"
                 phx-click={"#{get_item_type(@delete_item)}-delete"}
                 phx-value-id={get_item_id(@delete_item)}
                 phx-target={@myself}
-              >Delete</span>
+              >
+                Delete
+              </span>
             </div>
           </div>
         </.modal>
       <% end %>
-
       <!-- Sidebar header -->
       <div class="flex items-center justify-between pt-4 px-3.5 pb-3 gap-2">
         <%= if !@sidebar_collapsed do %>
@@ -110,15 +115,15 @@ defmodule CandoneWeb.SidebarLive do
         <!-- Navigation -->
         <div class="px-2 py-1">
           <a href="/" class="sidebar-nav-item sidebar-nav-item-active">
-            <span class="text-sm w-5 text-center">◫</span>
+            <span class="text-sm w-5 text-center"><.calendar_icon class="w-[22px]" /></span>
             <span>Board</span>
           </a>
           <a href="/people" class="sidebar-nav-item">
-            <span class="text-sm w-5 text-center">⌂</span>
+            <span class="text-sm w-5 text-center"><.people_icon class="w-[22px]" /></span>
             <span>People</span>
           </a>
           <a href="/notes" class="sidebar-nav-item">
-            <span class="text-sm w-5 text-center">☰</span>
+            <span class="text-sm w-5 text-center"><.note_icon class="w-[22px]" /></span>
             <span>Notes</span>
           </a>
           <a href="/companies" class="sidebar-nav-item">
@@ -148,7 +153,6 @@ defmodule CandoneWeb.SidebarLive do
             />
           <% end %>
         </div>
-
       <% end %>
     </aside>
     """
