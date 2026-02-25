@@ -19,38 +19,78 @@
   </div>
 </header>
 <!-- Content -->
-<div class="py-6 px-8 max-w-[1200px] mx-auto w-full">
-  <.table
-    id="notes"
-    rows={@streams.notes}
-    row_click={fn {_id, note} -> JS.navigate(~p"/notes/#{note}") end}
-  >
-    <:col :let={{_id, note}} label="Name"><%= note.name %></:col>
-    <:col :let={{_id, note}} label="Content"><%= note.content %></:col>
-    <:action :let={{_id, note}}>
-      <div class="sr-only">
-        <.link navigate={~p"/notes/#{note}"}>Show</.link>
-      </div>
-      <.link patch={~p"/notes/#{note}/edit"}>Edit</.link>
-    </:action>
-    <:action :let={{id, note}}>
-      <.link
-        phx-click={JS.push("delete", value: %{id: note.id}) |> hide("##{id}")}
-        data-confirm="Are you sure?"
-      >
-        Delete
-      </.link>
-    </:action>
-  </.table>
-
-  <.modal title="Notes" :if={@live_action in [:new, :edit]} id="note-modal" show on_cancel={JS.patch(~p"/notes")}>
-    <.live_component
-      module={CandoneWeb.NoteLive.FormComponent}
-      id={@note.id || :new}
-      title={@page_title}
-      action={@live_action}
-      note={@note}
-      patch={~p"/notes"}
-    />
-  </.modal>
+<div class="flex-1 overflow-y-auto bg-[#efeae2]">
+  <div class="py-6 px-8 max-w-[1200px] mx-auto w-full">
+    <div
+      id="notes"
+      phx-update="stream"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+    >
+      <%= for {id, note} <- @streams.notes do %>
+        <div
+          id={id}
+          class="task-card group cursor-pointer flex flex-col"
+          phx-click={JS.navigate(~p"/notes/#{note}")}
+        >
+          <!-- Card header: icon, ID, hover actions -->
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[13px] text-[#8b9db0]">☰</span>
+            <span class="text-[11px] text-sand-400 font-medium">NOTE-<%= note.id %></span>
+            <div class="ml-auto flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+              <.link
+                patch={~p"/notes/#{note}/edit"}
+                class="p-1 rounded text-sand-500 hover:text-sand-800 hover:bg-sand-200 transition-colors"
+                onclick="event.stopPropagation()"
+              >
+                <.pen_icon />
+              </.link>
+              <span
+                class="p-1 rounded text-red-300 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                phx-click={JS.push("delete", value: %{id: note.id}) |> hide("##{id}")}
+                data-confirm="Are you sure?"
+                onclick="event.stopPropagation()"
+              >
+                <.trash_icon class="w-[14px]" />
+              </span>
+            </div>
+          </div>
+          <!-- Title -->
+          <div class="text-[13px] font-semibold text-sand-900 leading-snug mb-1.5">
+            <%= note.name %>
+          </div>
+          <!-- Content preview -->
+          <%= if note.content && note.content != "" do %>
+            <div class="text-[11.5px] text-sand-500 leading-relaxed line-clamp-3 flex-1 mb-3">
+              <%= note.content %>
+            </div>
+          <% else %>
+            <div class="flex-1 mb-3"></div>
+          <% end %>
+          <!-- Footer: date + people count -->
+          <div class="flex items-center justify-between pt-2 border-t border-sand-200">
+            <span class="text-[10.5px] text-sand-400">
+              <%= Calendar.strftime(note.inserted_at, "%b %d, %Y") %>
+            </span>
+            <%= if note.people_count && note.people_count > 0 do %>
+              <span class="subtask-badge flex items-center gap-1">
+                <.people_icon class="w-3 h-3" />
+                <%= note.people_count %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
+
+<.modal title="Notes" :if={@live_action in [:new, :edit]} id="note-modal" show on_cancel={JS.patch(~p"/notes")}>
+  <.live_component
+    module={CandoneWeb.NoteLive.FormComponent}
+    id={@note.id || :new}
+    title={@page_title}
+    action={@live_action}
+    note={@note}
+    patch={~p"/notes"}
+  />
+</.modal>

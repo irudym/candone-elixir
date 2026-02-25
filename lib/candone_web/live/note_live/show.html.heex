@@ -1,29 +1,78 @@
-<div class="py-6 px-8 max-w-[1200px] mx-auto">
-  <.header>
-    Note <%= @note.id %>
-    <:subtitle>This is a note record from your database.</:subtitle>
-    <:actions>
-      <.link patch={~p"/notes/#{@note}/show/edit"} phx-click={JS.push_focus()}>
-        <.button>Edit note</.button>
-      </.link>
-    </:actions>
-  </.header>
-
-  <.list>
-    <:item title="Name"><%= @note.name %></:item>
-    <:item title="Content"><%= @note.content %></:item>
-  </.list>
-
-  <.back navigate={~p"/notes"}>Back to notes</.back>
-
-  <.modal title="Edit Note" :if={@live_action == :edit} id="note-modal" show on_cancel={JS.patch(~p"/notes/#{@note}")}>
-    <.live_component
-      module={CandoneWeb.NoteLive.FormComponent}
-      id={@note.id}
-      title={@page_title}
-      action={@live_action}
-      note={@note}
-      patch={~p"/notes/#{@note}"}
-    />
-  </.modal>
+<!-- Top bar -->
+<header class="flex items-center justify-between py-3 px-6 border-b border-sand-300 bg-sand-100 shrink-0">
+  <div class="text-[13px] font-medium text-sand-900 flex items-center min-w-0">
+    <span class="opacity-40 shrink-0">Candone</span>
+    <span class="opacity-20 mx-2 shrink-0">/</span>
+    <.link navigate={~p"/notes"} class="opacity-40 hover:opacity-70 transition-opacity shrink-0">Notes</.link>
+    <span class="opacity-20 mx-2 shrink-0">/</span>
+    <span class="truncate text-sand-900"><%= @note.name %></span>
+  </div>
+  <div class="flex items-center gap-2 shrink-0 ml-4">
+    <.link patch={~p"/notes/#{@note}/show/edit"} phx-click={JS.push_focus()}>
+      <button class="filter-btn flex items-center gap-1.5">
+        <.pen_icon class="w-3.5 h-3.5" /> Edit
+      </button>
+    </.link>
+    <div class="top-divider-v"></div>
+    <.link navigate={~p"/notes"} class="filter-btn">
+      ← Notes
+    </.link>
+  </div>
+</header>
+<!-- Content -->
+<div class="flex-1 overflow-y-auto bg-[#efeae2]">
+  <div class="py-8 px-10 max-w-[760px] mx-auto w-full">
+    <!-- Note metadata -->
+    <div class="flex items-center gap-2 mb-3">
+      <span class="text-[13px] text-[#8b9db0]">☰</span>
+      <span class="text-[11px] text-sand-400 font-medium">NOTE-<%= @note.id %></span>
+      <span class="text-[11px] text-sand-300">·</span>
+      <span class="text-[11px] text-sand-400">
+        <%= Calendar.strftime(@note.inserted_at, "%b %d, %Y") %>
+      </span>
+      <%= if @note.updated_at != @note.inserted_at do %>
+        <span class="text-[11px] text-sand-300">·</span>
+        <span class="text-[11px] text-sand-400 italic">
+          updated <%= Calendar.strftime(@note.updated_at, "%b %d, %Y") %>
+        </span>
+      <% end %>
+    </div>
+    <!-- Title -->
+    <h1 class="text-[22px] font-semibold text-sand-900 leading-tight mb-4">
+      <%= @note.name %>
+    </h1>
+    <!-- People badges -->
+    <%= if @note.people != [] do %>
+      <div class="flex flex-wrap gap-1.5 mb-5">
+        <span class="text-[10.5px] font-semibold text-sand-400 uppercase tracking-wide self-center">People</span>
+        <%= for person <- @note.people do %>
+          <span class="flex items-center gap-1 text-[11.5px] font-medium px-2.5 py-0.5 rounded-full bg-sand-200 text-sand-700">
+            <div class="w-4 h-4 rounded-full bg-accent flex items-center justify-center text-white text-[8px] font-bold shrink-0">
+              <%= String.first(person.first_name || "?") %><%= String.first(person.last_name || "") %>
+            </div>
+            <%= person.first_name %> <%= person.last_name %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+    <!-- Content -->
+    <div class="task-card prose-sm max-w-none">
+      <%= if @note.content && @note.content != "" do %>
+        <%= raw Markdown.as_html(@note.content) %>
+      <% else %>
+        <p class="text-[12px] text-sand-400 italic">No content yet.</p>
+      <% end %>
+    </div>
+  </div>
 </div>
+
+<.modal title="Edit Note" :if={@live_action == :edit} id="note-modal" show on_cancel={JS.patch(~p"/notes/#{@note}")}>
+  <.live_component
+    module={CandoneWeb.NoteLive.FormComponent}
+    id={@note.id}
+    title={@page_title}
+    action={@live_action}
+    note={@note}
+    patch={~p"/notes/#{@note}"}
+  />
+</.modal>

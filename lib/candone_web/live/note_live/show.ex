@@ -2,6 +2,9 @@ defmodule CandoneWeb.NoteLive.Show do
   use CandoneWeb, :live_view
 
   alias Candone.Notes
+  alias Candone.Markdown
+
+  import CandoneWeb.Components.Icons
 
   @impl true
   def mount(_params, _session, socket) do
