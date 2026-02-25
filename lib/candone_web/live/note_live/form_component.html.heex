@@ -10,12 +10,12 @@
     phx-change="validate"
     phx-submit="save"
   >
-
-    <div class="mb-4">
+    <div class="mb-4 mt-3">
       <.label>
         Participants
       </.label>
-      <.live_component module={SelectManyComponent}
+      <.live_component
+        module={SelectManyComponent}
         id="people-in-notes1"
         options={@people}
         f={@form}
@@ -32,8 +32,7 @@
           phx-target={@myself}
           class=" cursor-pointer bg-green-200 hover:bg-green-300 px-2 py-1 text-xs leading-5 rounded-lg font-semibold text-white"
         >
-          <.pen_icon />
-          Edit note
+          <.pen_icon /> Edit note
         </span>
       </div>
       <div class="mb-4">
@@ -44,9 +43,15 @@
     <% end %>
 
     <div class={"mb-4 #{if @show_markdown, do: "hidden"}"}>
-      <.input field={@form[:content]} type="textarea" label="Content" rows="18" phx-debounce="300" />
+      <.input
+        field={@form[:content]}
+        type="textarea"
+        label="Content"
+        rows="18"
+        phx-debounce="300"
+      />
     </div>
-    
+
     <:actions>
       <.button phx-disable-with="Saving...">Save Note</.button>
     </:actions>

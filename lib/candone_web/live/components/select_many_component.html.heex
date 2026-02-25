@@ -5,25 +5,19 @@
   x-data="{open: false, idx: -1}"
   x-on:click.away="open = false"
 >
-
   <button
     @click="open = true"
     x-ref="button"
     type="button"
-    class="min-h-[2.5rem] relative w-full bg-sand-50 border border-sand-400 rounded-lg pl-2 pr-10 py-0.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent text-sm transition-colors"
+    class="min-h-[2.5rem] relative w-full bg-white border border-sand-400 rounded-lg pl-2 pr-10 py-0.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent text-sm transition-colors"
     aria-haspopup="listbox"
     aria-expanded="true"
   >
     <div class="flex items-center">
       <div class="ml-1 flex flex-row flex-wrap w-full">
-
         <%= for option <- @selected_options do %>
           <div class="inline-flex items-center bg-sand-200 border border-sand-400 rounded-md px-0.5 py-0.5 m-0.5 text-xs font-medium">
-            <div
-              phx-click="remove"
-              phx-value-id={option.id}
-              phx-target={@myself}
-            >
+            <div phx-click="remove" phx-value-id={option.id} phx-target={@myself}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="mx-1 p-1 rounded w-[1.1rem] h-[1.1rem] cursor-pointer text-sand-700 hover:text-sand-900 hover:bg-sand-300 stroke-current"
@@ -36,10 +30,16 @@
                 stroke-miterlimit="2"
               >
                 <g transform="matrix(0.646062,-0.149612,-0.148781,0.649668,-0.319038,-1.14623)">
-                  <path d="M3,4L18.991,19.991" fill="none" stroke-width="3.2"/>
+                  <path d="M3,4L18.991,19.991" fill="none" stroke-width="3.2" />
                 </g>
                 <g transform="matrix(0.148781,0.649668,-0.646062,-0.149612,11.1139,-0.350554)">
-                  <path d="M3,4L18.991,19.991" fill="none" stroke-width="3.2" stroke-linejoin="round" stroke-miterlimit="1.5"/>
+                  <path
+                    d="M3,4L18.991,19.991"
+                    fill="none"
+                    stroke-width="3.2"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="1.5"
+                  />
                 </g>
               </svg>
             </div>
@@ -60,13 +60,22 @@
           id={"#{@f.name}-form_#{@name}_filter"}
           name={"#{@f.name}[#{@name}_filter]"}
         />
-
       </div>
     </div>
 
     <span class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-      <svg class="h-4 w-4 text-sand-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+      <svg
+        class="h-4 w-4 text-sand-600"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+          clip-rule="evenodd"
+        />
       </svg>
     </span>
   </button>
@@ -80,7 +89,7 @@
     x-show="open"
     tabindex="-1"
     role="listbox"
-    class="absolute z-50 mt-1 w-full bg-sand-50 shadow-lg max-h-56 rounded-lg border border-sand-400 py-1 text-sm overflow-auto focus:outline-none"
+    class="absolute z-50 mt-1 w-full bg-white shadow-lg max-h-56 rounded-lg border border-sand-400 py-1 text-sm overflow-auto focus:outline-none"
   >
     <%= for {option, index} <- Enum.with_index(@filtered_options) do %>
       <li
@@ -100,5 +109,4 @@
       </li>
     <% end %>
   </ul>
-
 </div>

@@ -49,14 +49,21 @@ defmodule CandoneWeb.CoreComponents do
       |> assign_new(:class, fn -> nil end)
 
     ~H"""
-    <div id="modal" class="fixed z-10 inset-0 overflow-y-auto [backdrop-filter:blur(3px)]" phx-remove={hide_modal()}>
+    <div
+      id="modal"
+      class="fixed z-10 inset-0 overflow-y-auto [backdrop-filter:blur(3px)]"
+      phx-remove={hide_modal()}
+    >
       <div class="flex items-center justify-center min-h-screen px-4 py-8">
         <div class="fixed inset-0 transition-opacity bg-sand-900/30" aria-hidden="true"></div>
 
         <div class="relative w-full sm:max-w-lg text-left rounded-xl transform transition-all bg-sand-50 border border-sand-400 shadow-[0_16px_48px_rgba(0,0,0,0.14)]">
           <!-- modal header -->
-          <div class="flex items-center justify-between px-4 py-2.5 rounded-t-xl bg-sand-900 border-b border-sand-950">
-            <span class="font-semibold tracking-tight text-sand-100 text-[13px]">
+          <div
+            class="flex items-center justify-between px-2 py-1.5 rounded-t-xl border-b border-sand-950"
+            style="background: #506061;"
+          >
+            <span class="font-semibold tracking-tight text-sand-100 text-[13px] px-4">
               <%= @title %>
             </span>
             <%= if @return_to do %>
@@ -322,7 +329,7 @@ defmodule CandoneWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-sand-400 text-sand-900 focus:ring-0"
+          class="rounded border-sand-400 text-sand-900 focus:ring-0 bg-white"
           {@rest}
         />
         <%= @label %>
@@ -339,7 +346,7 @@ defmodule CandoneWeb.CoreComponents do
       <select
         id={@id}
         name={@name}
-        class="mt-2 block w-full rounded-md border border-sand-400 bg-sand-50 text-sand-900 shadow-sm focus:border-sand-500 focus:ring-0 sm:text-sm"
+        class="mt-2 block w-full rounded-md border border-sand-400 bg-white text-sand-900 shadow-sm focus:border-sand-500 focus:ring-0 sm:text-sm"
         multiple={@multiple}
         {@rest}
       >
@@ -359,7 +366,7 @@ defmodule CandoneWeb.CoreComponents do
         id={@id}
         name={@name}
         class={[
-          "block w-full rounded-lg text-sm focus:ring-0 leading-relaxed transition-colors bg-sand-50 text-sand-900 py-2 px-3",
+          "block w-full rounded-lg text-sm focus:ring-0 leading-relaxed transition-colors bg-white text-sand-900 py-2 px-3",
           "min-h-[6rem] phx-no-feedback:border-sand-400 phx-no-feedback:focus:border-sand-500",
           @errors == [] && "border-sand-400 focus:border-sand-500",
           @errors != [] && "border-rose-400 focus:border-rose-400"
@@ -382,7 +389,7 @@ defmodule CandoneWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "appearance-none border rounded-lg w-full py-2 px-3 text-sm leading-tight focus:outline-none focus:ring-0 transition-colors bg-sand-50 text-sand-900",
+          "appearance-none border rounded-lg w-full py-2 px-3 text-sm leading-tight focus:outline-none focus:ring-0 transition-colors bg-white text-sand-900",
           @errors == [] && "border-sand-400 focus:border-sand-500",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
@@ -401,7 +408,10 @@ defmodule CandoneWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block mb-1.5 font-semibold uppercase text-sand-700 text-[10.5px] tracking-[0.7px]">
+    <label
+      for={@for}
+      class="block mb-1.5 font-semibold uppercase text-sand-700 text-[10.5px] tracking-[0.7px]"
+    >
       <%= render_slot(@inner_block) %>
     </label>
     """
