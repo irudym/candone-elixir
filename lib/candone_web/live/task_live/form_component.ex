@@ -41,7 +41,8 @@ defmodule CandoneWeb.TaskLive.FormComponent do
 
     task = Tasks.update_task_with_people(task, task_params, people)
     case task do
-      {:ok, _task} ->
+      {:ok, task} ->
+        notify_parent({:saved, task})
         {:noreply,
          socket
          |> put_flash(:info, "Task updated successfully")
@@ -64,7 +65,8 @@ defmodule CandoneWeb.TaskLive.FormComponent do
     end
 
     case result do
-      {:ok, _task} ->
+      {:ok, task} ->
+        notify_parent({:saved, task})
         {:noreply,
          socket
          |> put_flash(:info, "Task created successfully")
@@ -87,4 +89,6 @@ defmodule CandoneWeb.TaskLive.FormComponent do
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
   end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

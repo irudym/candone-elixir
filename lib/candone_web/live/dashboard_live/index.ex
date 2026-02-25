@@ -116,8 +116,11 @@ defmodule CandoneWeb.DashboardLive.Index do
   end
 
   defp apply_action(socket, :show_project, %{"id" => id}) do
-    socket
-    |> set_project(id)
+    if to_string(socket.assigns.current_project_id) == to_string(id) do
+      socket
+    else
+      set_project(socket, id)
+    end
   end
 
   @doc """
@@ -169,6 +172,61 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   defp update_sprint_cost(tasks) do
     Enum.reduce(tasks, 0, fn task, acc -> acc + (task.cost || 0) end)
+  end
+
+  @impl true
+  def handle_info({CandoneWeb.TaskLive.FormComponent, {:saved, task}}, socket) do
+    old_task = socket.assigns[:task]
+
+    socket =
+      cond do
+        is_nil(old_task) or is_nil(old_task.id) ->
+          stage_key = Enum.at(@stage_types, task.stage || 0)
+          count_key = Enum.at(@stage_counts, task.stage || 0)
+          socket
+          |> stream_insert(stage_key, task)
+          |> assign(count_key, socket.assigns[count_key] + 1)
+
+        old_task.stage != task.stage ->
+          old_key = Enum.at(@stage_types, old_task.stage)
+          new_key = Enum.at(@stage_types, task.stage)
+          old_count_key = Enum.at(@stage_counts, old_task.stage)
+          new_count_key = Enum.at(@stage_counts, task.stage)
+          socket
+          |> stream_delete(old_key, old_task)
+          |> stream_insert(new_key, task)
+          |> assign(old_count_key, socket.assigns[old_count_key] - 1)
+          |> assign(new_count_key, socket.assigns[new_count_key] + 1)
+
+        true ->
+          stream_insert(socket, Enum.at(@stage_types, task.stage), task)
+      end
+
+    socket =
+      if (old_task && old_task.stage == 1) || task.stage == 1 do
+        project = Projects.get_project!(socket.assigns.current_project_id)
+        sprint_tasks = Projects.get_project_tasks_with_stage(project, 1)
+        assign(socket, :sprint_cost, update_sprint_cost(sprint_tasks))
+      else
+        socket
+      end
+
+    {:noreply, socket}
+  end
+
+  def handle_info({CandoneWeb.NoteLive.FormComponent, {:saved, note}}, socket) do
+    old_note = socket.assigns[:note]
+
+    socket =
+      if is_nil(old_note) or is_nil(old_note.id) do
+        socket
+        |> stream_insert(:notes, note)
+        |> assign(:notes_count, socket.assigns.notes_count + 1)
+      else
+        stream_insert(socket, :notes, note)
+      end
+
+    {:noreply, socket}
   end
 
   @impl true

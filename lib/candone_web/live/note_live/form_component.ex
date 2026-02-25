@@ -67,7 +67,8 @@ defmodule CandoneWeb.NoteLive.FormComponent do
 
 
     case note do
-      {:ok, _note} ->
+      {:ok, note} ->
+        notify_parent({:saved, note})
         {:noreply,
          socket
          |> put_flash(:info, "Note updated successfully")
@@ -90,7 +91,8 @@ defmodule CandoneWeb.NoteLive.FormComponent do
     end
 
     case result do
-      {:ok, _note} ->
+      {:ok, note} ->
+        notify_parent({:saved, note})
         {:noreply,
          socket
          |> put_flash(:info, "Note created successfully")
@@ -104,6 +106,8 @@ defmodule CandoneWeb.NoteLive.FormComponent do
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
   end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
   defp save_note(socket, :new_note, note_params) do
     save_note(socket, :new, note_params)
