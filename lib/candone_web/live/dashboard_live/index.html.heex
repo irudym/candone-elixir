@@ -95,7 +95,7 @@
   <!-- ===== Board ===== -->
   <div class="flex-1 flex overflow-auto bg-[#efeae2]">
     <!-- Backlog column -->
-    <div class="board-column col-enter">
+    <div id="board-backlog" class="board-column col-enter">
       <div class="board-column-header">
         <div class="flex items-center gap-2">
           <span class="text-status-backlog text-sm">◎</span>
@@ -127,7 +127,7 @@
       </div>
     </div>
     <!-- In Progress / Sprint column -->
-    <div class="board-column col-enter [animation-delay:80ms]">
+    <div id="board-sprint" class="board-column col-enter [animation-delay:80ms]">
       <div class="board-column-header">
         <div class="flex items-center gap-2">
           <span class="text-accent text-sm">◑</span>
@@ -163,7 +163,7 @@
     </div>
     <!-- Done column -->
     <%= if !@hide_done do %>
-      <div class="board-column col-enter [animation-delay:160ms]">
+      <div id="board-done" class="board-column col-enter [animation-delay:160ms]">
         <div class="board-column-header">
           <div class="flex items-center gap-2">
             <span class="text-green-300 text-sm">●</span>
@@ -197,7 +197,7 @@
       </div>
     <% end %>
     <!-- Notes column -->
-    <div class="board-column col-enter [animation-delay:240ms]">
+    <div id="board-notes" class="board-column col-enter [animation-delay:240ms]">
       <div class="board-column-header">
         <div class="flex items-center gap-2">
           <span class="text-[#8b9db0] text-sm">☰</span>
