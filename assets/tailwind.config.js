@@ -9,7 +9,8 @@ module.exports = {
   content: [
     "./js/**/*.js",
     "../lib/candone_web.ex",
-    "../lib/candone_web/**/*.*ex"
+    "../lib/candone_web/**/*.*ex",
+    "../lib/candone/**/*.*ex"
   ],
   theme: {
     extend: {
