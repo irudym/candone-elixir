@@ -47,12 +47,11 @@ defmodule CandoneWeb.DashboardLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     projects = Candone.Projects.list_projects()
-    current_project_id = get_project_id(projects)
 
     {:ok, socket
           |> assign(:title, "Dashboard")
           |> assign(:projects, projects)
-          |> assign(:current_project_id, current_project_id)
+          |> assign(:current_project_id, :none)
           |> assign(:page_title, "Candone")
           |> assign(:sorting, :date)
           |> assign(:hide_done, false)
@@ -112,7 +111,7 @@ defmodule CandoneWeb.DashboardLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> set_project(socket.assigns.current_project_id)
+    |> set_project(get_project_id(socket.assigns.projects))
   end
 
   defp apply_action(socket, :show_project, %{"id" => id}) do
